@@ -161,5 +161,36 @@ Dự án được kết nối và đẩy lên kho lưu trữ GitHub chính thứ
 4. **Cơ chế Tự động Fallback thông minh (Multi-Tier Cascade):**
    - Tự động chuyển đổi mượt mà giữa các tầng mô hình (`selectedModel` -> `gemini-3.6-flash` -> `gemini-3.5-flash` -> `gemini-2.5-flash` -> `gemini-2.5-pro` -> ...) khi gặp giới hạn hạn ngạch (429) hoặc lỗi kết nối, đảm bảo tỷ lệ thành công tối đa mà người dùng không bị gián đoạn.
 
+---
+
+## 9. TÍCH HỢP BỘ TÀI LIỆU MỚI: GIÁO TRÌNH ĐẠI HỌC Y HÀ NỘI & VIỆN TIM MẠCH VIỆT NAM (PGS.TS. PHẠM MẠNH HÙNG & TS. PHAN ĐÌNH PHONG)
+
+Hệ thống đã tiếp nhận, phân tích toàn văn và nạp vào bộ nhớ trí tuệ của AI loạt tài liệu chuyên khảo y khoa mới:
+* `4.-Bai-giang-dien-tam-do.pdf`: Sách "Bài giảng Điện tâm đồ" - Bộ môn Tim mạch Đại học Y Hà Nội & Viện Tim mạch Việt Nam (Chủ biên: PGS.TS.BS. Phạm Mạnh Hùng, Đồng chủ biên: TS.BSNT. Phan Đình Phong).
+* `Đọc điện tâm đồ dễ hơn.pdf`: 147 trang chuyên khảo, bao quát toàn bộ quy trình đo, lỗi kỹ thuật đảo cực và 220 đề mục chuyên sâu.
+* `bai-giang-dien-tam-do-vieclamvui.pdf` & `.pptx`: Bài giảng Điện tâm đồ bình thường và bệnh lý - ThS.BS. Nguyễn Anh Tuấn & ThS.BS. Phan Đình Phong (ĐHYHN).
+* `CLS ECG.pdf`, `Sổ tay điện tâm đồ.pdf`, `Điện Tâm Đồ Trong Thực Hành Lâm Sàng.pdf`: Tập hợp ngân hàng ca bệnh thực hành lâm sàng.
+
+### Các tiêu chuẩn mới được nạp vào bộ nhớ AI & Bộ quy tắc rules.md:
+1. **Phân loại 3 Type Hội chứng Brugada (Bảng 1 - ĐHYHN):**
+   - Type 1: Điểm J $\ge 2\text{ mm}$, ST cong vòm (coved-type) dốc xuống nối tiếp sóng T âm đối xứng ở $V_1-V_3$ (Chẩn đoán xác định, nguy cơ đột tử cao).
+   - Type 2 & Type 3: ST dạng yên ngựa (saddleback).
+2. **Tiêu chuẩn Hội chứng QT dài (LQTS) theo ESC 2015 & Viện Tim Mạch VN:**
+   - Kỹ thuật đo thủ công tại $DII$ và $V_5$. Công thức Bazett $QTc = QT / \sqrt{RR}$.
+   - Ngưỡng chẩn đoán: Nam $> 470\text{ ms}$, Nữ $> 480\text{ ms}$; Báo động nguy cơ xoắn đỉnh khi $QTc > 500\text{ ms}$.
+   - 3 Type di truyền thường gặp: LQT1 (KCNQ1), LQT2 (KCNH2), LQT3 (SCN5A).
+3. **Tiêu chuẩn Tăng gánh (Phì đại) Buồng tim Mở rộng:**
+   - Dày nhĩ trái (P hai lá): $P > 100-120\text{ ms}$ có 2 đỉnh, biên độ $DI > DIII$, pha âm $V_1 \ge 0.04\text{ s}$ sâu $\ge 1\text{ mm}$ (Chỉ số Morris).
+   - Dày thất trái: Bổ sung tiêu chuẩn Cornell ($R_{aVL} + S_{V3} > 28\text{ mm}$ nam, $> 20\text{ mm}$ nữ) bên cạnh Sokolow-Lyon.
+   - Dày thất phải: $R/S$ ở $V_1 > 1$, $R_{V1} \ge 7\text{ mm}$, Sokolow-Lyon phải $> 10.5\text{ mm}$.
+4. **Sơ đồ 4 bước Brugada phân biệt Tim nhanh QRS rộng (VT vs SVT lệch hướng):**
+   - Vắng mặt $RS$ ở $V_1-V_6 \to$ VT; Khoảng $RS > 100\text{ ms} \to$ VT; Phân ly nhĩ - thất (AV dissociation) $\to$ VT; Hình thái kinh điển $\to$ VT.
+5. **Dấu hiệu Nhận biết Mắc lộn Điện cực chi (Limb Lead Reversals):**
+   - Mắc nhầm tay phải - tay trái (RA - LA): $DI$ đảo ngược toàn bộ sóng (P âm, QRS âm, T âm), $aVR$ dương.
+6. **Bổ sung Ca mẫu thử nghiệm (Presets) vào giao diện:**
+   - Ca 6: Hội chứng Brugada Type 1 điển hình (ST cong vòm ở $V_1-V_2$, T âm sâu).
+   - Ca 7: Hội chứng QT dài (LQTS — $QTc = 526\text{ ms}$, nguy cơ cơn xoắn đỉnh).
+
+
 
 

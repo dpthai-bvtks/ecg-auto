@@ -164,3 +164,88 @@ Khi AI Vision phân tích ảnh bản ghi điện tâm đồ, kết quả phải
   "ai_summary": "Nhận định ngắn gọn bằng tiếng Việt y khoa"
 }
 ```
+
+---
+
+## VI. BỘ TIÊU CHUẨN MỞ RỘNG CẬP NHẬT TỪ BỘ MÔN TIM MẠCH ĐẠI HỌC Y HÀ NỘI & VIỆN TIM MẠCH VIỆT NAM (PGS.TS. PHẠM MẠNH HÙNG, TS. PHAN ĐÌNH PHONG)
+
+### 1. Phân loại 3 Type Hội chứng Brugada (Bệnh lý Kênh Ion SCN5A / SCN10A)
+| Đặc điểm | Type 1 (Chẩn đoán xác định) | Type 2 (Nghi ngờ) | Type 3 (Nghi ngờ) |
+|---|---|---|---|
+| **Điểm J** | $\ge 2\text{ mm}$ ($0.2\text{ mV}$) | $\ge 2\text{ mm}$ ($0.2\text{ mV}$) | $\ge 2\text{ mm}$ ($0.2\text{ mV}$) |
+| **Hình dạng đoạn ST-T** | **Cong vòm (Coved-type)**, đi dốc xuống | **Yên ngựa (Saddleback)** | **Yên ngựa (Saddleback)** |
+| **Phần kết thúc đoạn ST** | Dốc xuống hòa vào sóng T âm | Chênh lên $\ge 1\text{ mm}$ | Chênh lên $< 1\text{ mm}$ |
+| **Sóng T** | Âm sâu đối xứng | Dương hoặc 2 pha | Dương hoặc âm nhẹ |
+| **Chuyển đạo biểu hiện** | $V_1, V_2$ (hoặc $V_3$, khoang liên sườn 2–3) | $V_1, V_2$ | $V_1, V_2$ |
+| **Ý nghĩa lâm sàng** | Nguy cơ cao rung thất, đột tử do tim ở người trẻ; cần khảo sát điện sinh lý và cân nhắc cấy ICD | Cần test thuốc chẹn kênh Natri (Ajmaline/Flecainide) để bộc lộ Type 1 | Tương tự Type 2 |
+
+### 2. Tiêu chuẩn Hội chứng QT dài (LQTS) theo ESC 2015 & Viện Tim Mạch VN
+* **Cách đo:** Đo thủ công bằng thước từ khởi đầu phức bộ QRS đến điểm kết thúc sóng T (giao điểm đường tiếp tuyến sườn dốc xuống của sóng T với đường đẳng điện TP) tại $DII$ và $V_5$.
+* **Công thức Bazett:** $QTc = \frac{QT}{\sqrt{RR\text{ (giây)}}}$.
+* **Ngưỡng chẩn đoán:**
+  * Bình thường: $420 \pm 20\text{ ms}$ (trẻ em: $400 \pm 20\text{ ms}$).
+  * Kéo dài: Nam $> 470\text{ ms}$; Nữ $> 480\text{ ms}$.
+  * Chẩn đoán xác định LQTS: $QTc \ge 480\text{ ms}$ lặp lại trên nhiều bản ghi, hoặc $QTc \ge 460\text{ ms}$ kèm ngất tái phát không rõ nguyên nhân.
+  * Nguy cơ đe dọa tính mạng: $QTc > 500\text{ ms}$ có nguy cơ cao khởi phát ngoại tâm thu thất dạng $R/T$ dẫn đến **Cơn xoắn đỉnh (Torsades de Pointes)** và rung thất.
+* **3 Type di truyền thường gặp nhất:**
+  * *LQT1 (KCNQ1):* Sóng T đáy rộng, hay khởi phát khi gắng sức/bơi lội.
+  * *LQT2 (KCNH2):* Sóng T dẹt, có khấc/hai đỉnh, hay khởi phát do tiếng động giật mình.
+  * *LQT3 (SCN5A):* Đoạn ST kéo dài, sóng T nhọn muộn, hay xảy ra trong khi ngủ.
+
+### 3. Tiêu chuẩn Tăng gánh (Phì đại) Buồng tim Bổ sung
+* **Dày nhĩ trái (P hai lá):**
+  * Sóng P rộng $> 100 - 120\text{ ms}$, có 2 đỉnh hoặc chẻ đôi ở $DII, DI, V_5, V_6$ (đỉnh sau lớn hơn đỉnh trước).
+  * Biên độ sóng P ở $DI > DIII$.
+  * Chuyển đạo $V_1$: Sóng P hai pha với pha âm rộng $\ge 0.04\text{ s}$ và sâu $\ge 1\text{ mm}$ (Chỉ số Morris).
+* **Dày nhĩ phải (P phế):**
+  * Sóng P cao nhọn đối xứng $\ge 2.5\text{ mm}$ ở $DII, DIII, aVF$. Thời gian sóng P bình thường ($< 120\text{ ms}$).
+  * Chuyển đạo $V_1$: Pha dương cao $> 1.5\text{ mm}$.
+* **Dày thất trái - Bổ sung Tiêu chuẩn Cornell:**
+  * Nam: $R_{aVL} + S_{V3} > 28\text{ mm}$ ($2.8\text{ mV}$).
+  * Nữ: $R_{aVL} + S_{V3} > 20\text{ mm}$ ($2.0\text{ mV}$).
+  * Điểm Romhilt-Estes $\ge 5$ điểm: Chẩn đoán xác định dày thất trái.
+* **Dày thất phải:**
+  * $R/S$ ở $V_1 > 1$, $R_{V1} \ge 7\text{ mm}$, $S_{V5/V6} \ge 7\text{ mm}$.
+  * Sokolow-Lyon phải: $R_{V1} + S_{V5/V6} > 10.5\text{ mm}$.
+  * Trục tim lệch phải $> +110^\circ$.
+
+### 4. Sơ đồ 4 Bước Brugada Phân biệt Cơn Tim Nhanh QRS Rộng (VT vs SVT Lệch Hướng)
+1. **Bước 1:** Có sự vắng mặt hoàn toàn của dạng phức bộ $RS$ ở tất cả các chuyển đạo trước tim $V_1 - V_6$ không?
+   * *Nếu CÓ:* Kết luận **Nhịp nhanh thất (VT)** (độ đặc hiệu $100\%$).
+   * *Nếu KHÔNG:* Chuyển sang Bước 2.
+2. **Bước 2:** Khoảng cách từ đầu sóng R đến đáy sóng S (RS interval) $> 100\text{ ms}$ ở bất kỳ chuyển đạo trước tim nào không?
+   * *Nếu CÓ:* Kết luận **Nhịp nhanh thất (VT)**.
+   * *Nếu KHÔNG:* Chuyển sang Bước 3.
+3. **Bước 3:** Có hiện tượng **Phân ly nhĩ - thất (AV Dissociation)**, nhát bắt được thất (Capture beat) hoặc nhát bóp hỗn hợp (Fusion beat) không?
+   * *Nếu CÓ:* Kết luận **Nhịp nhanh thất (VT)**.
+   * *Nếu KHÔNG:* Chuyển sang Bước 4.
+4. **Bước 4:** Có tiêu chuẩn hình thái kinh điển của VT ở $V_1/V_2$ và $V_6$ không? (Dạng LBBB với $R_{V1} > 30\text{ ms}$, sườn dốc xuống của S có khấc; Dạng RBBB với sóng R đơn pha hoặc $qR$ ở $V_1$, $R/S < 1$ ở $V_6$).
+   * *Nếu CÓ:* Kết luận **Nhịp nhanh thất (VT)**.
+   * *Nếu KHÔNG:* Kết luận **Cơn nhịp nhanh trên thất dẫn truyền lệch hướng (SVT with aberrancy)**.
+
+### 5. Dấu hiệu Nhận biết Mắc Lộn Điện Cực Chi (Limb Lead Reversals)
+* **Đảo ngược Tay Phải / Tay Trái (RA - LA):**
+  * Chuyển đạo $DI$: Toàn bộ các sóng đảo ngược hoàn toàn (P âm, QRS âm, T âm).
+  * Chuyển đạo $aVR$ trở nên dương; $aVR$ và $aVL$ hoán đổi cho nhau.
+  * Chuyển đạo $DII$ và $DIII$ hoán đổi cho nhau.
+  * Các chuyển đạo trước tim $V_1-V_6$ hoàn toàn bình thường (giúp loại trừ đảo ngược phủ tạng Dextrocardia).
+* **Đảo ngược Tay Phải / Chân Trái (RA - LL):**
+  * $DII$ đảo ngược hoàn toàn; $DI$ và $DIII$ hoán đổi và đảo chiều.
+
+### 6. Các Giai đoạn Biến đổi Điện giải
+* **Tăng Kali máu (Hyperkalemia):**
+  * *Nhẹ ($5.5 - 6.5\text{ mmol/L}$):* Sóng T cao nhọn đối xứng, hẹp đáy (hình lều).
+  * *Vừa ($6.5 - 8.0\text{ mmol/L}$):* Sóng P dẹt dần, khoảng PR kéo dài, QRS bắt đầu giãn rộng, nhịp chậm xoang/bộ nối.
+  * *Nặng ($> 8.0\text{ mmol/L}$):* Sóng P biến mất, QRS giãn rộng hòa lẫn sóng T tạo thành **sóng hình sin (Sine wave pattern)** $\rightarrow$ Nguy cơ ngừng tim/rung thất tức thì.
+* **Hạ Kali máu (Hypokalemia):**
+  * Sóng T dẹt dần hoặc âm, xuất hiện **sóng U** nhô cao (biên độ $U > T$ ở $V_2-V_4$), đoạn ST chênh xuống nhẹ, khoảng $QU$ kéo dài (dễ nhầm với QT kéo dài).
+* **Rối loạn Canxi máu:**
+  * *Hạ Canxi máu:* Khoảng ST kéo dài dẫn đến QT kéo dài (sóng T hình thái bình thường).
+  * *Tăng Canxi máu:* Đoạn ST bị rút ngắn hoặc biến mất hoàn toàn dẫn đến QT ngắn.
+
+### 7. Điện tâm đồ ở Bệnh nhân Mang Máy Tạo Nhịp Tim (Pacemaker)
+* **Spike tạo nhịp:** Nhát bóp máy tạo nhịp đặc trưng bởi một vạch điện thế thẳng đứng, rất hẹp ($1-2\text{ ms}$) xuất hiện ngay trước sóng khử cực.
+* **Tạo nhịp nhĩ (A-pacing):** Spike đi ngay trước sóng P.
+* **Tạo nhịp thất (V-pacing):** Spike đi ngay trước phức bộ QRS. Do dây điện cực thường đặt tại mỏm thất phải, phức bộ QRS khử cực bất thường sẽ có dạng **giãn rộng giống Block nhánh trái (LBBB)** với trục lệch trái.
+* **Tạo nhịp hai buồng (DDD):** Có 2 spike liên tiếp (1 trước P và 1 trước QRS).
+

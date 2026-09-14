@@ -12,12 +12,14 @@
    - Tự động điền dữ liệu (Auto-fill) vào form và hiển thị chẩn đoán phân biệt cùng phác đồ xử trí gợi ý ngay lập tức.
 2. **Kính soi bản ghi ECG tương tác (Interactive Viewer):**
    - Phóng to/thu nhỏ (lên đến 600%), xoay 90°, kéo rê chuột hoặc vuốt cảm ứng để soi chi tiết từng ô ly $1\text{ mm}$ ($0.04\text{ s} / 0.1\text{ mV}$) và dải sóng.
-3. **Thư viện 5 ca lâm sàng mẫu (Demo Presets):**
+3. **Thư viện 7 ca lâm sàng mẫu (Demo Presets):**
    - Ca 1: Nhồi máu cơ tim cấp thành dưới (STEMI DII, DIII, aVF).
    - Ca 2: Rung nhĩ đáp ứng thất nhanh (AFib with RVR).
    - Ca 3: Hội chứng tiền kích thích Wolff–Parkinson–White (WPW).
    - Ca 4: Block nhĩ thất độ III (phân ly nhĩ thất).
    - Ca 5: Tăng Kali máu nặng (sóng T cao nhọn, QRS giãn rộng, mất P).
+   - Ca 6: Hội chứng Brugada Type 1 điển hình (ST vòm coved-type ở V1-V2, T âm - ĐH Y Hà Nội).
+   - Ca 7: Hội chứng QT dài (LQTS — QTc kéo dài 526ms, nguy cơ xoắn đỉnh).
 4. **Tiện ích lâm sàng:**
    - **Tính song song QTc:** Tính cả công thức Bazett và Fridericia (chuẩn ACC/AHA).
    - **Định hướng trục nhanh:** Dựa theo chiều sóng DI và aVF.
@@ -31,11 +33,15 @@
 ## 📂 Danh mục tài liệu trong kho lưu trữ
 
 - `index.html`: Ứng dụng web chính hoàn chỉnh (chỉ cần mở trực tiếp bằng trình duyệt hoặc chạy qua GitHub Pages).
-- `rules.md`: Toàn bộ bộ quy tắc và tiêu chuẩn đọc điện tim chuẩn hóa theo GS. Trần Đỗ Trinh và schema JSON AI Vision.
+- `rules.md`: Toàn bộ bộ quy tắc và tiêu chuẩn đọc điện tim chuẩn hóa theo GS. Trần Đỗ Trinh, Bộ môn Tim mạch ĐH Y Hà Nội & Viện Tim mạch VN (PGS.TS. Phạm Mạnh Hùng, TS. Phan Đình Phong).
 - `PM-ECG.md`: Toàn bộ lịch sử trao đổi, tiến trình thực hiện và tài liệu dự án.
+- `4.-Bai-giang-dien-tam-do.pdf`: Sách Bài giảng Điện tâm đồ - PGS.TS.BS. Phạm Mạnh Hùng & TS.BSNT. Phan Đình Phong (ĐH Y Hà Nội / Viện Tim Mạch VN).
+- `Đọc điện tâm đồ dễ hơn.pdf`: Chuyên khảo 147 trang với 220 chuyên mục kỹ thuật đo, lỗi đảo cực và bệnh lý tim mạch.
+- `bai-giang-dien-tam-do-vieclamvui.pdf` / `.pptx`: Bài giảng Điện tâm đồ bình thường & bệnh lý - ThS.BS. Nguyễn Anh Tuấn & ThS.BS. Phan Đình Phong.
 - `huong-dan-doc-ecg.pdf`: Sách Hướng dẫn đọc điện tim của GS. Trần Đỗ Trinh.
 - `PDF-Huong-dan-doc-dien-tim-nhathuocngocanh.pdf`: Sách Hướng dẫn đọc điện tim (Tái bản lần thứ 10) - GS. Trần Đỗ Trinh & ThS. Trần Văn Đồng.
 - `Thực Hành Đọc Điện Tim.pdf`: Tuyển tập ca lâm sàng và bản ghi điện tim thực hành.
+- `CLS ECG.pdf`, `Sổ tay điện tâm đồ.pdf`, `Điện Tâm Đồ Trong Thực Hành Lâm Sàng.pdf`: Tuyển tập ca lâm sàng thực hành.
 
 ---
 

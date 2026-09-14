@@ -301,6 +301,8 @@
               <option value="wpw">Ca 3: Hội chứng tiền kích thích Wolff-Parkinson-White (WPW)</option>
               <option value="avb3">Ca 4: Block nhĩ thất độ III (phân ly nhĩ thất)</option>
               <option value="hyperk">Ca 5: Tăng Kali máu nặng (T cao nhọn, QRS rộng)</option>
+              <option value="brugada_t1">Ca 6: Hội chứng Brugada Type 1 (ST vòm dốc xuống V1-V2 — ĐH Y Hà Nội)</option>
+              <option value="lqts_torsade">Ca 7: Hội chứng QT dài (LQTS — QTc 510ms, nguy cơ xoắn đỉnh)</option>
             </select>
           </div>
         </div>
@@ -874,7 +876,40 @@
       },
       sV1: 15, rV56: 10, rAvl: 8, rV1: 4,
       special: 'hyperk',
+      clinical_reasoning: '1. Sóng P dẹt và hầu như tiêu biến ở các chuyển đạo.\n2. Phức bộ QRS giãn rộng 145ms với trục vô định.\n3. Sóng T cao nhọn, đối xứng hình lều, đáy hẹp ở V2-V5 (biên độ > 10mm).\n4. Đối chiếu tiêu chuẩn Viện Tim Mạch VN: Hình ảnh tăng Kali máu giai đoạn nặng (> 7.5 mmol/L). Nguy cơ chuyển sang sóng hình sin và rung thất rất cao. Chỉ định cấp cứu: Canxi tiêm tĩnh mạch, Insulin + Glucose, khí dung Albuterol và lọc máu khẩn.',
       ai_summary: 'Sóng T cao nhọn, đáy hẹp, đối xứng hình lều ở hầu hết các chuyển đạo trước tim (V2-V5). Phức bộ QRS giãn rộng 145ms, sóng P dẹt/mất. Hình ảnh kinh điển của tăng Kali máu nặng đe dọa ngừng tim.'
+    },
+    brugada_t1: {
+      hr: 72, pWave: 'normal', pr: 160, rhythm: 'regular',
+      wenckebach: false, fixedRatio: false, dissociation: false,
+      qrs: 96, v1shape: 'rsr', v6shape: 'normal', axis: 40,
+      qt: 380, sex: 'nam',
+      regions: {
+        inf: { st: 'none', t: 'none', q: false },
+        sept: { st: 'elevation', t: 'inverted', q: false },
+        ant: { st: 'none', t: 'none', q: false },
+        lat: { st: 'none', t: 'none', q: false }
+      },
+      sV1: 8, rV56: 16, rAvl: 5, rV1: 4,
+      special: 'brugada',
+      clinical_reasoning: '1. Nhịp xoang đều 72 l/p, PR 160ms bình thường.\n2. Chuyển đạo V1-V2: Điểm J chênh lên >= 2mm (đo được 3.5mm), đoạn ST chênh lên dạng vòm (coved-type) đi dốc xuống liên tục hòa vào sóng T âm sâu đối xứng.\n3. Đối chiếu Bảng 1 - Tiêu chuẩn Brugada (Giáo trình ĐH Y Hà Nội / Viện Tim Mạch VN): Đạt tiêu chuẩn chẩn đoán xác định Hội chứng Brugada Type 1.\n4. Đánh giá nguy cơ: Nguy cơ cao rung thất kịch phát và đột tử do tim ở nam giới trẻ tuổi. Đề nghị chỉ định khảo sát điện sinh lý và cân nhắc cấy máy phá rung tự động (ICD).',
+      ai_summary: 'Hội chứng Brugada Type 1 điển hình: ST chênh lên dạng cong vòm (coved-type) >2mm ở V1-V2 tiếp nối bằng sóng T âm sâu. Bệnh lý kênh Natri có nguy cơ đột tử tim mạch cao.'
+    },
+    lqts_torsade: {
+      hr: 64, pWave: 'normal', pr: 170, rhythm: 'regular',
+      wenckebach: false, fixedRatio: false, dissociation: false,
+      qrs: 88, v1shape: 'normal', v6shape: 'normal', axis: 60,
+      qt: 510, sex: 'nu',
+      regions: {
+        inf: { st: 'none', t: 'none', q: false },
+        sept: { st: 'none', t: 'none', q: false },
+        ant: { st: 'none', t: 'none', q: false },
+        lat: { st: 'none', t: 'none', q: false }
+      },
+      sV1: 9, rV56: 18, rAvl: 4, rV1: 3,
+      special: 'none',
+      clinical_reasoning: '1. Nhịp xoang đều 64 l/p, PR 170ms, QRS hẹp 88ms.\n2. Khoảng QT đo thủ công tại DII và V5 là 510ms. Tần số 64 l/p (RR = 0.94s) -> QTc tính theo công thức Bazett là 526ms.\n3. Đối chiếu tiêu chuẩn ESC 2015 / Viện Tim Mạch VN: QTc > 480ms ở nữ (vượt ngưỡng 500ms đe dọa tính mạng). Thuộc nhóm nguy cơ rất cao khởi phát ngoại tâm thu thất dạng R/T dẫn đến Cơn xoắn đỉnh (Torsades de Pointes) và rung thất.\n4. Khuyến nghị: Rà soát ngay các thuốc đang sử dụng (Amiodarone, Quinolone, hướng thần...), xét nghiệm ion đồ (K+, Mg2+, Ca2+), tránh vận động gắng sức mạnh.',
+      ai_summary: 'Khoảng QT kéo dài rõ rệt (QT = 510ms, QTc Bazett = 526ms vượt ngưỡng báo động 500ms). Nguy cơ cao biến cố xoắn đỉnh và ngất, nghi ngờ Hội chứng QT dài (LQTS).'
     }
   };
 
@@ -1097,25 +1132,38 @@
     if(sp) sp.style.display = type==='loading' ? 'block' : 'none';
   }
 
-  // System Prompt strictly based on GS. Tran Do Trinh & ThS. Tran Van Dong
+  // System Prompt based on GS. Tran Do Trinh, ThS. Tran Van Dong & Hanoi Medical University guidelines (PGS.TS. Pham Manh Hung, TS. Phan Dinh Phong)
   const ECG_AI_SYSTEM_PROMPT = `
-Bạn là chuyên gia phân tích điện tâm đồ (ECG) hàng đầu, áp dụng nghiêm ngặt quy trình và tiêu chuẩn kinh điển của GS.TS. Trần Đỗ Trinh (Nguyên Viện trưởng Viện Tim mạch học Việt Nam) và ThS. Trần Văn Đồng.
+Bạn là chuyên gia phân tích điện tâm đồ (ECG) hàng đầu, áp dụng nghiêm ngặt quy trình chẩn đoán kinh điển của GS.TS. Trần Đỗ Trinh, ThS. Trần Văn Đồng cùng bộ tiêu chuẩn cập nhật của Bộ môn Tim mạch - Trường Đại học Y Hà Nội & Viện Tim mạch Việt Nam (PGS.TS. Phạm Mạnh Hùng, TS. Phan Đình Phong).
 
 Nhiệm vụ: Phân tích toàn diện ảnh chụp bản ghi điện tâm đồ 12 chuyển đạo tiêu chuẩn.
 1. ĐỌC THÔNG SỐ IN SẴN (HEADER OCR):
-   - Tìm các chỉ số do máy in ở góc trên hoặc rìa: Vent. Rate (HR), PR/PQ interval (ms), QRS duration (ms), QT/QTc (ms), Trục P-QRS-T (degrees). Nếu có, lấy giá trị này với độ tin cậy cao.
-2. QUAN SÁT HÌNH THÁI SÓNG 12 CHUYỂN ĐẠO (ĐỐI CHIẾU TIÊU CHUẨN GS. TRẦN ĐỖ TRINH):
-   - Nhịp: Nhịp xoang hay không, đều hay không đều, sóng P (bình thường, P phế nhọn cao >=2.5mm, P hai pha âm rộng >=0.04s, hoặc mất P thay bằng sóng lăn tăn f trong rung nhĩ, răng cưa F trong cuồng nhĩ).
-   - Khoảng PR: bình thường 120-200ms, ngắn <120ms (nghi WPW), dài >200ms (Block AV I), Wenckebach (PR dài dần rớt QRS), tỷ lệ cố định 2:1/3:1, phân ly nhĩ thất (Block AV III).
-   - QRS: độ rộng (bình thường <100-110ms, rộng >=120ms). Hình dạng V1: rSR' (Block nhánh phải - RBBB), QS/rS rộng (Block nhánh trái - LBBB). Hình dạng V6: S rộng khấc (RBBB) hoặc R rộng khấc (LBBB). Trục QRS: góc alpha từ -180 đến +180 độ.
-   - Khoảng QT: đo thời gian QT tính bằng ms.
-   - Đoạn ST, sóng T và Q hoại tử theo 4 vùng:
-     + Thành dưới (II, III, aVF): ST chênh lên/xuống, T đảo ngược/cao nhọn, Q hoại tử (rộng >=0.04s hoặc sâu >=25% R).
-     + Vách / trước vách (V1, V2): ST, T, Q.
-     + Trước rộng / trước mỏm (V3, V4): ST, T, Q.
-     + Thành bên (I, aVL, V5, V6): ST, T, Q.
-   - Phì đại buồng tim (Sokolow-Lyon): S(V1) mm, R(V5/V6) mm, R(aVL) mm, R(V1) mm.
-   - Dấu hiệu đặc biệt: sóng Delta (WPW), Brugada dạng vòm V1-V3, viêm màng ngoài tim (ST chênh lan tỏa lõm), tăng Kali (T cao nhọn, QRS rộng, mất P), Digoxin (ST đáy chén), Epsilon, Osborn.
+   - Tìm các chỉ số do máy in ở góc trên hoặc rìa: Vent. Rate (HR), PR/PQ interval (ms), QRS duration (ms), QT/QTc (ms), Trục P-QRS-T (degrees). Lấy giá trị này đối chiếu kiểm tra.
+2. PHÂN TÍCH THEO QUY TRÌNH HỆ THỐNG:
+   - Kỹ thuật & Điện cực: Kiểm tra test milivolt (10mm/mV, 25mm/s), kiểm tra mắc ngược điện cực chi (nếu DI âm toàn bộ cả P, QRS, T và aVR dương -> nghi mắc lộn tay phải/tay trái RA-LA).
+   - Nhịp: Nhịp xoang (P dương ở DI, DII, aVF, V4-V6; âm ở aVR) hay không, đều hay loạn nhịp (rung nhĩ sóng f lăn tăn, cuồng nhĩ sóng F răng cưa tần số 250-350 l/p, ngoại tâm thu nhĩ/thất).
+   - Sóng P (Tăng gánh nhĩ):
+     + Dày nhĩ trái (P hai lá): P rộng > 100-120ms chẻ đôi 2 đỉnh (đỉnh sau > đỉnh trước) ở DII/DI/V5/V6, biên độ DI > DIII; V1 có pha âm rộng >= 0.04s, sâu >= 1mm (Chỉ số Morris).
+     + Dày nhĩ phải (P phế): P cao nhọn đối xứng >= 2.5mm ở DII, DIII, aVF; V1 pha dương cao > 1.5mm.
+   - Khoảng PR: Bình thường 120-200ms; Ngắn < 120ms (nghi WPW với sóng Delta); Dài > 200ms (Block AV I); Wenckebach (PR dài dần rồi rớt QRS); Mobitz II; Phân ly nhĩ thất (Block AV III).
+   - Phức bộ QRS & Dẫn truyền:
+     + Độ rộng bình thường 60-100ms; giãn rộng >= 120ms.
+     + V1: rSR' (tai thỏ - RBBB); QS hoặc rS rộng sâu (LBBB). V6: S rộng khấc (RBBB) hoặc R rộng đơn pha có khấc (LBBB).
+     + Phân biệt tim nhanh QRS rộng (Thuật toán 4 bước Brugada): vắng mặt dạng RS ở V1-V6, khoảng RS > 100ms, phân ly nhĩ thất (nhát bắt được thất/nhát bóp hỗn hợp) -> Nhịp nhanh thất (VT).
+   - Trục điện tim: Góc alpha (-180 đến +180 độ). Trục trung gian (0 đến +90), Lệch trái (-30 đến -90), Lệch phải (+90 đến +180), Vô định (-90 đến -180).
+   - Phì đại thất:
+     + Dày thất trái: Sokolow-Lyon: S(V1) + R(V5/V6) >= 35mm; Cornell: R(aVL) + S(V3) > 28mm (nam) hoặc > 20mm (nữ); R(aVL) > 11mm; Dấu hiệu strain ST-T âm ở V5-V6.
+     + Dày thất phải: R/S ở V1 > 1, R(V1) >= 7mm, Sokolow-Lyon phải: R(V1) + S(V5/V6) > 10.5mm, trục lệch phải > +110 độ.
+   - Khoảng QT & QTc (Tiêu chuẩn ESC 2015): Đo tại DII và V5. QTc Bazett = QT/căn(RR). Kéo dài khi > 470ms (nam) hoặc > 480ms (nữ). Nguy cơ xoắn đỉnh khi QTc > 500ms (Hội chứng QT dài - LQTS).
+   - Đoạn ST, sóng T & Q hoại tử (Định khu 4 vùng & phân giai đoạn NMCT):
+     + Dưới (II, III, aVF); Vách (V1, V2); Trước (V3, V4); Bên (I, aVL, V5, V6). Soi gương ở chuyển đạo đối diện. Sóng Q hoại tử rộng >= 0.04s hoặc sâu >= 25% R.
+   - Hội chứng & Dấu hiệu đặc biệt:
+     + Brugada Type 1: Điểm J >= 2mm, ST cong vòm (coved-type) dốc xuống hòa vào sóng T âm ở V1-V3. (Bệnh lý kênh Natri nguy cơ đột tử tim mạch).
+     + Brugada Type 2/3: ST dạng yên ngựa (saddleback).
+     + Rối loạn điện giải: Tăng Kali máu (T cao nhọn đối xứng hình lều, PR dài, P dẹt -> QRS giãn rộng hình sin); Hạ Kali máu (T dẹt, sóng U nhô cao ở V2-V4, ST chênh xuống).
+     + Viêm màng ngoài tim: ST chênh lên lan tỏa lõm (hình đáy thuyền) kèm PR chênh xuống.
+     + Ngấm Digoxin: ST lõm đáy chén. Sóng Osborn (hạ thân nhiệt). Sóng Epsilon (ARVC).
+     + Máy tạo nhịp (Pacemaker): Xuất hiện vạch spike thẳng đứng trước sóng P hoặc trước QRS.
 
 YÊU CẦU TRẢ VỀ:
 Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau, không kèm bất kỳ giải thích nào khác ngoài JSON:
