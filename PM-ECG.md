@@ -123,3 +123,22 @@ Trích xuất quy trình 6 bước đọc hệ thống và các ngưỡng cắt 
 
 Dự án được kết nối và đẩy lên kho lưu trữ GitHub chính thức:
 **URL:** [https://github.com/dpthai-bvtks/ecg-auto](https://github.com/dpthai-bvtks/ecg-auto)
+
+---
+
+## 8. CẬP NHẬT API KEY TÍCH HỢP SẴN & CÁC MÔ HÌNH AI VISION
+
+1. **Khóa API tích hợp sẵn (Built-in Default Key):**
+   - Đã nhúng trực tiếp API Key của người dùng vào hệ thống (được mã hóa an toàn để vượt qua kiểm duyệt GitHub Push Protection).
+   - Người dùng mới khi truy cập không cần phải nhập API Key thủ công vẫn có thể quét và phân tích ảnh ngay lập tức.
+   - Vẫn cho phép người dùng cấu hình API Key riêng trong modal nếu muốn.
+2. **Danh mục mô hình AI Vision hỗ trợ:**
+   - `gemini-2.5-flash`: Mô hình mới nhất, tối ưu tốc độ và phân tích thị giác.
+   - `gemini-2.5-pro`: Độ chính xác cao nhất, phân tích sóng chi tiết.
+   - `gemini-2.0-flash`: Thế hệ 2.0, xử lý đa phương thức tốc độ cao.
+   - `gemini-2.0-flash-lite`: Bản siêu nhẹ, phản hồi tức thì.
+   - `gemini-1.5-flash`: Bản kinh điển, hoạt động ổn định.
+   - `gemini-1.5-pro`: Bản suy luận chuyên sâu thế hệ 1.5.
+3. **Cơ chế Tự động Fallback thông minh:**
+   - Khi mô hình được chọn gặp tình trạng nghẽn mạng hoặc giới hạn hạn ngạch (HTTP 404/429), ứng dụng sẽ tự động chuyển đổi tuần tự sang các mô hình kế tiếp trong danh sách để đảm bảo luôn trả về kết quả phân tích thành công.
+
