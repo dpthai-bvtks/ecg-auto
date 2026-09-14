@@ -30,7 +30,7 @@
 
 ## 📂 Danh mục tài liệu trong kho lưu trữ
 
-- `ho-tro-doc-ecg.html`: Ứng dụng web chính hoàn chỉnh (chỉ cần mở trực tiếp bằng trình duyệt).
+- `index.html`: Ứng dụng web chính hoàn chỉnh (chỉ cần mở trực tiếp bằng trình duyệt hoặc chạy qua GitHub Pages).
 - `rules.md`: Toàn bộ bộ quy tắc và tiêu chuẩn đọc điện tim chuẩn hóa theo GS. Trần Đỗ Trinh và schema JSON AI Vision.
 - `PM-ECG.md`: Toàn bộ lịch sử trao đổi, tiến trình thực hiện và tài liệu dự án.
 - `huong-dan-doc-ecg.pdf`: Sách Hướng dẫn đọc điện tim của GS. Trần Đỗ Trinh.
@@ -45,7 +45,7 @@
    ```bash
    git clone https://github.com/dpthai-bvtks/ecg-auto.git
    ```
-2. Nhấp đúp chuột vào file `ho-tro-doc-ecg.html` để mở trực tiếp trên trình duyệt (Chrome, Edge, Safari, Firefox).
+2. Nhấp đúp chuột vào file `index.html` để mở trực tiếp trên trình duyệt (Chrome, Edge, Safari, Firefox).
 3. Lấy Google Gemini API Key miễn phí tại [Google AI Studio](https://aistudio.google.com/app/apikey).
 4. Bấm **"⚙️ Cài đặt API AI"** trên thanh tiêu đề ứng dụng, dán mã API Key vào và bấm **"Lưu cài đặt"**.
 5. Kéo thả ảnh điện tim vào khung hoặc bấm chọn ca mẫu để bắt đầu phân tích!

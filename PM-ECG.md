@@ -109,10 +109,10 @@ Trích xuất quy trình 6 bước đọc hệ thống và các ngưỡng cắt 
 
 | Tên file | Kích thước | Chức năng / Nội dung |
 |---|---|---|
-| `ho-tro-doc-ecg.html` | ~72 KB | Ứng dụng web chính hoàn chỉnh (Tích hợp AI Vision, Kính soi, Demo Presets, EMR copy, A4 Print). |
-| `ho-tro-doc-ecg.original.html` | ~45 KB | Bản sao lưu nguyên gốc trước khi chỉnh sửa. |
-| `rules.md` | ~8 KB | Bộ quy tắc & tiêu chuẩn đọc điện tim chuẩn hóa theo GS. Trần Đỗ Trinh và schema JSON của AI. |
-| `PM-ECG.md` | ~9 KB | Tài liệu lưu trữ toàn bộ lịch sử trao đổi, tiến trình thực hiện và tài liệu dự án. |
+| `index.html` | ~76 KB | Ứng dụng web chính hoàn chỉnh (Tích hợp AI Vision, Kính soi, Demo Presets, EMR copy, A4 Print, tương thích GitHub Pages). |
+| `rules.md` | ~11 KB | Bộ quy tắc & tiêu chuẩn đọc điện tim chuẩn hóa theo GS. Trần Đỗ Trinh và schema JSON của AI. |
+| `PM-ECG.md` | ~11 KB | Tài liệu lưu trữ toàn bộ lịch sử trao đổi, tiến trình thực hiện và tài liệu dự án. |
+| `README.md` | ~4 KB | Trang thông tin dự án và hướng dẫn sử dụng nhanh trên GitHub. |
 | `huong-dan-doc-ecg.pdf` | 4.6 MB | Tài liệu hướng dẫn đọc điện tim của GS. Trần Đỗ Trinh. |
 | `PDF-Huong-dan-doc-dien-tim-nhathuocngocanh.pdf` | 22.2 MB | Sách Hướng dẫn đọc điện tim (Tái bản lần 10) - GS. Trần Đỗ Trinh & ThS. Trần Văn Đồng. |
 | `Thực Hành Đọc Điện Tim.pdf` | 7.9 MB | Tuyển tập ca lâm sàng và bản đồ điện tim thực hành. |
