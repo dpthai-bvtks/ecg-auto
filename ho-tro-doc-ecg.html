@@ -1,0 +1,1373 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ECG Console — Hỗ trợ đọc điện tâm đồ (Tích hợp AI Vision)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #eef1ef;
+    --paper: #ffffff;
+    --ink: #142b2e;
+    --ink-soft: #4c6266;
+    --line: #d7dedb;
+    --teal: #1f6f64;
+    --teal-deep: #0f4a43;
+    --teal-light: #e6f3f0;
+    --amber: #9a6400;
+    --amber-bg: #fbf1dd;
+    --red: #a4291e;
+    --red-bg: #faeae7;
+    --green: #2c7a4b;
+    --green-bg: #eaf5ee;
+    --mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    --sans: 'IBM Plex Sans', -apple-system, 'Segoe UI', sans-serif;
+  }
+  *{ box-sizing: border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .topbar{
+    background: var(--teal-deep);
+    color: #eef6f3;
+    padding: 18px 24px 16px;
+    background-image:
+      linear-gradient(rgba(238,246,243,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(238,246,243,0.05) 1px, transparent 1px);
+    background-size: 14px 14px;
+    position: relative;
+    overflow: hidden;
+  }
+  .topbar::after{
+    content:"";
+    position:absolute; left:0; right:0; bottom:0; height:3px;
+    background: repeating-linear-gradient(90deg, #d97a63 0 6px, transparent 6px 12px);
+    opacity:.55;
+  }
+  .topbar-inner{ max-width: 1200px; margin: 0 auto; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+  .brand{ display:flex; align-items:center; gap:12px; }
+  .brand svg{ width:36px; height:36px; flex:none; }
+  .brand h1{ font-size: 19px; margin:0; font-weight:600; letter-spacing:.2px; }
+  .brand p{ margin:2px 0 0; font-size:12.5px; color:#a9c9c2; }
+  .top-actions{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .api-status-badge{
+    font-size:11.5px; font-family:var(--mono); padding:5px 9px; border-radius:20px;
+    background: rgba(255,255,255,0.12); color:#bce2d8; display:flex; align-items:center; gap:6px;
+  }
+  .api-status-badge .dot{ width:7px; height:7px; border-radius:50%; background:#88c7b8; }
+  .api-status-badge.configured .dot{ background:#38d39f; box-shadow:0 0 8px #38d39f; }
+  .btn-top{
+    background: rgba(255,255,255,0.15); color:#fff; border:1px solid rgba(255,255,255,0.25);
+    font-size:12px; font-weight:600; padding:6px 12px; border-radius:6px; cursor:pointer;
+    display:flex; align-items:center; gap:6px; transition: background .15s;
+  }
+  .btn-top:hover{ background: rgba(255,255,255,0.25); }
+
+  .wrap{ max-width: 1200px; margin: 0 auto; padding: 20px 24px 80px; display:grid; grid-template-columns: 1.35fr 1fr; gap: 20px; align-items:start; }
+  @media (max-width: 960px){ .wrap{ grid-template-columns: 1fr; } }
+
+  .card{ background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 18px 20px; margin-bottom: 16px; box-shadow:0 1px 3px rgba(0,0,0,0.02); }
+  .card h2{
+    font-size: 13.5px; margin: 0 0 14px; color: var(--teal-deep); font-weight:600;
+    display:flex; align-items:center; gap:8px; letter-spacing:.15px;
+  }
+  .card h2 .idx{
+    font-family: var(--mono); font-size:11px; color:#fff; background: var(--teal);
+    width:22px; height:22px; border-radius:6px; display:flex; align-items:center; justify-content:center; flex:none;
+  }
+
+  /* AI Card & Upload */
+  .ai-card{ border: 1.5px solid #2da695; background: linear-gradient(180deg, #f3f9f7 0%, #ffffff 120px); position:relative; }
+  .ai-card-header{ display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; }
+  .ai-badge{ font-size:11px; font-weight:700; background:#248f7f; color:#fff; padding:3px 8px; border-radius:4px; font-family:var(--mono); }
+  .upload-dropzone{
+    border: 2px dashed #9bc8bf; border-radius: 9px; padding: 20px 16px; text-align: center;
+    background: #fbfdfc; cursor: pointer; transition: all .2s; position: relative;
+  }
+  .upload-dropzone:hover, .upload-dropzone.dragover{
+    border-color: var(--teal); background: #f0f7f5;
+  }
+  .upload-icon{ width:40px; height:40px; fill:none; stroke:var(--teal); margin:0 auto 8px; stroke-width:1.8; }
+  .upload-title{ font-size:13.5px; font-weight:600; color:var(--teal-deep); margin-bottom:3px; }
+  .upload-hint{ font-size:11.5px; color:var(--ink-soft); }
+  .upload-actions{ display:flex; gap:10px; justify-content:center; margin-top:12px; flex-wrap:wrap; }
+  .upload-btn{
+    font-size:12px; font-weight:600; padding:6px 12px; border-radius:6px; border:1px solid var(--line);
+    background:#fff; color:var(--ink); cursor:pointer; display:inline-flex; align-items:center; gap:6px;
+  }
+  .upload-btn:hover{ border-color:var(--teal); color:var(--teal); }
+
+  /* Interactive Image Viewer */
+  .ecg-viewer-wrap{ margin-top: 14px; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: #1a2628; display:none; }
+  .ecg-viewer-toolbar{
+    background: #111a1b; color:#d2dedb; padding: 6px 10px; display:flex; justify-content:space-between;
+    align-items:center; font-size:12px; border-bottom: 1px solid #283739; flex-wrap:wrap; gap:8px;
+  }
+  .viewer-btns{ display:flex; gap:6px; align-items:center; }
+  .v-btn{
+    background: #233437; color:#fff; border:1px solid #3a4e52; border-radius:4px;
+    padding: 3px 8px; font-size:11px; cursor:pointer; font-family:var(--mono);
+  }
+  .v-btn:hover{ background: var(--teal); }
+  .ecg-viewport{
+    height: 260px; overflow: hidden; position: relative; cursor: grab; background-color:#162122;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .ecg-viewport:active{ cursor: grabbing; }
+  .ecg-viewport img{ max-width: 100%; max-height: 100%; transform-origin: center center; transition: transform .05s ease-out; user-select: none; }
+
+  /* AI status & notes */
+  .ai-status-bar{
+    margin-top:12px; padding:9px 12px; border-radius:7px; font-size:12.5px; display:none;
+    align-items:center; gap:8px;
+  }
+  .ai-status-bar.loading{ background:#eaf5f2; color:#185a51; border:1px solid #bfe3da; }
+  .ai-status-bar.success{ background:var(--green-bg); color:var(--green); border:1px solid #a3d9b4; }
+  .ai-status-bar.error{ background:var(--red-bg); color:var(--red); border:1px solid #f0b4ad; }
+  .spinner{
+    width:16px; height:16px; border:2px solid #bfe3da; border-top-color:var(--teal);
+    border-radius:50%; animation: spin 0.7s linear infinite; flex:none;
+  }
+  @keyframes spin{ to{ transform: rotate(360deg); } }
+
+  .ai-notes-box{
+    margin-top:12px; background:#fff; border:1px solid #b7ded5; border-left:4px solid var(--teal);
+    border-radius:6px; padding:10px 12px; font-size:12px; display:none;
+  }
+  .ai-notes-box b{ color:var(--teal-deep); }
+
+  /* Forms & fields */
+  .grid2{ display:grid; grid-template-columns: 1fr 1fr; gap: 12px 16px; }
+  .grid3{ display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px 16px; }
+  @media (max-width: 520px){ .grid3{ grid-template-columns: 1fr 1fr; } }
+
+  label.field{ display:block; font-size: 12px; }
+  label.field span.lbl{ display:block; color: var(--ink-soft); margin-bottom: 5px; font-weight:500; }
+  input[type=number], select{
+    width:100%; font-family: var(--mono); font-size: 13.5px; color: var(--ink);
+    background: #fbfcfb; border:1px solid var(--line); border-radius:6px; padding: 8px 9px;
+    transition: background-color .3s, border-color .3s;
+  }
+  select{ font-family: var(--sans); font-size:13px; }
+  input[type=number]:focus, select:focus{ outline: 2px solid var(--teal); outline-offset: 1px; border-color: var(--teal); }
+
+  /* Flash highlight when auto-filled */
+  .flash-fill{ animation: flashGreen 1.4s ease-out; }
+  @keyframes flashGreen{
+    0% { background-color: #c4ede3; border-color: #2da695; }
+    100% { background-color: #fbfcfb; border-color: var(--line); }
+  }
+
+  .radio-row, .check-row{ display:flex; gap:14px; flex-wrap:wrap; margin-top:2px; }
+  .radio-row label, .check-row label{ display:flex; align-items:center; gap:6px; font-size:13px; color: var(--ink); cursor:pointer; }
+  .region-table{ width:100%; border-collapse: collapse; font-size:12.5px; }
+  .region-table th{ text-align:left; font-weight:500; color: var(--ink-soft); padding: 4px 6px 8px; border-bottom:1px solid var(--line); }
+  .region-table td{ padding: 6px; vertical-align: middle; border-bottom:1px dashed var(--line); }
+  .region-table tr:last-child td{ border-bottom:none; }
+  .region-name{ font-weight:600; }
+  .region-leads{ font-family: var(--mono); font-size:11px; color: var(--ink-soft); display:block; }
+
+  .hint{ font-size: 11.5px; color: var(--ink-soft); margin-top: 6px; }
+
+  .btnrow{ display:flex; gap:10px; margin-top: 4px; flex-wrap:wrap; }
+  button{
+    font-family: var(--sans); font-size: 13.5px; font-weight:600; cursor:pointer;
+    border-radius: 7px; padding: 10px 16px; border:1px solid transparent;
+  }
+  button.primary{ background: var(--teal); color:#fff; }
+  button.primary:hover{ background: var(--teal-deep); }
+  button.ghost{ background: transparent; color: var(--ink-soft); border-color: var(--line); }
+  button.ghost:hover{ border-color: var(--ink-soft); color: var(--ink); }
+
+  /* Results panel */
+  .panel{ position: sticky; top: 16px; }
+  .readout{
+    background: var(--teal-deep); color:#eaf3f0; border-radius:10px; padding: 16px 18px;
+    font-family: var(--mono); font-size: 12.6px; line-height:1.75; margin-bottom:16px;
+    background-image: linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+    background-size: 12px 12px;
+  }
+  .readout .rlabel{ color:#8fb9b0; }
+  .readout .rline{ display:flex; justify-content:space-between; gap:8px; }
+
+  .findings-card h2{ margin-bottom: 10px; }
+  .finding{
+    border-radius: 8px; padding: 11px 12px; margin-bottom: 9px; font-size: 13px;
+    border-left: 4px solid var(--line);
+  }
+  .finding .ftitle{ font-weight: 600; margin-bottom:2px; }
+  .finding .ftx{ margin-top:6px; padding-top:6px; border-top:1px dashed rgba(0,0,0,0.15); font-size:12.5px; }
+  .finding .ftx b{ font-weight:600; }
+  .finding.normal{ background: var(--green-bg); border-color: var(--green); color:#1f5836; }
+  .finding.caution{ background: var(--amber-bg); border-color: var(--amber); color: #6d4a00; }
+  .finding.critical{ background: var(--red-bg); border-color: var(--red); color: #7a1e15; }
+  .finding.info{ background:#eef1ef; border-color:#9fb0ac; color: var(--ink); }
+
+  .empty-state{ font-size: 13px; color: var(--ink-soft); padding: 8px 2px; }
+  .disclaimer{
+    font-size: 11.5px; color: var(--ink-soft); border-top:1px solid var(--line);
+    margin-top: 14px; padding-top: 12px; line-height:1.45;
+  }
+
+  .footer-credit{ text-align:center; font-size:11.5px; color: var(--ink-soft); padding: 8px 24px 32px; }
+
+  /* Modal API Key */
+  .modal-overlay{
+    position: fixed; inset:0; background: rgba(10,25,27,0.55); backdrop-filter:blur(3px);
+    display:flex; align-items:center; justify-content:center; z-index:999; padding:20px;
+    opacity:0; pointer-events:none; transition: opacity .2s ease;
+  }
+  .modal-overlay.open{ opacity:1; pointer-events:auto; }
+  .modal-box{
+    background:#fff; border-radius:12px; max-width:520px; width:100%; padding:22px 24px;
+    box-shadow: 0 16px 36px rgba(0,0,0,0.18);
+  }
+  .modal-box h3{ margin:0 0 10px; font-size:16px; color:var(--teal-deep); }
+  .modal-box p{ font-size:12.5px; color:var(--ink-soft); margin:0 0 14px; line-height:1.5; }
+  .api-input-wrap{ margin-bottom:14px; }
+  .api-input-wrap input{ font-family:var(--mono); font-size:13px; padding:9px 10px; width:100%; }
+
+  /* Print Styles */
+  @media print{
+    .topbar, .ai-card, .btnrow, .modal-overlay, .footer-credit, .upload-dropzone, .ecg-viewer-wrap{ display:none !important; }
+    body{ background:#fff; color:#000; font-size:12pt; }
+    .wrap{ display:block; padding:0; }
+    .panel{ position:static; }
+    .card{ border:1px solid #ccc; box-shadow:none; break-inside:avoid; }
+    .readout{ background:#f5f5f5 !important; color:#000 !important; border:1px solid #ddd; }
+    .readout .rlabel{ color:#444; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <svg viewBox="0 0 48 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0 12 H10 L14 4 L19 20 L23 12 L26 12 L29 6 L32 12 H48" stroke="#d97a63" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+        <div>
+          <h1>ECG Console — Hỗ trợ đọc điện tâm đồ</h1>
+          <p>Chuẩn hóa theo tài liệu GS.TS. Trần Đỗ Trinh &amp; ThS. Trần Văn Đồng (Hội Tim mạch học Việt Nam)</p>
+        </div>
+      </div>
+      <div class="top-actions">
+        <div class="api-status-badge" id="apiStatusBadge">
+          <span class="dot"></span><span id="apiStatusText">Chưa có API Key</span>
+        </div>
+        <button class="btn-top" id="openApiModalBtn">⚙️ Cài đặt API AI</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <!-- LEFT COLUMN: INPUTS -->
+    <div>
+
+      <!-- CARD 0: AI VISION UPLOAD -->
+      <div class="card ai-card" id="aiCard">
+        <div class="ai-card-header">
+          <h2><span class="idx">AI</span>Nhập &amp; Phân tích ảnh chụp ECG (Vision AI)</h2>
+          <span class="ai-badge">Google Gemini Vision</span>
+        </div>
+
+        <div class="upload-dropzone" id="dropzone">
+          <svg class="upload-icon" viewBox="0 0 24 24"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div class="upload-title">Kéo &amp; thả ảnh chụp bản ghi điện tim vào đây</div>
+          <div class="upload-hint">Hỗ trợ ảnh JPEG, PNG, WEBP từ máy quét hoặc ảnh chụp điện thoại (chuyển đạo rõ nét)</div>
+          
+          <div class="upload-actions">
+            <label class="upload-btn">
+              📁 Chọn file ảnh từ máy
+              <input type="file" id="fileInput" accept="image/*" style="display:none;">
+            </label>
+            <label class="upload-btn">
+              📷 Chụp trực tiếp từ camera
+              <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none;">
+            </label>
+            <select class="upload-btn" id="presetSelect" style="padding:5px 8px; font-size:12px; font-family:var(--sans);">
+              <option value="">🧪 Nạp ca mẫu thử nghiệm (Demo)...</option>
+              <option value="stemi_inf">Ca 1: Nhồi máu cơ tim cấp thành dưới (STEMI DII, DIII, aVF)</option>
+              <option value="afib_rvr">Ca 2: Rung nhĩ đáp ứng thất nhanh (AFib RVR)</option>
+              <option value="wpw">Ca 3: Hội chứng tiền kích thích Wolff-Parkinson-White (WPW)</option>
+              <option value="avb3">Ca 4: Block nhĩ thất độ III (phân ly nhĩ thất)</option>
+              <option value="hyperk">Ca 5: Tăng Kali máu nặng (T cao nhọn, QRS rộng)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Interactive Viewer -->
+        <div class="ecg-viewer-wrap" id="ecgViewerWrap">
+          <div class="ecg-viewer-toolbar">
+            <span>Kính soi bản ghi ECG (Kéo để di chuyển • Lăn chuột để zoom)</span>
+            <div class="viewer-btns">
+              <button class="v-btn" id="zoomInBtn" title="Phóng to">+</button>
+              <button class="v-btn" id="zoomOutBtn" title="Thu nhỏ">−</button>
+              <button class="v-btn" id="rotateBtn" title="Xoay 90 độ">↻ Xoay</button>
+              <button class="v-btn" id="resetViewBtn" title="Đặt lại">⟲</button>
+              <button class="v-btn" id="removeImgBtn" title="Đóng ảnh" style="background:#552828;">✕</button>
+            </div>
+          </div>
+          <div class="ecg-viewport" id="ecgViewport">
+            <img id="ecgPreviewImg" src="" alt="ECG Preview">
+          </div>
+        </div>
+
+        <!-- Action trigger -->
+        <div style="margin-top:12px; display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+          <button class="primary" id="aiScanBtn" style="background:#178374; display:flex; align-items:center; gap:8px;">
+            ✨ Quét &amp; Tự động điền (AI Vision)
+          </button>
+          <span style="font-size:11.5px; color:var(--ink-soft);">Tự bóc tách thông số in sẵn &amp; hình thái sóng 12 chuyển đạo</span>
+        </div>
+
+        <!-- Status & Notes -->
+        <div class="ai-status-bar" id="aiStatusBar">
+          <div class="spinner"></div>
+          <span id="aiStatusMsg">Đang phân tích...</span>
+        </div>
+
+        <div class="ai-notes-box" id="aiNotesBox">
+          <div style="font-weight:600; color:var(--teal-deep); margin-bottom:4px;">🔍 Nhận định từ AI Vision:</div>
+          <div id="aiNotesText"></div>
+        </div>
+      </div>
+
+      <!-- CARD 1: SYMPTOMS -->
+      <div class="card">
+        <h2><span class="idx">1</span>Triệu chứng lâm sàng kèm theo</h2>
+        <div class="check-row">
+          <label><input type="checkbox" id="sym-chestpain"> Đau ngực</label>
+          <label><input type="checkbox" id="sym-dyspnea"> Khó thở</label>
+          <label><input type="checkbox" id="sym-palpitation"> Hồi hộp / trống ngực</label>
+          <label><input type="checkbox" id="sym-dizzy"> Chóng mặt / tiền ngất</label>
+          <label><input type="checkbox" id="sym-syncope"> Ngất</label>
+          <label><input type="checkbox" id="sym-diaphoresis"> Vã mồ hôi / buồn nôn</label>
+          <label><input type="checkbox" id="sym-edema"> Phù chân</label>
+        </div>
+        <label class="field" style="margin-top:12px; max-width:280px;">
+          <span class="lbl">Thời gian khởi phát đau ngực (nếu có)</span>
+          <select id="onsetTime">
+            <option value="none">Không đau ngực / không rõ</option>
+            <option value="lt2">Dưới 2 giờ</option>
+            <option value="2to12">2 – 12 giờ</option>
+            <option value="gt12">Trên 12 giờ</option>
+          </select>
+        </label>
+      </div>
+
+      <!-- CARD 2: RATE & RHYTHM -->
+      <div class="card">
+        <h2><span class="idx">2</span>Tần số &amp; nhịp cơ bản (Theo GS. Trần Đỗ Trinh)</h2>
+        <div class="grid3">
+          <label class="field">
+            <span class="lbl">Tần số tim (lần/phút)</span>
+            <input type="number" id="hr" placeholder="vd: 78" min="10" max="300">
+          </label>
+          <label class="field">
+            <span class="lbl">Sóng P</span>
+            <select id="pWave">
+              <option value="normal">Có, hình dạng bình thường (DII, V1)</option>
+              <option value="abnormal">Có, hình dạng bất thường (P phế, P hai pha)</option>
+              <option value="absent">Không thấy sóng P rõ (hoặc sóng f lăn tăn/F răng cưa)</option>
+            </select>
+          </label>
+          <label class="field">
+            <span class="lbl">Khoảng PR / PQ (ms) [bt: 120–200]</span>
+            <input type="number" id="pr" placeholder="vd: 160" min="0" max="600">
+          </label>
+        </div>
+        <div style="margin-top:12px;">
+          <span class="lbl" style="display:block;color:var(--ink-soft);font-size:12px;margin-bottom:6px;font-weight:500;">Tính quy luật của nhịp</span>
+          <div class="radio-row">
+            <label><input type="radio" name="rhythm" value="regular" checked> Đều</label>
+            <label><input type="radio" name="rhythm" value="irregular"> Không đều hoàn toàn</label>
+          </div>
+        </div>
+        <div style="margin-top:12px;">
+          <span class="lbl" style="display:block;color:var(--ink-soft);font-size:12px;margin-bottom:6px;font-weight:500;">Dẫn truyền nhĩ – thất bất thường</span>
+          <div class="check-row">
+            <label><input type="checkbox" id="wenckebach"> PR dài dần rồi rớt QRS (Luciani – Wenckebach)</label>
+            <label><input type="checkbox" id="fixedRatio"> Tỷ lệ P : QRS cố định &gt; 1:1 (vd 2:1, 3:1)</label>
+            <label><input type="checkbox" id="dissociation"> P và QRS phân ly hoàn toàn (Block AV độ 3)</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 3: QRS & AXIS -->
+      <div class="card">
+        <h2><span class="idx">3</span>Phức bộ QRS &amp; trục điện tim</h2>
+        <div class="grid3">
+          <label class="field">
+            <span class="lbl">Độ rộng QRS (ms) [bt: &lt;100-110]</span>
+            <input type="number" id="qrs" placeholder="vd: 92" min="0" max="300">
+          </label>
+          <label class="field">
+            <span class="lbl">Hình dạng ở V1</span>
+            <select id="v1shape">
+              <option value="normal">Bình thường (rS)</option>
+              <option value="rsr">Dạng rSR' (chữ M - Block nhánh phải)</option>
+              <option value="qswide">QS hoặc rS rộng (Block nhánh trái)</option>
+            </select>
+          </label>
+          <label class="field">
+            <span class="lbl">Hình dạng ở V6</span>
+            <select id="v6shape">
+              <option value="normal">Bình thường (qR)</option>
+              <option value="notchedS">Sóng S rộng, có khấc</option>
+              <option value="broadR">Sóng R rộng, đơn pha, có khấc</option>
+            </select>
+          </label>
+        </div>
+        <div class="grid2" style="margin-top:12px;">
+          <label class="field">
+            <span class="lbl">Trục QRS (độ, −180° → 180°)</span>
+            <input type="number" id="axis" placeholder="vd: 45" min="-180" max="180">
+          </label>
+          <label class="field">
+            <span class="lbl">Định hướng trục nhanh theo DI &amp; aVF</span>
+            <select id="axisQuickSelect">
+              <option value="custom">Nhập số độ chính xác...</option>
+              <option value="normal">DI (+), aVF (+) → Trục trung gian (0° đến +90°)</option>
+              <option value="left">DI (+), aVF (−) → Trục lệch trái (−30° đến −90°)</option>
+              <option value="right">DI (−), aVF (+) → Trục lệch phải (+90° đến +180°)</option>
+              <option value="extreme">DI (−), aVF (−) → Trục vô định (−90° đến −180°)</option>
+            </select>
+          </label>
+        </div>
+      </div>
+
+      <!-- CARD 4: QT / QTC -->
+      <div class="card">
+        <h2><span class="idx">4</span>Khoảng QT &amp; QTc</h2>
+        <div class="grid3">
+          <label class="field">
+            <span class="lbl">Khoảng QT đo được (ms)</span>
+            <input type="number" id="qt" placeholder="vd: 380" min="0" max="800">
+          </label>
+          <label class="field">
+            <span class="lbl">Giới tính bệnh nhân</span>
+            <select id="sex">
+              <option value="nam">Nam (ngưỡng bình thường &lt; 450 ms)</option>
+              <option value="nu">Nữ (ngưỡng bình thường &lt; 460 ms)</option>
+            </select>
+          </label>
+          <div class="field">
+            <span class="lbl">QTc (Bazett / Fridericia)</span>
+            <div style="font-family:var(--mono); font-size:15px; padding-top:6px; color:var(--teal-deep); font-weight:600;" id="qtcOut">—</div>
+          </div>
+        </div>
+        <p class="hint">Bazett: QTc = QT ÷ √(RR); Fridericia: QTc = QT ÷ ∛(RR) (chính xác hơn khi nhịp nhanh/chậm).</p>
+      </div>
+
+      <!-- CARD 5: ST & T & Q BY REGIONS -->
+      <div class="card">
+        <h2><span class="idx">5</span>Đoạn ST &amp; sóng T theo vùng tưới máu giải phẫu</h2>
+        <table class="region-table">
+          <thead>
+            <tr><th style="width:28%">Vùng giải phẫu</th><th>Đoạn ST</th><th>Sóng T</th><th style="width:16%">Q hoại tử</th></tr>
+          </thead>
+          <tbody id="regionBody"></tbody>
+        </table>
+        <p class="hint">Q bệnh lý (hoại tử): thời gian rộng ≥ 0,04s (1 ô nhỏ) hoặc sâu ≥ 25% biên độ sóng R cùng chuyển đạo (theo GS. Trần Đỗ Trinh).</p>
+      </div>
+
+      <!-- CARD 6: HYPERTROPHY -->
+      <div class="card">
+        <h2><span class="idx">6</span>Điện thế buồng tim (Phì đại / Dày thất)</h2>
+        <div class="grid3">
+          <label class="field">
+            <span class="lbl">S ở V1 (mm)</span>
+            <input type="number" id="sV1" placeholder="vd: 18" min="0" max="60">
+          </label>
+          <label class="field">
+            <span class="lbl">R lớn nhất ở V5/V6 (mm)</span>
+            <input type="number" id="rV56" placeholder="vd: 20" min="0" max="60">
+          </label>
+          <label class="field">
+            <span class="lbl">R ở aVL (mm)</span>
+            <input type="number" id="rAvl" placeholder="vd: 8" min="0" max="60">
+          </label>
+        </div>
+        <label class="field" style="margin-top:12px; max-width:280px;">
+          <span class="lbl">R ở V1 (mm) [≥ 7mm nghi dày thất phải]</span>
+          <input type="number" id="rV1" placeholder="vd: 4" min="0" max="60">
+        </label>
+      </div>
+
+      <!-- CARD 7: SPECIAL PATTERNS -->
+      <div class="card">
+        <h2><span class="idx">7</span>Dấu hiệu &amp; hội chứng đặc biệt</h2>
+        <select id="special">
+          <option value="none">Không có dấu hiệu đặc biệt</option>
+          <option value="wpw">Sóng Delta + PR ngắn &lt; 120ms (Hội chứng WPW)</option>
+          <option value="brugada">ST chênh lên dạng vòm coved-type ở V1–V3 (Hội chứng Brugada)</option>
+          <option value="pericarditis">ST chênh lên lan tỏa lõm + PR chênh xuống (Viêm màng ngoài tim cấp)</option>
+          <option value="hyperk">T cao nhọn đối xứng, QRS giãn rộng, mất P (Nghi tăng Kali máu)</option>
+          <option value="digoxin">ST lõm hình đáy chén (Ngấm / ngộ độc Digoxin)</option>
+          <option value="epsilon">Sóng Epsilon ở V1–V3 (Loạn sản thất phải gây loạn nhịp – ARVC)</option>
+          <option value="osborn">Sóng J / Osborn (Hạ thân nhiệt)</option>
+        </select>
+      </div>
+
+      <div class="btnrow">
+        <button class="primary" id="analyzeBtn">Phân tích kết quả</button>
+        <button class="ghost" id="copySummaryBtn">📋 Sao chép tóm tắt</button>
+        <button class="ghost" id="printBtn">🖨️ In phiếu kết quả</button>
+        <button class="ghost" id="resetBtn" style="color:var(--red);">Xóa toàn bộ</button>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN: RESULTS STICKY -->
+    <div class="panel">
+      <div class="readout" id="readout">
+        <div class="rline"><span class="rlabel">NHỊP</span><span id="rt-rhythm">—</span></div>
+        <div class="rline"><span class="rlabel">TẦN SỐ</span><span id="rt-hr">—</span></div>
+        <div class="rline"><span class="rlabel">PR / PQ</span><span id="rt-pr">—</span></div>
+        <div class="rline"><span class="rlabel">QRS</span><span id="rt-qrs">—</span></div>
+        <div class="rline"><span class="rlabel">QTc (Baz/Frid)</span><span id="rt-qtc">—</span></div>
+        <div class="rline"><span class="rlabel">TRỤC ĐIỆN TIM</span><span id="rt-axis">—</span></div>
+      </div>
+
+      <div class="card findings-card">
+        <h2>Gợi ý chẩn đoán phân biệt &amp; xử trí</h2>
+        <div id="findings"><p class="empty-state">Nhập thông số hoặc tải ảnh điện tim để nhận kết quả phân tích tự động.</p></div>
+        <div class="disclaimer">
+          Dựa trên hệ thống phân tích kinh điển của <b>GS.TS. Trần Đỗ Trinh &amp; ThS. Trần Văn Đồng</b> (Viện Tim Mạch Việt Nam) kết hợp khuyến cáo cập nhật của Hội Tim Mạch Việt Nam (VNHA).
+          Công cụ hỗ trợ định hướng, không thay thế chẩn đoán lâm sàng của bác sĩ điều trị.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-credit">
+    ECG Console — Tích hợp AI Vision đọc ảnh điện tim • Biên soạn: ThS.BSCK1 Nguyễn Hùng Trấn
+  </div>
+
+  <!-- MODAL: API KEY SETUP -->
+  <div class="modal-overlay" id="apiModal">
+    <div class="modal-box">
+      <h3>Cài đặt Google Gemini API Key (AI Vision)</h3>
+      <p>
+        Khóa API được lưu trữ trực tiếp trên trình duyệt của bạn (LocalStorage), bảo mật tuyệt đối và chỉ kết nối trực tiếp đến Google API khi bạn yêu cầu phân tích ảnh.
+      </p>
+
+      <div class="api-input-wrap">
+        <label class="field">
+          <span class="lbl">Gemini API Key:</span>
+          <input type="password" id="apiKeyInput" placeholder="Dán mã API Key dạng AIzaSy... vào đây">
+        </label>
+        <div style="margin-top:6px; display:flex; justify-content:space-between; align-items:center;">
+          <label style="font-size:12px; cursor:pointer; color:var(--ink-soft);">
+            <input type="checkbox" id="showKeyToggle"> Hiện khóa API
+          </label>
+          <a href="https://aistudio.google.com/app/apikey" target="_blank" style="font-size:12px; color:var(--teal); text-decoration:none;">
+            👉 Lấy API Key miễn phí tại Google AI Studio
+          </a>
+        </div>
+      </div>
+
+      <div class="api-input-wrap">
+        <label class="field">
+          <span class="lbl">Mô hình AI:</span>
+          <select id="modelSelect">
+            <option value="gemini-2.5-flash">Gemini 2.5 Flash (Khuyến nghị - Nhận diện nhanh &amp; chính xác)</option>
+            <option value="gemini-1.5-flash">Gemini 1.5 Flash (Tối ưu tốc độ)</option>
+            <option value="gemini-1.5-pro">Gemini 1.5 Pro (Phân tích chuyên sâu)</option>
+          </select>
+        </label>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:16px;">
+        <button class="ghost" id="closeApiModalBtn">Đóng</button>
+        <button class="primary" id="saveApiKeyBtn">Lưu cài đặt</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // REGIONS DEFINITION (According to GS. Tran Do Trinh)
+  const REGIONS = [
+    { key:'inf',  name:'Thành dưới (Sau dưới)', leads:'II, III, aVF (ĐM vành phải / mũ)' },
+    { key:'sept', name:'Vách / trước vách',     leads:'V1, V2 (LAD đoạn gần)' },
+    { key:'ant',  name:'Trước rộng / trước mỏm', leads:'V3, V4 (LAD nhánh chéo)' },
+    { key:'lat',  name:'Thành bên (Trước bên)', leads:'I, aVL, V5, V6 (ĐM mũ / LCx)' },
+  ];
+
+  const tbody = document.getElementById('regionBody');
+  REGIONS.forEach(r=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><span class="region-name">${r.name}</span><span class="region-leads">${r.leads}</span></td>
+      <td>
+        <select id="st-${r.key}">
+          <option value="none">Đẳng điện (bình thường)</option>
+          <option value="elevation">ST chênh lên</option>
+          <option value="depression">ST chênh xuống</option>
+        </select>
+      </td>
+      <td>
+        <select id="t-${r.key}">
+          <option value="none">Bình thường</option>
+          <option value="inverted">Đảo ngược (âm)</option>
+          <option value="peaked">Cao nhọn đối xứng</option>
+        </select>
+      </td>
+      <td style="text-align:center;">
+        <input type="checkbox" id="q-${r.key}" style="width:16px;height:16px;">
+      </td>`;
+    tbody.appendChild(tr);
+  });
+
+  function val(id){ const el = document.getElementById(id); return el ? (el.type==='checkbox' ? el.checked : el.value) : ''; }
+  function num(id){ const el = document.getElementById(id); if(!el) return null; const v = el.value; return v===''? null : parseFloat(v); }
+  function setVal(id, v){
+    const el = document.getElementById(id);
+    if(!el || v===undefined || v===null) return;
+    if(el.type==='checkbox') el.checked = Boolean(v);
+    else el.value = v;
+    el.classList.remove('flash-fill');
+    void el.offsetWidth; // trigger reflow
+    el.classList.add('flash-fill');
+  }
+  function radio(name){ const r = document.querySelector(`input[name="${name}"]:checked`); return r ? r.value : 'regular'; }
+  function setRadio(name, v){
+    const el = document.querySelector(`input[name="${name}"][value="${v}"]`);
+    if(el){ el.checked = true; }
+  }
+
+  // QTc Calculation (Both Bazett & Fridericia)
+  function computeQTcDetails(){
+    const hr = num('hr'); const qt = num('qt');
+    if(hr===null || qt===null || hr<=0) return null;
+    const rr = 60/hr;
+    const bazett = qt / Math.sqrt(rr);
+    const fridericia = qt / Math.cbrt(rr);
+    return { bazett, fridericia };
+  }
+
+  function updateQTcDisplay(){
+    const q = computeQTcDetails();
+    if(!q){
+      document.getElementById('qtcOut').textContent = '—';
+      document.getElementById('rt-qtc').textContent = '—';
+      return;
+    }
+    const b = Math.round(q.bazett);
+    const f = Math.round(q.fridericia);
+    document.getElementById('qtcOut').textContent = `${b} ms (Bazett) / ${f} ms (Frid)`;
+    document.getElementById('rt-qtc').textContent = `${b} / ${f} ms`;
+  }
+
+  ['hr','qt'].forEach(id=> document.getElementById(id).addEventListener('input', updateQTcDisplay));
+
+  // Quick Axis Select
+  document.getElementById('axisQuickSelect').addEventListener('change', (e)=>{
+    const m = { normal: 45, left: -45, right: 120, extreme: -135 };
+    if(m[e.target.value] !== undefined){
+      setVal('axis', m[e.target.value]);
+    }
+  });
+
+  // ==========================================
+  // IMAGE VIEWER & ZOOM/PAN ENGINE
+  // ==========================================
+  let currentImageBase64 = null;
+  let currentImageMime = 'image/jpeg';
+  let viewState = { scale: 1, x: 0, y: 0, rotation: 0 };
+  let isDragging = false, startX = 0, startY = 0;
+
+  const ecgViewport = document.getElementById('ecgViewport');
+  const ecgImg = document.getElementById('ecgPreviewImg');
+  const ecgViewerWrap = document.getElementById('ecgViewerWrap');
+
+  function updateTransform(){
+    ecgImg.style.transform = `translate(${viewState.x}px, ${viewState.y}px) rotate(${viewState.rotation}deg) scale(${viewState.scale})`;
+  }
+
+  function resetViewport(){
+    viewState = { scale: 1, x: 0, y: 0, rotation: 0 };
+    updateTransform();
+  }
+
+  document.getElementById('zoomInBtn').addEventListener('click', ()=>{ viewState.scale = Math.min(viewState.scale * 1.25, 6); updateTransform(); });
+  document.getElementById('zoomOutBtn').addEventListener('click', ()=>{ viewState.scale = Math.max(viewState.scale / 1.25, 0.4); updateTransform(); });
+  document.getElementById('rotateBtn').addEventListener('click', ()=>{ viewState.rotation = (viewState.rotation + 90) % 360; updateTransform(); });
+  document.getElementById('resetViewBtn').addEventListener('click', resetViewport);
+  document.getElementById('removeImgBtn').addEventListener('click', ()=>{
+    currentImageBase64 = null;
+    ecgImg.src = '';
+    ecgViewerWrap.style.display = 'none';
+  });
+
+  // Mouse drag to pan
+  ecgViewport.addEventListener('mousedown', (e)=>{
+    isDragging = true;
+    startX = e.clientX - viewState.x;
+    startY = e.clientY - viewState.y;
+  });
+  window.addEventListener('mousemove', (e)=>{
+    if(!isDragging) return;
+    viewState.x = e.clientX - startX;
+    viewState.y = e.clientY - startY;
+    updateTransform();
+  });
+  window.addEventListener('mouseup', ()=> isDragging = false);
+
+  // Wheel to zoom
+  ecgViewport.addEventListener('wheel', (e)=>{
+    e.preventDefault();
+    const factor = e.deltaY < 0 ? 1.15 : 0.87;
+    viewState.scale = Math.max(0.4, Math.min(viewState.scale * factor, 6));
+    updateTransform();
+  }, { passive: false });
+
+  // Load Image into Viewer
+  function loadFile(file){
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = (e)=>{
+      currentImageBase64 = e.target.result.split(',')[1];
+      currentImageMime = file.type || 'image/jpeg';
+      ecgImg.src = e.target.result;
+      ecgViewerWrap.style.display = 'block';
+      resetViewport();
+      setAiStatus('Ảnh đã sẵn sàng. Nhấn "Quét & Tự động điền" để AI phân tích.', 'loading');
+      setTimeout(()=> document.getElementById('aiStatusBar').style.display='none', 2500);
+    };
+    reader.readAsDataURL(file);
+  }
+
+  const dropzone = document.getElementById('dropzone');
+  dropzone.addEventListener('dragover', (e)=>{ e.preventDefault(); dropzone.classList.add('dragover'); });
+  dropzone.addEventListener('dragleave', ()=> dropzone.classList.remove('dragover'));
+  dropzone.addEventListener('drop', (e)=>{
+    e.preventDefault(); dropzone.classList.remove('dragover');
+    if(e.dataTransfer.files && e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
+  });
+  document.getElementById('fileInput').addEventListener('change', (e)=>{ if(e.target.files[0]) loadFile(e.target.files[0]); });
+  document.getElementById('cameraInput').addEventListener('change', (e)=>{ if(e.target.files[0]) loadFile(e.target.files[0]); });
+
+  // ==========================================
+  // PRESET CLINICAL CASES (DEMO SAMPLES)
+  // ==========================================
+  const PRESET_CASES = {
+    stemi_inf: {
+      hr: 68, pWave: 'normal', pr: 180, rhythm: 'regular',
+      wenckebach: false, fixedRatio: false, dissociation: false,
+      qrs: 88, v1shape: 'normal', v6shape: 'normal', axis: 60,
+      qt: 410, sex: 'nam',
+      regions: {
+        inf: { st: 'elevation', t: 'peaked', q: true },
+        sept: { st: 'none', t: 'none', q: false },
+        ant: { st: 'none', t: 'none', q: false },
+        lat: { st: 'depression', t: 'inverted', q: false }
+      },
+      sV1: 10, rV56: 18, rAvl: 4, rV1: 3,
+      special: 'none',
+      ai_summary: 'Bản ghi ghi nhận ST chênh lên dạng vòm (Pardee) tại DII, DIII, aVF kèm sóng Q hoại tử. Có hình ảnh ST chênh xuống soi gương rõ rệt tại DI, aVL. Phù hợp Nhồi máu cơ tim cấp thành dưới (STEMI Inferior) giai đoạn cấp (theo tiêu chuẩn GS. Trần Đỗ Trinh).'
+    },
+    afib_rvr: {
+      hr: 142, pWave: 'absent', pr: null, rhythm: 'irregular',
+      wenckebach: false, fixedRatio: false, dissociation: false,
+      qrs: 82, v1shape: 'normal', v6shape: 'normal', axis: 30,
+      qt: 310, sex: 'nu',
+      regions: {
+        inf: { st: 'none', t: 'none', q: false },
+        sept: { st: 'none', t: 'none', q: false },
+        ant: { st: 'none', t: 'none', q: false },
+        lat: { st: 'depression', t: 'none', q: false }
+      },
+      sV1: 8, rV56: 14, rAvl: 5, rV1: 2,
+      special: 'none',
+      ai_summary: 'Nhịp hoàn toàn không đều, mất hoàn toàn sóng P thay bằng sóng lăn tăn (sóng f nhỏ) ở V1. Tần số thất trung bình 142 l/p. ST chênh xuống nhẹ ở V5, V6 nghi do thiếu máu cơ tim tương đối khi nhịp quá nhanh. Chẩn đoán: Rung nhĩ đáp ứng thất nhanh (AFib with RVR).'
+    },
+    wpw: {
+      hr: 82, pWave: 'normal', pr: 98, rhythm: 'regular',
+      wenckebach: false, fixedRatio: false, dissociation: false,
+      qrs: 128, v1shape: 'rsr', v6shape: 'broadR', axis: -15,
+      qt: 400, sex: 'nam',
+      regions: {
+        inf: { st: 'none', t: 'none', q: false },
+        sept: { st: 'none', t: 'none', q: false },
+        ant: { st: 'none', t: 'none', q: false },
+        lat: { st: 'none', t: 'inverted', q: false }
+      },
+      sV1: 6, rV56: 22, rAvl: 7, rV1: 14,
+      special: 'wpw',
+      ai_summary: 'Khoảng PR rất ngắn (< 120ms, đo được ~98ms), đoạn khởi đầu phức bộ QRS trườn dốc tạo thành sóng Delta rõ ở DII, V4-V6 làm QRS giãn rộng 128ms. Sóng R cao ưu thế ở V1. Điển hình Hội chứng tiền kích thích Wolff-Parkinson-White (WPW type A).'
+    },
+    avb3: {
+      hr: 38, pWave: 'normal', pr: 340, rhythm: 'regular',
+      wenckebach: false, fixedRatio: false, dissociation: true,
+      qrs: 135, v1shape: 'qswide', v6shape: 'broadR', axis: -45,
+      qt: 540, sex: 'nam',
+      regions: {
+        inf: { st: 'none', t: 'none', q: false },
+        sept: { st: 'none', t: 'none', q: false },
+        ant: { st: 'none', t: 'none', q: false },
+        lat: { st: 'none', t: 'none', q: false }
+      },
+      sV1: 14, rV56: 12, rAvl: 6, rV1: 2,
+      special: 'none',
+      ai_summary: 'Sóng P xuất hiện đều với tần số nhĩ ~80 l/p. Phức bộ QRS tần số chậm ~38 l/p, giãn rộng. Sóng P và QRS độc lập, phân ly nhĩ-thất hoàn toàn. Chẩn đoán: Block nhĩ thất độ III (Block AV hoàn toàn, nhịp thoát thất).'
+    },
+    hyperk: {
+      hr: 58, pWave: 'absent', pr: null, rhythm: 'regular',
+      wenckebach: false, fixedRatio: false, dissociation: false,
+      qrs: 145, v1shape: 'normal', v6shape: 'broadR', axis: -60,
+      qt: 440, sex: 'nam',
+      regions: {
+        inf: { st: 'none', t: 'peaked', q: false },
+        sept: { st: 'none', t: 'peaked', q: false },
+        ant: { st: 'none', t: 'peaked', q: false },
+        lat: { st: 'none', t: 'peaked', q: false }
+      },
+      sV1: 15, rV56: 10, rAvl: 8, rV1: 4,
+      special: 'hyperk',
+      ai_summary: 'Sóng T cao nhọn, đáy hẹp, đối xứng hình lều ở hầu hết các chuyển đạo trước tim (V2-V5). Phức bộ QRS giãn rộng 145ms, sóng P dẹt/mất. Hình ảnh kinh điển của tăng Kali máu nặng đe dọa ngừng tim.'
+    }
+  };
+
+  document.getElementById('presetSelect').addEventListener('change', (e)=>{
+    const p = PRESET_CASES[e.target.value];
+    if(!p) return;
+    applyAiDataToForm(p);
+    setAiStatus(`Đã nạp thành công ca mẫu: ${e.target.options[e.target.selectedIndex].text}`, 'success');
+    analyze();
+  });
+
+  // ==========================================
+  // API KEY MANAGEMENT (LOCAL STORAGE)
+  // ==========================================
+  const modal = document.getElementById('apiModal');
+  const apiKeyInput = document.getElementById('apiKeyInput');
+  const modelSelect = document.getElementById('modelSelect');
+  const apiStatusBadge = document.getElementById('apiStatusBadge');
+  const apiStatusText = document.getElementById('apiStatusText');
+
+  function updateApiStatus(){
+    const k = localStorage.getItem('gemini_ecg_key');
+    if(k && k.trim().length > 10){
+      apiStatusBadge.classList.add('configured');
+      apiStatusText.textContent = `AI Sẵn sàng (${localStorage.getItem('gemini_ecg_model') || 'Gemini 2.5'})`;
+    } else {
+      apiStatusBadge.classList.remove('configured');
+      apiStatusText.textContent = 'Chưa có API Key';
+    }
+  }
+
+  document.getElementById('openApiModalBtn').addEventListener('click', ()=>{
+    apiKeyInput.value = localStorage.getItem('gemini_ecg_key') || '';
+    modelSelect.value = localStorage.getItem('gemini_ecg_model') || 'gemini-2.5-flash';
+    modal.classList.add('open');
+  });
+  document.getElementById('closeApiModalBtn').addEventListener('click', ()=> modal.classList.remove('open'));
+  document.getElementById('showKeyToggle').addEventListener('change', (e)=>{
+    apiKeyInput.type = e.target.checked ? 'text' : 'password';
+  });
+  document.getElementById('saveApiKeyBtn').addEventListener('click', ()=>{
+    const k = apiKeyInput.value.trim();
+    if(k){
+      localStorage.setItem('gemini_ecg_key', k);
+      localStorage.setItem('gemini_ecg_model', modelSelect.value);
+      alert('Đã lưu API Key thành công!');
+    } else {
+      localStorage.removeItem('gemini_ecg_key');
+      alert('Đã xóa API Key!');
+    }
+    updateApiStatus();
+    modal.classList.remove('open');
+  });
+
+  updateApiStatus();
+
+  // ==========================================
+  // AI VISION INTEGRATION (GEMINI API)
+  // ==========================================
+  function setAiStatus(msg, type='loading'){
+    const bar = document.getElementById('aiStatusBar');
+    const txt = document.getElementById('aiStatusMsg');
+    bar.className = `ai-status-bar ${type}`;
+    bar.style.display = 'flex';
+    txt.textContent = msg;
+    const sp = bar.querySelector('.spinner');
+    if(sp) sp.style.display = type==='loading' ? 'block' : 'none';
+  }
+
+  // System Prompt strictly based on GS. Tran Do Trinh & ThS. Tran Van Dong
+  const ECG_AI_SYSTEM_PROMPT = `
+Bạn là chuyên gia phân tích điện tâm đồ (ECG) hàng đầu, áp dụng nghiêm ngặt quy trình và tiêu chuẩn kinh điển của GS.TS. Trần Đỗ Trinh (Nguyên Viện trưởng Viện Tim mạch học Việt Nam) và ThS. Trần Văn Đồng.
+
+Nhiệm vụ: Phân tích ảnh chụp bản ghi điện tâm đồ 12 chuyển đạo tiêu chuẩn.
+1. ĐỌC THÔNG SỐ IN SẴN (HEADER OCR):
+   - Tìm các chỉ số do máy in ở góc trên hoặc rìa: Vent. Rate (HR), PR/PQ interval (ms), QRS duration (ms), QT/QTc (ms), Trục P-QRS-T (degrees). Nếu có, lấy giá trị này với độ tin cậy cao.
+2. QUAN SÁT HÌNH THÁI SÓNG 12 CHUYỂN ĐẠO (ĐỐI CHIẾU TIÊU CHUẨN GS. TRẦN ĐỖ TRINH):
+   - Nhịp: Nhịp xoang hay không, đều hay không đều, sóng P (bình thường, P phế nhọn cao >=2.5mm, P hai pha âm rộng >=0.04s, hoặc mất P thay bằng sóng lăn tăn f trong rung nhĩ, răng cưa F trong cuồng nhĩ).
+   - Khoảng PR: bình thường 120-200ms, ngắn <120ms (nghi WPW), dài >200ms (Block AV I), Wenckebach (PR dài dần rớt QRS), tỷ lệ cố định 2:1/3:1, phân ly nhĩ thất (Block AV III).
+   - QRS: độ rộng (bình thường <100-110ms, rộng >=120ms). Hình dạng V1: rSR' (Block nhánh phải - RBBB), QS/rS rộng (Block nhánh trái - LBBB). Hình dạng V6: S rộng khấc (RBBB) hoặc R rộng khấc (LBBB). Trục QRS: góc alpha từ -180 đến +180 độ.
+   - Khoảng QT: đo thời gian QT tính bằng ms.
+   - Đoạn ST, sóng T và Q hoại tử theo 4 vùng:
+     + Thành dưới (II, III, aVF): ST chênh lên/xuống, T đảo ngược/cao nhọn, Q hoại tử (rộng >=0.04s hoặc sâu >=25% R).
+     + Vách / trước vách (V1, V2): ST, T, Q.
+     + Trước rộng / trước mỏm (V3, V4): ST, T, Q.
+     + Thành bên (I, aVL, V5, V6): ST, T, Q.
+   - Phì đại buồng tim (Sokolow-Lyon): S(V1) mm, R(V5/V6) mm, R(aVL) mm, R(V1) mm.
+   - Dấu hiệu đặc biệt: sóng Delta (WPW), Brugada dạng vòm V1-V3, viêm màng ngoài tim (ST chênh lan tỏa lõm), tăng Kali (T cao nhọn, QRS rộng, mất P), Digoxin (ST đáy chén), Epsilon, Osborn.
+
+YÊU CẦU TRẢ VỀ:
+Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau, không kèm bất kỳ giải thích nào khác ngoài JSON:
+{
+  "hr": 78,
+  "pWave": "normal" | "abnormal" | "absent",
+  "pr": 160,
+  "rhythm": "regular" | "irregular",
+  "wenckebach": false,
+  "fixedRatio": false,
+  "dissociation": false,
+  "qrs": 92,
+  "v1shape": "normal" | "rsr" | "qswide",
+  "v6shape": "normal" | "notchedS" | "broadR",
+  "axis": 45,
+  "qt": 380,
+  "sex": "nam" | "nu",
+  "regions": {
+    "inf": { "st": "none" | "elevation" | "depression", "t": "none" | "inverted" | "peaked", "q": false },
+    "sept": { "st": "none" | "elevation" | "depression", "t": "none" | "inverted" | "peaked", "q": false },
+    "ant": { "st": "none" | "elevation" | "depression", "t": "none" | "inverted" | "peaked", "q": false },
+    "lat": { "st": "none" | "elevation" | "depression", "t": "none" | "inverted" | "peaked", "q": false }
+  },
+  "sV1": 12,
+  "rV56": 18,
+  "rAvl": 6,
+  "rV1": 3,
+  "special": "none" | "wpw" | "brugada" | "pericarditis" | "hyperk" | "digoxin" | "epsilon" | "osborn",
+  "ai_summary": "Tóm tắt ngắn gọn các phát hiện trên điện tâm đồ (chuẩn tiếng Việt y khoa)."
+}
+`;
+
+  async function analyzeImageWithGemini(){
+    const apiKey = localStorage.getItem('gemini_ecg_key');
+    if(!apiKey){
+      modal.classList.add('open');
+      setAiStatus('Vui lòng nhập API Key Google Gemini để sử dụng tính năng đọc ảnh.', 'error');
+      return;
+    }
+    if(!currentImageBase64){
+      setAiStatus('Vui lòng chọn hoặc chụp ảnh điện tim trước khi quét!', 'error');
+      return;
+    }
+
+    const model = localStorage.getItem('gemini_ecg_model') || 'gemini-2.5-flash';
+    setAiStatus(`Đang kết nối Gemini Vision (${model})... Đang đọc thông số và phân tích 12 chuyển đạo...`, 'loading');
+
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+    const payload = {
+      contents: [
+        {
+          parts: [
+            { text: ECG_AI_SYSTEM_PROMPT },
+            {
+              inline_data: {
+                mime_type: currentImageMime,
+                data: currentImageBase64
+              }
+            }
+          ]
+        }
+      ],
+      generationConfig: {
+        temperature: 0.1,
+        response_mime_type: "application/json"
+      }
+    };
+
+    try {
+      const resp = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if(!resp.ok){
+        const errJson = await resp.json().catch(()=>({}));
+        throw new Error(errJson.error?.message || `HTTP ${resp.status}: Lỗi máy chủ Gemini`);
+      }
+
+      const resData = await resp.json();
+      const textResult = resData.candidates?.[0]?.content?.parts?.[0]?.text;
+      if(!textResult) throw new Error('Không nhận được nội dung trả về từ AI.');
+
+      // Parse JSON from result
+      let cleanJson = textResult.trim();
+      if(cleanJson.startsWith('```json')) cleanJson = cleanJson.replace(/^```json/, '').replace(/```$/, '').trim();
+      else if(cleanJson.startsWith('```')) cleanJson = cleanJson.replace(/^```/, '').replace(/```$/, '').trim();
+
+      const parsed = JSON.parse(cleanJson);
+      applyAiDataToForm(parsed);
+      setAiStatus('Phân tích thành công! Các thông số đã được tự động điền.', 'success');
+      analyze(); // run clinical diagnosis logic
+    } catch(err){
+      console.error('Gemini Vision Error:', err);
+      setAiStatus(`Lỗi phân tích: ${err.message}`, 'error');
+    }
+  }
+
+  function applyAiDataToForm(data){
+    if(data.hr !== undefined) setVal('hr', data.hr);
+    if(data.pWave) setVal('pWave', data.pWave);
+    if(data.pr !== undefined) setVal('pr', data.pr);
+    if(data.rhythm) setRadio('rhythm', data.rhythm);
+    if(data.wenckebach !== undefined) setVal('wenckebach', data.wenckebach);
+    if(data.fixedRatio !== undefined) setVal('fixedRatio', data.fixedRatio);
+    if(data.dissociation !== undefined) setVal('dissociation', data.dissociation);
+    if(data.qrs !== undefined) setVal('qrs', data.qrs);
+    if(data.v1shape) setVal('v1shape', data.v1shape);
+    if(data.v6shape) setVal('v6shape', data.v6shape);
+    if(data.axis !== undefined) setVal('axis', data.axis);
+    if(data.qt !== undefined) setVal('qt', data.qt);
+    if(data.sex) setVal('sex', data.sex);
+
+    if(data.regions){
+      REGIONS.forEach(r=>{
+        const regData = data.regions[r.key];
+        if(regData){
+          if(regData.st) setVal(`st-${r.key}`, regData.st);
+          if(regData.t) setVal(`t-${r.key}`, regData.t);
+          if(regData.q !== undefined) setVal(`q-${r.key}`, regData.q);
+        }
+      });
+    }
+
+    if(data.sV1 !== undefined) setVal('sV1', data.sV1);
+    if(data.rV56 !== undefined) setVal('rV56', data.rV56);
+    if(data.rAvl !== undefined) setVal('rAvl', data.rAvl);
+    if(data.rV1 !== undefined) setVal('rV1', data.rV1);
+    if(data.special) setVal('special', data.special);
+
+    updateQTcDisplay();
+
+    // Show AI Notes
+    const notesBox = document.getElementById('aiNotesBox');
+    const notesTxt = document.getElementById('aiNotesText');
+    if(data.ai_summary){
+      notesTxt.innerHTML = data.ai_summary;
+      notesBox.style.display = 'block';
+    } else {
+      notesBox.style.display = 'none';
+    }
+  }
+
+  document.getElementById('aiScanBtn').addEventListener('click', analyzeImageWithGemini);
+
+  // ==========================================
+  // CLINICAL ANALYSIS LOGIC (GS. TRAN DO TRINH)
+  // ==========================================
+  function addFinding(list, level, title, text, tx){
+    list.push({level, title, text, tx});
+  }
+
+  function analyze(){
+    const hr = num('hr');
+    const pWave = val('pWave');
+    const pr = num('pr');
+    const rhythm = radio('rhythm');
+    const wenckebach = val('wenckebach');
+    const fixedRatio = val('fixedRatio');
+    const dissociation = val('dissociation');
+    const qrs = num('qrs');
+    const v1shape = val('v1shape');
+    const v6shape = val('v6shape');
+    const axis = num('axis');
+    const qt = num('qt');
+    const sex = val('sex');
+    const sV1 = num('sV1'), rV56 = num('rV56'), rAvl = num('rAvl'), rV1 = num('rV1');
+    const special = val('special');
+    const qtcDet = computeQTcDetails();
+    const qtc = qtcDet ? qtcDet.bazett : null;
+
+    const symChestPain = val('sym-chestpain');
+    const symDyspnea = val('sym-dyspnea');
+    const symPalpitation = val('sym-palpitation');
+    const symDizzy = val('sym-dizzy');
+    const symSyncope = val('sym-syncope');
+    const symDiaphoresis = val('sym-diaphoresis');
+    const onset = val('onsetTime');
+    const onsetLabel = { none:'không rõ / không đau ngực', lt2:'dưới 2 giờ', '2to12':'2–12 giờ', gt12:'trên 12 giờ' }[onset];
+
+    const findings = [];
+
+    // Rate wording
+    let rateWord = '—';
+    if(hr!==null){
+      rateWord = hr<60 ? 'chậm' : (hr>100 ? 'nhanh' : 'bình thường');
+    }
+
+    // 1. Rate & Rhythm
+    if(hr!==null && rhythm==='regular' && pWave==='normal' && !dissociation && !fixedRatio){
+      if(hr>=60 && hr<=100) addFinding(findings,'normal','Nhịp xoang bình thường', `Tần số ${hr} lần/phút, đều, sóng P đi trước mỗi phức bộ QRS với khoảng PR ổn định.`);
+      else if(hr<60){
+        const symptomatic = symDizzy || symSyncope;
+        addFinding(findings,'caution','Nhịp chậm xoang (Sinus Bradycardia)', `Tần số ${hr} lần/phút.${symptomatic ? ' Kèm triệu chứng chóng mặt / tiền ngất trên lâm sàng.' : ' Cần đánh giá nguyên nhân (thuốc làm chậm nhịp, vận động viên, suy nút xoang).'}`,
+          symptomatic ? 'Atropine 0,5mg TM mỗi 3–5 phút (tối đa 3mg); nếu không đáp ứng, chuẩn bị tạo nhịp qua da hoặc truyền Dopamine/Adrenaline. Ngừng ngay các thuốc làm chậm nhịp (chẹn beta, chẹn kênh calci non-DHP, Digoxin).' : undefined);
+      }
+      else addFinding(findings,'caution','Nhịp nhanh xoang (Sinus Tachycardia)', `Tần số ${hr} lần/phút. Cần tìm nguyên nhân: đau ngực, sốt, thiếu máu, cường giáp, giảm thể tích tuần hoàn, suy tim sung huyết hoặc thuốc kích thích.`, 'Điều trị theo nguyên nhân nền; không sử dụng thuốc giảm nhịp máy móc khi chưa giải quyết yếu tố thúc đẩy.');
+    }
+
+    if(rhythm==='irregular' && pWave==='absent'){
+      const unstable = symDyspnea || symChestPain || symSyncope;
+      addFinding(findings,'critical','Nghi Rung nhĩ (Atrial Fibrillation)', `Nhịp thất không đều hoàn toàn, mất sóng P thay thế bằng sóng f nhỏ lăn tăn.${unstable ? ' Kèm triệu chứng đau ngực/khó thở/ngất gợi ý huyết động không ổn định.' : ''} Cần đánh giá đáp ứng tần số thất, nguy cơ huyết khối tắc mạch (CHA₂DS₂-VASc) và nguy cơ chảy máu (HAS-BLED).`,
+        unstable
+          ? 'Huyết động không ổn định (tụt huyết áp, đau ngực thiếu máu cục bộ, phù phổi cấp): Chỉ định SỐC ĐIỆN CHUYỂN NHỊP ĐỒNG BỘ khẩn cấp. Nếu ổn định: kiểm soát tần số bằng chẹn beta hoặc chẹn kênh calci non-DHP, khởi động kháng đông đường uống (DOAC/VKA).'
+          : 'Kiểm soát tần số thất bằng chẹn beta (Bisoprolol, Metoprolol) hoặc Diltiazem/Verapamil (tránh nếu EF giảm); khởi trị kháng đông đường uống theo thang điểm CHA₂DS₂-VASc (chỉ định khi >=2 điểm ở nam, >=3 điểm ở nữ).');
+    } else if(rhythm==='irregular' && pWave==='abnormal'){
+      addFinding(findings,'caution','Nghi Loạn nhịp nhĩ / Cuồng nhĩ dẫn truyền thay đổi', 'Nhịp không đều, hình dạng sóng P thay đổi — nghĩ đến nhịp nhanh nhĩ đa ổ (MAT), ngoại tâm thu nhĩ rải rác hoặc cuồng nhĩ (Atrial Flutter) dẫn truyền thay đổi.');
+    }
+
+    if(rhythm==='regular' && pWave==='absent'){
+      if(qrs!==null && qrs>=120){
+        const vtUnstable = symChestPain || symDyspnea || symSyncope || symDizzy;
+        addFinding(findings,'critical','Cảnh báo: Nghi Nhịp nhanh thất (Ventricular Tachycardia)',
+          hr!==null && hr>100 ? `Tần số ${hr} l/p, QRS rộng (${qrs}ms), mất sóng P — phải xử trí như Nhịp nhanh thất cho đến khi có bằng chứng ngược lại.` : 'QRS giãn rộng không thấy sóng P — có thể là nhịp tự thất hoặc dẫn truyền lệch hướng.',
+          hr!==null && hr>100 ? (vtUnstable ? 'Huyết động không ổn định: SỐC ĐIỆN ĐỒNG BỘ NGAY LẬP TỨC (Synchronized Cardioversion 100-200J).' : 'Huyết động còn ổn định: Truyền Amiodarone 150mg trong 10 phút, sau đó duy trì; sẵn sàng máy sốc điện.') : undefined);
+      } else {
+        addFinding(findings,'caution','Nghi Nhịp bộ nối (Junctional Rhythm) / Nhịp nhanh kịch phát trên thất', 'QRS hẹp, đều, không thấy sóng P đi trước — gợi ý chủ nhịp xuất phát từ bộ nối nhĩ thất.');
+      }
+    }
+
+    // 2. AV Conduction (Theo GS. Tran Do Trinh)
+    if(pr!==null && pWave!=='absent' && !wenckebach && !fixedRatio && !dissociation){
+      if(pr>200){
+        addFinding(findings,'caution','Block nhĩ – thất độ I', `Khoảng PR = ${pr} ms (> 200 ms), dẫn truyền 1:1 đều đặn. Thường do thoái hóa hệ dẫn truyền hoặc tác dụng phụ thuốc.`);
+      } else if(pr<120 && special!=='wpw'){
+        addFinding(findings,'info','Khoảng PR ngắn (< 120ms)', `PR = ${pr} ms. Nếu có sóng trườn Delta cần nghĩ đến Hội chứng Wolff-Parkinson-White (WPW); nếu QRS bình thường có thể là hội chứng LGL hoặc dẫn truyền qua đường phụ.`);
+      }
+    }
+    if(wenckebach){
+      addFinding(findings,'caution','Block nhĩ – thất độ II kiểu I (Luciani – Wenckebach / Mobitz I)', 'Khoảng PR dài dần qua từng chu kỳ cho đến khi một sóng P bị nghẽn không dẫn được thất (rớt QRS). Tổn thương thường tại nút nhĩ thất, tiên lượng thường lành tính hơn Mobitz II.');
+    }
+    if(fixedRatio && !wenckebach){
+      addFinding(findings,'critical','Block nhĩ – thất độ II kiểu II (Mobitz II / Block cao độ)', 'Sóng P bị nghẽn không dẫn thất theo tỷ lệ cố định (2:1, 3:1) mà PR các nhịp dẫn không dài dần. Tổn thương dưới nút nhĩ thất (bó His), nguy cơ cao tiến triển thành ngất Adams-Stokes hoặc vô tâm thu.',
+        'Thường có chỉ định ĐẶT MÁY TẠO NHỊP VĨNH VIỄN. Nếu có tụt huyết áp hoặc chóng mặt: chuẩn bị tạo nhịp tạm thời qua da/tĩnh mạch; Atropine thường kém đáp ứng.');
+    }
+    if(dissociation){
+      addFinding(findings,'critical','Block nhĩ – thất độ III (Block hoàn toàn / Phân ly nhĩ thất)', 'Sóng P và phức bộ QRS hoàn toàn độc lập, nhĩ đập theo nhịp xoang còn thất đập theo chủ nhịp thoát thất chậm chạp — Cấp cứu tim mạch khẩn cấp.',
+        'Chỉ định tạo nhịp tạm thời cấp cứu (qua da hoặc tĩnh mạch) nếu huyết động không ổn định, chuẩn bị cấy máy tạo nhịp tim vĩnh viễn. Có thể dùng Isoproterenol hoặc Dopamine hỗ trợ duy trì tần số thoát trong lúc chờ tạo nhịp.');
+    }
+
+    // 3. QRS & Bundle Branch Block
+    if(qrs!==null){
+      if(qrs>=120){
+        if(v1shape==='rsr' && v6shape==='notchedS'){
+          addFinding(findings,'caution','Block nhánh phải hoàn toàn (Complete RBBB)', `QRS giãn rộng = ${qrs} ms, dạng tai thỏ rSR' ở V1 và sóng S rộng có khấc ở V6/DI (tiêu chuẩn GS. Trần Đỗ Trinh).`);
+        } else if(v6shape==='broadR' && (v1shape==='qswide' || v1shape==='normal')){
+          addFinding(findings,'caution','Block nhánh trái hoàn toàn (Complete LBBB)', `QRS = ${qrs} ms, sóng R rộng đơn pha có khấc ở V6/DI, dạng rS/QS sâu ở V1. LBBB mới xuất hiện kèm đau ngực phải được xử trí tương đương Hội chứng vành cấp STEMI cho đến khi loại trừ.`);
+        } else {
+          addFinding(findings,'caution','QRS giãn rộng không đặc hiệu', `QRS = ${qrs} ms (>= 120ms) — cần phân biệt dẫn truyền lệch hướng, tăng Kali máu hoặc ngộ độc thuốc chống loạn nhịp.`);
+        }
+      } else if(qrs>=100){
+        addFinding(findings,'info','QRS giới hạn trên (100–110ms)', `QRS = ${qrs} ms — theo dõi block nhánh không hoàn toàn hoặc dày thất.`);
+      }
+    }
+
+    // 4. Axis
+    let axisWord = '—';
+    if(axis!==null){
+      if(axis>=-30 && axis<=90){ axisWord='Trục trung gian (bình thường)'; }
+      else if(axis<-30 && axis>=-90){ axisWord='Trục lệch trái'; addFinding(findings,'info','Trục điện tim lệch trái (Góc α < −30°)', `Trục = ${axis}°. Cân nhắc: Block phân nhánh trái trước (LAFB), Dày thất trái, Nhồi máu cơ tim thành dưới cũ.`); }
+      else if(axis>90 && axis<=180){ axisWord='Trục lệch phải'; addFinding(findings,'info','Trục điện tim lệch phải (Góc α > +90°)', `Trục = ${axis}°. Cân nhắc: Dày thất phải, Bệnh phổi mạn tính (tâm phế mạn), Thuyên tắc phổi cấp, Block phân nhánh trái sau.`); }
+      else { axisWord='Trục vô định (Extreme axis)'; addFinding(findings,'caution','Trục vô định / Trục cực Tây Bắc', `Trục = ${axis}°. Thường gặp trong nhịp nhanh thất, tăng Kali máu nặng hoặc bệnh tim bẩm sinh phức tạp.`); }
+    }
+
+    // 5. QTc Assessment
+    if(qtc!==null){
+      const thr = sex==='nu' ? 460 : 450;
+      if(qtc>500){
+        addFinding(findings,'critical','QTc kéo dài rõ rệt (> 500 ms) — Nguy cơ Xoắn đỉnh', `QTc ≈ ${Math.round(qtc)} ms (Bazett). Nguy cơ rất cao xuất hiện Loạn nhịp thất đa hình / Xoắn đỉnh (Torsades de Pointes).`,
+          'Ngừng ngay các thuốc gây kéo dài QT (kháng sinh Quinolone/Macrolide, chống loạn thần, chống trầm cảm). Bù Magnesium sulfate 1–2g TM trong 10–15 phút kể cả khi Magie máu bình thường. Điều chỉnh Kali máu đạt 4,5–5,0 mmol/L.');
+      } else if(qtc>thr){
+        addFinding(findings,'caution','QTc kéo dài', `QTc ≈ ${Math.round(qtc)} ms (ngưỡng bình thường: < ${thr} ms). Cần rà soát các thuốc đang sử dụng và xét nghiệm điện giải đồ (K+, Mg++, Ca++).`);
+      } else if(qtc<350){
+        addFinding(findings,'info','QTc ngắn (< 350 ms)', `QTc ≈ ${Math.round(qtc)} ms. Cân nhắc Hội chứng QT ngắn bẩm sinh hoặc Tăng Calci máu.`);
+      }
+    }
+
+    // 6. ST & T & Q (Ischemia & Infarction mapping according to GS. Tran Do Trinh)
+    const elevated = [], depressed = [], invertedT = [], peakedT = [], qPath = [];
+    REGIONS.forEach(r=>{
+      const st = val(`st-${r.key}`);
+      const t = val(`t-${r.key}`);
+      const q = val(`q-${r.key}`);
+      if(st==='elevation') elevated.push(r);
+      if(st==='depression') depressed.push(r);
+      if(t==='inverted') invertedT.push(r);
+      if(t==='peaked') peakedT.push(r);
+      if(q) qPath.push(r);
+    });
+
+    const territoryMap = {
+      inf: 'Động mạch vành phải (RCA) hoặc nhánh mũ (LCx)',
+      sept: 'Đoạn gần Động mạch liên thất trước (LAD)',
+      ant: 'Động mạch liên thất trước (LAD đoạn giữa/nhánh chéo)',
+      lat: 'Động mạch mũ (LCx) hoặc nhánh chéo (Diagonal)'
+    };
+
+    if(elevated.length>0){
+      const names = elevated.map(r=>r.name).join(' + ');
+      const artery = elevated.map(r=>territoryMap[r.key]).join('; ');
+      const symNote = symChestPain ? ` Kèm đau ngực cấp tính khởi phát ${onsetLabel}.` : '';
+      addFinding(findings,'critical','Cảnh báo tối cấp: Nhồi máu cơ tim cấp ST chênh lên (STEMI)',
+        `ST chênh lên tại vùng: ${names}.${symNote} Vị trí động mạch vành thủ phạm nghi ngờ: ${artery}. Đây là cấp cứu nội khoa khẩn cấp cần chiến lược tái tưới máu mạch vành thì đầu.`,
+        `Xử trí cấp cứu ban đầu: Aspirin 162–325mg nhai ngay + Thuốc ức chế P2Y12 (Ticagrelor 180mg hoặc Clopidogrel 300–600mg liều nạp) + Kháng đông (Enoxaparin hoặc Heparin) + Statin cường độ cao (Atorvastatin 80mg). Chuyển khẩn cấp đến phòng Can thiệp mạch vành (PCI thì đầu) trong vòng 90–120 phút. Nếu quá 12 giờ: đánh giá thêm dấu hiệu thiếu máu tiến triển hoặc biến chứng cơ học.`);
+      if(elevated.some(r=>r.key==='inf')){
+        addFinding(findings,'caution','Lưu ý đặc biệt với Nhồi máu cơ tim thành dưới',
+          'Cần đo ngay các chuyển đạo thất phải (V3R, V4R) và thành sau (V7–V9). CHỐNG CHỈ ĐỊNH dùng Nitroglycerin và các thuốc giãn mạch nếu có Nhồi máu thất phải đi kèm vì nguy cơ tụt huyết áp nghiêm trọng.',
+          'Nếu có tổn thương thất phải: truyền dịch tĩnh mạch (NaCl 0.9%) để nâng và duy trì tiền tải thất phải; tránh tuyệt đối thuốc lợi tiểu và hạ áp.');
+      }
+    }
+
+    if(depressed.length>0){
+      const names = depressed.map(r=>r.name).join(', ');
+      if(elevated.length===0){
+        addFinding(findings,'caution','ST chênh xuống — Nghi Thiếu máu cơ tim dưới nội tâm mạc',
+          `ST chênh xuống ở vùng: ${names}. Nếu ở V1–V3 cần cảnh giác hình ảnh soi gương của Nhồi máu thành sau (Posterior MI — cần đo V7–V9).`,
+          'Nếu kèm đau ngực: xử trí theo phác đồ Hội chứng vành cấp không ST chênh lên (NSTE-ACS) — Kháng kết tập tiểu cầu kép, kháng đông, Statin cường độ cao, chẹn beta nếu huyết động cho phép, phân tầng nguy cơ (GRACE/TIMI) để chụp mạch vành sớm.');
+      } else {
+        addFinding(findings,'info','Hình ảnh ST chênh xuống soi gương (Reciprocal changes)', `Ghi nhận ST chênh xuống tại ${names} đối diện vùng ST chênh lên — củng cố chẩn đoán Nhồi máu cơ tim cấp tính.`);
+      }
+    }
+
+    if(invertedT.length>0 && elevated.length===0){
+      addFinding(findings,'caution','Sóng T âm sâu đảo ngược (Thiếu máu cơ tim / NSTEMI)',
+        `Ghi nhận tại vùng: ${invertedT.map(r=>r.name).join(', ')}. Cần đối chiếu men tim (hs-cTnI/hs-cTnT) và loại trừ Hội chứng Wellens nếu xuất hiện ở V2–V3.`);
+    }
+
+    if(peakedT.length>0){
+      addFinding(findings,'caution','Sóng T cao nhọn đối xứng',
+        `Ghi nhận ở: ${peakedT.map(r=>r.name).join(', ')}. Cần phân biệt giai đoạn tối cấp (Hyperacute T wave) của nhồi máu cơ tim hay tăng Kali máu.`);
+    }
+
+    if(qPath.length>0){
+      addFinding(findings,'info','Sóng Q hoại tử bệnh lý',
+        `Ghi nhận tại vùng: ${qPath.map(r=>r.name).join(', ')} — gợi ý sẹo nhồi máu cơ tim bán cấp hoặc cũ theo tiêu chuẩn GS. Trần Đỗ Trinh.`);
+    }
+
+    // 7. Hypertrophy (Sokolow-Lyon according to GS. Tran Do Trinh)
+    if(sV1!==null && rV56!==null){
+      const sokolow = sV1 + rV56;
+      if(sokolow>=35 || (rAvl!==null && rAvl>11)){
+        addFinding(findings,'info','Dày thất trái theo tiêu chuẩn Sokolow – Lyon',
+          `Chỉ số S(V1) + R(V5/V6) = ${sokolow} mm (ngưỡng ≥ 35 mm)${rAvl!==null?`, R(aVL) = ${rAvl} mm`:''}. Phù hợp tăng gánh thất trái do tăng huyết áp lâu năm hoặc bệnh van tim.`);
+      }
+    }
+    if(rV1!==null && rV1>=7){
+      addFinding(findings,'info','Nghi Dày thất phải (Right Ventricular Hypertrophy)',
+        `Sóng R(V1) = ${rV1} mm (≥ 7 mm), tỷ lệ R/S ở V1 > 1. Gợi ý bệnh phổi tắc nghẽn mạn tính (COPD), tăng áp lực động mạch phổi hoặc hẹp van hai lá.`);
+    }
+
+    // 8. Special Patterns
+    const specialText = {
+      wpw: ['critical','Hội chứng tiền kích thích Wolff – Parkinson – White (WPW)',
+        'Đoạn PR ngắn < 120ms kết hợp sóng Delta ở đầu phức bộ QRS. Nguy cơ xuất hiện cơn nhịp nhanh vào lại nhĩ thất (AVRT) hoặc rung nhĩ dẫn truyền qua đường phụ gây rung thất đột tử.',
+        'Nếu rung nhĩ có dẫn truyền qua đường phụ: CHỐNG CHỈ ĐỊNH dùng Digoxin, Verapamil, Diltiazem và chẹn beta TM (có thể làm tăng dẫn truyền qua đường phụ gây rung thất). Ưu tiên Sốc điện đồng bộ hoặc Procainamide/Ibutilide; hội chẩn thăm dò điện sinh lý để triệt đốt (RF ablation).'],
+      brugada: ['critical','Hình ảnh Điện tim dạng Brugada (Type 1)',
+        'ST chênh lên dạng vòm (coved-type) ≥ 2mm ở V1–V3 tiếp nối sóng T âm. Nguy cơ đột tử do rung thất/nhịp nhanh thất đa hình.',
+        'Hạ sốt tích cực nếu có sốt; tránh tuyệt đối các thuốc chẹn kênh Natri (nhóm IA, IC) và các thuốc có trong danh sách www.brugadadrugs.org; hội chẩn chuyên gia loạn nhịp tim để đánh giá chỉ định cấy máy khử rung tự động (ICD).'],
+      pericarditis: ['caution','Nghi Viêm màng ngoài tim cấp (Acute Pericarditis)',
+        'ST chênh lên lan tỏa lõm ở hầu hết các chuyển đạo (không theo vùng tưới máu động mạch vành) kèm PR chênh xuống; aVR có ST chênh xuống và PR chênh lên.',
+        'Kháng viêm không steroid liều cao (Ibuprofen 600–800mg x 3 lần/ngày) phối hợp Colchicine 0,5mg x 1–2 lần/ngày trong 3 tháng; làm siêu âm tim đánh giá tràn dịch màng ngoài tim.'],
+      hyperk: ['critical','Cấp cứu: Nghi Tăng Kali máu nặng (Severe Hyperkalemia)',
+        'Sóng T cao nhọn đối xứng đáy hẹp, QRS giãn rộng, mất sóng P — dấu hiệu tối khẩn đe dọa ngừng tim vô tâm thu.',
+        'Tiêm tĩnh mạch chậm Calcium gluconate 10% (10ml trong 2–3 phút) để ổn định màng tế bào cơ tim ngay; tiếp theo truyền Glucose 20% + Insulin tác dụng nhanh, khí dung Salbutamol liều cao và dùng thuốc lợi tiểu quai/lọc máu cấp cứu.'],
+      digoxin: ['info','Dấu hiệu ngấm Digoxin (Digitalis effect)',
+        'Đoạn ST lõm hình đáy chén ("hình ria mép Salvador Dali"). Đây là biểu hiện ngấm thuốc, cần phân biệt với ngộ độc Digoxin trên lâm sàng.'],
+      epsilon: ['caution','Sóng Epsilon — Nghi Loạn sản thất phải sinh loạn nhịp (ARVC)',
+        'Sóng khấc nhỏ Epsilon ở cuối QRS tại các chuyển đạo V1–V3. Cần chụp MRI tim và khai thác tiền sử gia đình có người đột tử khi còn trẻ.'],
+      osborn: ['caution','Sóng J / Osborn (Hạ thân nhiệt)',
+        'Sóng nhô cao rõ ở điểm nối J giữa QRS và ST. Đo lại thân nhiệt trung tâm và thực hiện ủ ấm chủ động.'],
+    };
+    if(special!=='none' && specialText[special]){
+      const [lvl, title, text, tx] = specialText[special];
+      addFinding(findings, lvl, title, text, tx);
+    }
+
+    if(findings.length===0){
+      addFinding(findings,'normal','Chưa ghi nhận bất thường điện học rõ rệt', 'Các chỉ số nằm trong giới hạn bình thường theo tiêu chuẩn GS. Trần Đỗ Trinh. Vẫn cần đối chiếu với bệnh cảnh lâm sàng và so sánh với các bản ghi ECG trước đó.');
+    }
+
+    // Render Readout
+    document.getElementById('rt-rhythm').textContent = rhythm==='regular' ? 'Đều' : 'Không đều';
+    document.getElementById('rt-hr').textContent = hr!==null ? `${hr} l/p (${rateWord})` : '—';
+    document.getElementById('rt-pr').textContent = pr!==null ? `${pr} ms` : '—';
+    document.getElementById('rt-qrs').textContent = qrs!==null ? `${qrs} ms` : '—';
+    document.getElementById('rt-axis').textContent = axisWord;
+    updateQTcDisplay();
+
+    // Render Findings List
+    const box = document.getElementById('findings');
+    box.innerHTML = '';
+    const order = {critical:0, caution:1, info:2, normal:3};
+    findings.sort((a,b)=>order[a.level]-order[b.level]);
+    findings.forEach(f=>{
+      const div = document.createElement('div');
+      div.className = `finding ${f.level}`;
+      div.innerHTML = `<div class="ftitle">${f.title}</div><div>${f.text}</div>${f.tx ? `<div class="ftx"><b>Xử trí gợi ý:</b> ${f.tx}</div>` : ''}`;
+      box.appendChild(div);
+    });
+  }
+
+  // Copy clinical summary to clipboard
+  document.getElementById('copySummaryBtn').addEventListener('click', ()=>{
+    const rhythm = radio('rhythm')==='regular' ? 'Đều' : 'Không đều';
+    const hr = num('hr') ? `${num('hr')} l/p` : '—';
+    const pr = num('pr') ? `${num('pr')} ms` : '—';
+    const qrs = num('qrs') ? `${num('qrs')} ms` : '—';
+    const qtc = document.getElementById('rt-qtc').textContent;
+    const axis = document.getElementById('rt-axis').textContent;
+
+    const findingsEls = document.querySelectorAll('#findings .finding .ftitle');
+    const conclusions = Array.from(findingsEls).map(el=>el.textContent).join('; ');
+
+    const textToCopy = `TÓM TẮT ĐIỆN TÂM ĐỒ (ECG):
+- Nhịp: ${rhythm} | Tần số: ${hr}
+- Khoảng PR/PQ: ${pr} | Độ rộng QRS: ${qrs}
+- QTc: ${qtc} | Trục điện tim: ${axis}
+- Kết luận & Hướng xử trí: ${conclusions || 'Bình thường'}
+(Nguồn: ECG Console - Theo tài liệu GS. Trần Đỗ Trinh)`;
+
+    navigator.clipboard.writeText(textToCopy).then(()=>{
+      alert('Đã sao chép tóm tắt điện tim vào bộ nhớ tạm! Bạn có thể dán (Ctrl+V) vào bệnh án điện tử.');
+    }).catch(()=>{
+      alert('Không thể sao chép tự động. Vui lòng thử lại!');
+    });
+  });
+
+  document.getElementById('analyzeBtn').addEventListener('click', analyze);
+  document.getElementById('printBtn').addEventListener('click', ()=> window.print());
+  document.getElementById('resetBtn').addEventListener('click', ()=>{
+    document.querySelectorAll('input[type=number]').forEach(i=>i.value='');
+    document.querySelectorAll('select').forEach(s=>s.selectedIndex=0);
+    document.querySelectorAll('input[type=checkbox]').forEach(c=>c.checked=false);
+    document.querySelector('input[name="rhythm"][value="regular"]').checked = true;
+    document.getElementById('qtcOut').textContent = '—';
+    ['rt-rhythm','rt-hr','rt-pr','rt-qrs','rt-qtc','rt-axis'].forEach(id=>document.getElementById(id).textContent='—');
+    document.getElementById('findings').innerHTML = '<p class="empty-state">Nhập thông số hoặc tải ảnh điện tim để nhận kết quả phân tích tự động.</p>';
+    document.getElementById('aiNotesBox').style.display = 'none';
+    document.getElementById('aiStatusBar').style.display = 'none';
+    document.getElementById('presetSelect').value = '';
+    currentImageBase64 = null;
+    ecgImg.src = '';
+    ecgViewerWrap.style.display = 'none';
+  });
+</script>
+</body>
+</html>
