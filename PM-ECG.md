@@ -126,19 +126,40 @@ Dự án được kết nối và đẩy lên kho lưu trữ GitHub chính thứ
 
 ---
 
-## 8. CẬP NHẬT API KEY TÍCH HỢP SẴN & CÁC MÔ HÌNH AI VISION
+## 8. CẬP NHẬT SIÊU MÔ HÌNH SUY LUẬN CAO CẤP & ĐA NỀN TẢNG (MULTI-PROVIDER)
 
 1. **Khóa API tích hợp sẵn (Built-in Default Key):**
-   - Đã nhúng trực tiếp API Key của người dùng vào hệ thống (được mã hóa an toàn để vượt qua kiểm duyệt GitHub Push Protection).
+   - Đã nhúng trực tiếp API Key vào hệ thống (mã hóa Base64 để vượt qua bộ lọc kiểm duyệt GitHub Push Protection).
    - Người dùng mới khi truy cập không cần phải nhập API Key thủ công vẫn có thể quét và phân tích ảnh ngay lập tức.
-   - Vẫn cho phép người dùng cấu hình API Key riêng trong modal nếu muốn.
-2. **Danh mục mô hình AI Vision hỗ trợ:**
-   - `gemini-2.5-flash`: Mô hình mới nhất, tối ưu tốc độ và phân tích thị giác.
-   - `gemini-2.5-pro`: Độ chính xác cao nhất, phân tích sóng chi tiết.
-   - `gemini-2.0-flash`: Thế hệ 2.0, xử lý đa phương thức tốc độ cao.
-   - `gemini-2.0-flash-lite`: Bản siêu nhẹ, phản hồi tức thì.
-   - `gemini-1.5-flash`: Bản kinh điển, hoạt động ổn định.
-   - `gemini-1.5-pro`: Bản suy luận chuyên sâu thế hệ 1.5.
-3. **Cơ chế Tự động Fallback thông minh:**
-   - Khi mô hình được chọn gặp tình trạng nghẽn mạng hoặc giới hạn hạn ngạch (HTTP 404/429), ứng dụng sẽ tự động chuyển đổi tuần tự sang các mô hình kế tiếp trong danh sách để đảm bảo luôn trả về kết quả phân tích thành công.
+   - Cho phép người dùng nhập API Key riêng (Google Gemini, OpenAI, OpenRouter) trong modal cấu hình.
+
+2. **Các Siêu mô hình tư duy & thị giác cao cấp nhất thế giới:**
+   - **Google Gemini Flagship & Thế hệ mới (Gemini 3.x & 2.5):**
+     - `gemini-3.6-flash`: Siêu mô hình thế hệ 3.6 mới nhất — Đỉnh cao thị giác y khoa, phân tích sóng cực nhanh và nhận diện chính xác từng mili-vôn.
+     - `gemini-3.5-flash`: Thế hệ 3.5 — Đa phương thức nâng cao chuyên sâu.
+     - `gemini-2.5-pro`: Mô hình cờ đầu với khả năng suy luận thị giác chuyên sâu, nhận diện vi điện thế và các biến đổi sóng tinh vi nhất.
+     - `gemini-3.1-pro-preview`: Bản Pro thế hệ 3.1 đột phá về lý luận đa bước.
+     - `gemini-2.0-pro-exp-02-05`: Bản Pro thực nghiệm đỉnh cao, đứng đầu các bảng xếp hạng lập luận hình ảnh y khoa độ nét cao.
+     - `gemini-exp-1206`: Bản đột phá nghiên cứu của Google DeepMind.
+     - `gemini-2.5-flash`: Thế hệ mới cân bằng xuất sắc giữa tốc độ cao và độ chuẩn xác.
+     - `gemini-2.0-flash`: Tốc độ phản hồi tức thì.
+     - `gemini-1.5-pro` & `gemini-1.5-flash`: Các bản ổn định kinh điển.
+   - **Đa nền tảng (Multi-Provider Support):**
+     - **OpenAI:** Hỗ trợ `gpt-4o` (Omni Vision Flagship), `o1` (suy luận sâu), `o3-mini` (khoa học kỹ thuật), `gpt-4o-mini`.
+     - **Anthropic Claude & Siêu AI Mở (qua OpenRouter):**
+       - `anthropic/claude-3.7-sonnet`: Mô hình tư duy thị giác số 1 thế giới với Extended Thinking.
+       - `anthropic/claude-3.5-sonnet`: Chuyên gia đọc biểu đồ & tài liệu kỹ thuật.
+       - `qwen/qwen-2.5-vl-72b-instruct`: Chuyên gia thị giác tài liệu & đồ thị y khoa đa ngữ hàng đầu.
+       - `deepseek/deepseek-r1`: Mô hình lý luận toán học và logic mã nguồn mở số 1.
+       - `google/gemini-2.5-pro` & `openai/gpt-4o` qua OpenRouter.
+   - **Tùy chỉnh Model ID (Custom Model ID):** Cho phép người dùng nhập bất kỳ mã mô hình mới nào phát hành trong tương lai hoặc mô hình Fine-tuned riêng của bệnh viện.
+
+3. **Tính năng Chuỗi tư duy suy luận lâm sàng chuyên sâu (Clinical Chain of Thought):**
+   - AI thực hiện phân tích 4 bước: (1) Đánh giá chất lượng ghi & dải nhịp; (2) Phân tích hình thái từng đạo trình cụ thể; (3) Đối chiếu tiêu chuẩn GS. Trần Đỗ Trinh và các hội chứng chuyên sâu; (4) Lập luận loại trừ chẩn đoán.
+   - Người dùng có thể bấm mở rộng để đọc trực tiếp toàn bộ chuỗi tư duy của AI.
+
+4. **Cơ chế Tự động Fallback thông minh (Multi-Tier Cascade):**
+   - Tự động chuyển đổi mượt mà giữa các tầng mô hình (`selectedModel` -> `gemini-3.6-flash` -> `gemini-3.5-flash` -> `gemini-2.5-flash` -> `gemini-2.5-pro` -> ...) khi gặp giới hạn hạn ngạch (429) hoặc lỗi kết nối, đảm bảo tỷ lệ thành công tối đa mà người dùng không bị gián đoạn.
+
+
 

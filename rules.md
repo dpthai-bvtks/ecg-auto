@@ -160,6 +160,7 @@ Khi AI Vision phân tích ảnh bản ghi điện tâm đồ, kết quả phải
   "rAvl": 4,
   "rV1": 3,
   "special": "none",
+  "clinical_reasoning": "Chuỗi lập luận lâm sàng chi tiết từng bước (Lead-by-lead analysis & đối chiếu tiêu chuẩn GS. Trần Đỗ Trinh)",
   "ai_summary": "Nhận định ngắn gọn bằng tiếng Việt y khoa"
 }
 ```
