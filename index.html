@@ -235,6 +235,81 @@
   .api-input-wrap{ margin-bottom:14px; }
   .api-input-wrap input{ font-family:var(--mono); font-size:13px; padding:9px 10px; width:100%; }
 
+  /* Quick Clinical & Paraclinical Tags and Buttons */
+  .tag-btn{
+    background: #eef6f3;
+    border: 1px solid #b8ddd4;
+    color: var(--teal-deep);
+    border-radius: 14px;
+    font-size: 11.5px;
+    padding: 3px 9px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all .15s;
+    user-select: none;
+  }
+  .tag-btn:hover{
+    background: var(--teal);
+    color: #fff;
+    border-color: var(--teal);
+  }
+  .tag-btn.active{
+    background: var(--teal-deep);
+    color: #fff;
+    border-color: var(--teal-deep);
+  }
+
+  /* Clinical Guidance Card & Checklist */
+  .clinical-guidance-card{
+    border: 1.5px solid #248f7f;
+    background: #ffffff;
+    box-shadow: 0 2px 10px rgba(31,111,100,0.12);
+    margin-bottom: 16px;
+    border-radius: 10px;
+    padding: 16px 18px;
+  }
+  .risk-badge{
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 12px;
+    font-family: var(--mono);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .risk-badge.risk-critical{ background: var(--red-bg); color: var(--red); border: 1px solid #f0b4ad; }
+  .risk-badge.risk-high{ background: var(--amber-bg); color: var(--amber); border: 1px solid #f3d79b; }
+  .risk-badge.risk-medium{ background: #eaf0fb; color: #1e4ea4; border: 1px solid #b9d1f8; }
+  .risk-badge.risk-low{ background: var(--green-bg); color: var(--green); border: 1px solid #a3d9b4; }
+
+  .checklist-box{ display: flex; flex-direction: column; gap: 6px; }
+  .checklist-item{
+    background: #fdfefe;
+    border: 1px solid #d5e5e1;
+    border-radius: 6px;
+    padding: 7px 10px;
+    font-size: 12.5px;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    line-height: 1.45;
+    transition: background .15s, opacity .15s;
+  }
+  .checklist-item:hover{ background: #f6fbf9; }
+  .checklist-item input[type=checkbox]{
+    margin-top: 2px;
+    cursor: pointer;
+    flex: none;
+    width: 15px;
+    height: 15px;
+  }
+  .checklist-item.done{
+    text-decoration: line-through;
+    opacity: 0.6;
+    background: #f0f4f3;
+  }
+
   /* Print Styles */
   @media print{
     .topbar, .ai-card, .btnrow, .modal-overlay, .footer-credit, .upload-dropzone, .ecg-viewer-wrap{ display:none !important; }
@@ -322,6 +397,73 @@
           <div class="ecg-viewport" id="ecgViewport">
             <img id="ecgPreviewImg" src="" alt="ECG Preview">
           </div>
+        </div>
+
+        <!-- CLINICAL & PARACLINICAL INPUTS SECTION (Tích hợp Lâm sàng & Cận lâm sàng) -->
+        <div class="clinical-input-section" style="margin-top:14px; background:#ffffff; border:1px solid #c7e3dc; border-radius:8px; padding:14px;">
+          <div style="font-weight:600; font-size:13px; color:var(--teal-deep); margin-bottom:8px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px;">
+            <span style="display:flex; align-items:center; gap:6px;">
+              <span style="background:var(--teal); color:#fff; width:20px; height:20px; border-radius:4px; display:inline-flex; align-items:center; justify-content:center; font-size:11px;">📋</span>
+              Thông tin Lâm sàng &amp; Cận lâm sàng kèm theo (Tùy chọn)
+            </span>
+            <span style="font-size:11px; font-weight:normal; color:var(--ink-soft);">Giúp AI chẩn đoán xác định &amp; lập phác đồ xử trí sát thực tế</span>
+          </div>
+
+          <!-- Quick tags for rapid clinical entry -->
+          <div style="margin-bottom:10px;">
+            <div style="font-size:11.5px; color:var(--ink-soft); margin-bottom:5px; font-weight:500;">⚡ Thẻ chọn nhanh dấu hiệu then chốt:</div>
+            <div class="quick-tags-wrap" style="display:flex; flex-wrap:wrap; gap:5px;">
+              <button type="button" class="tag-btn" data-action="tag-chestpain-acute">+ Đau ngực cấp &lt;2h</button>
+              <button type="button" class="tag-btn" data-action="tag-chestpain-radiating">+ Đau sau xương ức lan tay T</button>
+              <button type="button" class="tag-btn" data-action="tag-dyspnea">+ Khó thở khi nằm (Orthopnea)</button>
+              <button type="button" class="tag-btn" data-action="tag-syncope">+ Ngất đột ngột / Choáng</button>
+              <button type="button" class="tag-btn" data-action="tag-shock">+ Tụt HA / Sốc tim (&lt;90mmHg)</button>
+              <button type="button" class="tag-btn" data-action="tag-palpitation">+ Hồi hộp trống ngực</button>
+              <button type="button" class="tag-btn" data-action="tag-trop-high">+ Troponin (+) tăng cao</button>
+              <button type="button" class="tag-btn" data-action="tag-k-high">+ Kali máu tăng (&gt;6.5 mmol/L)</button>
+              <button type="button" class="tag-btn" data-action="tag-k-low">+ Hạ Kali máu (&lt;3.0 mmol/L)</button>
+              <button type="button" class="tag-btn" data-action="tag-med-digoxin">+ Đang dùng Digoxin</button>
+              <button type="button" class="tag-btn" data-action="tag-med-amiodarone">+ Đang dùng Amiodarone</button>
+              <button type="button" class="tag-btn" data-action="tag-echo-ef">+ EF giảm (&lt;40%)</button>
+            </div>
+          </div>
+
+          <!-- Structured input grids -->
+          <div class="grid3" style="margin-bottom:10px;">
+            <label class="field">
+              <span class="lbl">Huyết áp (HA tâm thu / tâm trương, mmHg)</span>
+              <input type="text" id="vital-bp" placeholder="vd: 120/80 hoặc 85/50" style="font-family:var(--mono); font-size:13px; padding:7px 9px; width:100%; border:1px solid var(--line); border-radius:6px;">
+            </label>
+            <label class="field">
+              <span class="lbl">SpO2 (%) &amp; Mạch ngoại vi</span>
+              <input type="text" id="vital-spo2" placeholder="vd: SpO2 96%, mạch quay 68 l/p" style="font-family:var(--sans); font-size:12.5px; padding:7px 9px; width:100%; border:1px solid var(--line); border-radius:6px;">
+            </label>
+            <label class="field">
+              <span class="lbl">Men tim (hs-Troponin T/I, CK-MB)</span>
+              <input type="text" id="lab-troponin" placeholder="vd: hs-cTnT 1850 ng/L hoặc Dương tính (+)" style="font-family:var(--sans); font-size:12.5px; padding:7px 9px; width:100%; border:1px solid var(--line); border-radius:6px;">
+            </label>
+          </div>
+
+          <div class="grid3" style="margin-bottom:10px;">
+            <label class="field">
+              <span class="lbl">Điện giải đồ (K⁺, Na⁺, Ca²⁺, Mg²⁺)</span>
+              <input type="text" id="lab-electrolytes" placeholder="vd: K+ 6.8 mmol/L, Mg2+ 0.65 mmol/L" style="font-family:var(--sans); font-size:12.5px; padding:7px 9px; width:100%; border:1px solid var(--line); border-radius:6px;">
+            </label>
+            <label class="field">
+              <span class="lbl">Siêu âm tim / EF% / Vận động vùng</span>
+              <input type="text" id="lab-echo" placeholder="vd: EF 42%, giảm động thành dưới" style="font-family:var(--sans); font-size:12.5px; padding:7px 9px; width:100%; border:1px solid var(--line); border-radius:6px;">
+            </label>
+            <label class="field">
+              <span class="lbl">Thuốc đang dùng &amp; Tiền sử bệnh</span>
+              <input type="text" id="lab-meds" placeholder="vd: Digoxin, Amiodarone, ĐTĐ typ 2" style="font-family:var(--sans); font-size:12.5px; padding:7px 9px; width:100%; border:1px solid var(--line); border-radius:6px;">
+            </label>
+          </div>
+
+          <!-- Free text for clinical notes -->
+          <label class="field">
+            <span class="lbl">Ghi chú bệnh cảnh lâm sàng chi tiết / Diễn biến cấp cứu:</span>
+            <textarea id="clinicalNotesInput" rows="2" placeholder="vd: Bệnh nhân nam 62 tuổi, đột ngột đau ngực dữ dội sau xương ức lan vai trái 1.5h, vã mồ hôi, tiền sử THA..." style="width:100%; font-family:var(--sans); font-size:12.5px; padding:8px 10px; border:1px solid var(--line); border-radius:6px; resize:vertical; line-height:1.45;"></textarea>
+          </label>
         </div>
 
         <!-- Action trigger -->
@@ -552,8 +694,61 @@
         <div class="rline"><span class="rlabel">TRỤC ĐIỆN TIM</span><span id="rt-axis">—</span></div>
       </div>
 
+      <!-- DEDICATED CLINICAL GUIDANCE CARD -->
+      <div class="card clinical-guidance-card" id="aiClinicalGuidanceCard" style="display:none;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px; border-bottom:1px solid #e1efe9; padding-bottom:8px;">
+          <h2 style="margin:0; font-size:13.5px; color:var(--teal-deep); display:flex; align-items:center; gap:8px;">
+            <span style="background:var(--teal); color:#fff; width:22px; height:22px; border-radius:6px; display:inline-flex; align-items:center; justify-content:center; font-size:12px;">🩺</span>
+            Gợi ý Chẩn đoán &amp; Phác đồ Xử trí
+          </h2>
+          <span id="cgRiskBadge" class="risk-badge risk-critical"></span>
+        </div>
+
+        <!-- Primary Diagnosis Box -->
+        <div style="background:#f4faf8; border:1px solid #cce8e0; border-left:4px solid var(--teal); border-radius:6px; padding:10px 12px; margin-bottom:10px;">
+          <div style="font-size:11px; text-transform:uppercase; letter-spacing:.5px; color:#185a51; font-weight:700;">Chẩn đoán xác định / Nghĩ nhiều nhất:</div>
+          <div id="cgPrimaryDiag" style="font-size:13.5px; font-weight:700; color:#0f4a43; margin-top:3px; line-height:1.4;"></div>
+        </div>
+
+        <!-- Differential Diagnoses -->
+        <div id="cgDifferentialsWrap" style="margin-bottom:10px; font-size:12px;">
+          <span style="font-weight:600; color:var(--ink);">Chẩn đoán phân biệt cần loại trừ:</span>
+          <div id="cgDifferentialsList" style="margin-top:4px; color:var(--ink-soft); line-height:1.5;"></div>
+        </div>
+
+        <!-- Emergency Immediate Actions Checklist -->
+        <div id="cgImmediateWrap" style="margin-bottom:10px;">
+          <div style="font-size:12px; font-weight:700; color:#a4291e; margin-bottom:6px; display:flex; align-items:center; gap:5px;">
+            <span>🚨 Hướng xử trí cấp cứu ban đầu (Immediate Actions):</span>
+          </div>
+          <div id="cgImmediateList" class="checklist-box"></div>
+        </div>
+
+        <!-- Medications & Protocols -->
+        <div id="cgMedsWrap" style="margin-bottom:10px;">
+          <div style="font-size:12px; font-weight:700; color:var(--teal-deep); margin-bottom:6px;">
+            💊 Thuốc &amp; Phác đồ can thiệp cụ thể:
+          </div>
+          <div id="cgMedsList" style="font-size:12.5px; color:#1e3d39; line-height:1.55; background:#fbfdfc; border:1px dashed #b7ded5; padding:8px 10px; border-radius:6px;"></div>
+        </div>
+
+        <!-- Critical Warnings & Contraindications -->
+        <div id="cgWarningsWrap" style="margin-bottom:10px; display:none;">
+          <div style="background:var(--red-bg); border:1px solid #f0b4ad; border-radius:6px; padding:8px 10px; font-size:12px; color:var(--red);">
+            <b style="display:flex; align-items:center; gap:4px;">⚠️ Cảnh báo &amp; Chống chỉ định đặc biệt:</b>
+            <div id="cgWarningsList" style="margin-top:4px; line-height:1.45;"></div>
+          </div>
+        </div>
+
+        <!-- Further Workup & Monitoring -->
+        <div id="cgWorkupWrap" style="font-size:12px;">
+          <div style="font-weight:600; color:var(--ink); margin-bottom:4px;">🔬 Thăm dò cận lâm sàng &amp; Theo dõi tiếp theo:</div>
+          <div id="cgWorkupList" style="color:var(--ink-soft); line-height:1.5;"></div>
+        </div>
+      </div>
+
       <div class="card findings-card">
-        <h2>Gợi ý chẩn đoán phân biệt &amp; xử trí</h2>
+        <h2>Tiêu chuẩn điện tim chi tiết (GS. Trần Đỗ Trinh)</h2>
         <div id="findings"><p class="empty-state">Nhập thông số hoặc tải ảnh điện tim để nhận kết quả phân tích tự động.</p></div>
         <div class="disclaimer">
           Dựa trên hệ thống phân tích kinh điển của <b>GS.TS. Trần Đỗ Trinh &amp; ThS. Trần Văn Đồng</b> (Viện Tim Mạch Việt Nam) kết hợp khuyến cáo cập nhật của Hội Tim Mạch Việt Nam (VNHA).
@@ -816,7 +1011,44 @@
       },
       sV1: 10, rV56: 18, rAvl: 4, rV1: 3,
       special: 'none',
-      ai_summary: 'Bản ghi ghi nhận ST chênh lên dạng vòm (Pardee) tại DII, DIII, aVF kèm sóng Q hoại tử. Có hình ảnh ST chênh xuống soi gương rõ rệt tại DI, aVL. Phù hợp Nhồi máu cơ tim cấp thành dưới (STEMI Inferior) giai đoạn cấp (theo tiêu chuẩn GS. Trần Đỗ Trinh).'
+      vitals: { bp: '90/60', spo2: '96%, mạch 68 l/p' },
+      symptoms: { chestpain: true, dyspnea: false, syncope: false, palpitation: false, dizzy: false, diaphoresis: true, edema: false, onset: 'lt2' },
+      labs: { troponin: 'hs-cTnT: 1850 ng/L (Dương tính tăng cao)', electrolytes: 'K+ 4.1 mmol/L, Na+ 138 mmol/L', echo: 'EF 48%, giảm động rõ thành sau dưới', meds: 'Chưa dùng thuốc tim mạch' },
+      clinical_notes: `Bệnh nhân nam 62 tuổi, đột ngột đau thắt ngực dữ dội đè nặng sau xương ức lan vai và tay trái kéo dài 1.5 giờ, vã mồ hôi nhiều, buồn nôn. Huyết áp tụt 90/60 mmHg nghi ngờ có nhồi máu thất phải kèm theo.`,
+      clinical_reasoning: `1. Điện tâm đồ ghi nhận ST chênh lên dạng vòm (Pardee) tại DII, DIII, aVF kèm sóng Q hoại tử; ST chênh xuống soi gương ở DI, aVL.
+2. Lâm sàng: Đau ngực cấp < 2 giờ điển hình của hội chứng vành cấp kèm vã mồ hôi, buồn nôn, huyết áp thấp (90/60 mmHg).
+3. Cận lâm sàng: hs-cTnT tăng cao khẳng định hoại tử cơ tim cấp tính.
+4. Kết luận: Nhồi máu cơ tim cấp có ST chênh lên (STEMI) thành dưới giờ thứ 2 nguy cơ cao. Cần đo ngay V3R-V4R để loại trừ nhồi máu thất phải và kích hoạt Cathlab can thiệp thì đầu khẩn cấp.`,
+      ai_summary: `Nhồi máu cơ tim cấp có ST chênh lên (STEMI) thành dưới giai đoạn cấp (DII, DIII, aVF) kèm hình ảnh soi gương DI, aVL. Men tim hs-cTnT tăng cao kết hợp đau ngực cấp <2h và tụt huyết áp.`,
+      clinical_diagnosis: {
+        primary: 'Nhồi máu cơ tim cấp có ST chênh lên (STEMI) thành dưới giờ thứ 2, Killip I (Nghi tổn thương ĐM vành phải RCA kèm thất phải)',
+        risk_level: 'Nguy cơ rất cao',
+        differentials: ['Viêm màng ngoài tim cấp', 'Phình bóc tách động mạch chủ ngực (Stanford A)', 'Thuyên tắc động mạch phổi cấp']
+      },
+      treatment_plan: {
+        immediate_actions: [
+          'Bất động tuyệt đối tại giường bệnh, mắc monitor theo dõi liên tục điện tim, huyết áp và SpO2',
+          'Thở oxy qua cannula 2-4 l/p nếu SpO2 < 90% hoặc khó thở',
+          'KÍCH HOẠT KHẨN CẤP phòng Can thiệp mạch vành (Cathlab) thực hiện PCI thì đầu trong vòng < 120 phút',
+          'ĐO NGAY 6 CHUYỂN ĐẠO MỞ RỘNG: V3R, V4R (loại trừ nhồi máu thất phải) và V7, V8, V9 (thành sau)'
+        ],
+        medications: [
+          'Kháng kết tập tiểu cầu kép (DAPT) liều nạp ngay: Aspirin 300mg (nhai nát) + Ticagrelor 180mg (uống) hoặc Clopidogrel 600mg',
+          'Kháng đông: Enoxaparin 30mg tiêm tĩnh mạch bolus, sau đó tiêm dưới da 1mg/kg mỗi 12 giờ (hoặc Heparin không phân đoạn)',
+          'Statin cường độ cao: Atorvastatin 80mg (uống ngay 1 liều)',
+          'Giảm đau ngực: Morphin 2-4mg tiêm tĩnh mạch chậm nếu đau ngực dữ dội không đỡ (thận trọng huyết áp)'
+        ],
+        contraindications_warnings: [
+          'CHỐNG CHỈ ĐỊNH TUYỆT ĐỐI dùng Nitroglycerin và các thuốc giãn mạch nếu có nhồi máu thất phải (ST chênh lên ở V4R) hoặc huyết áp tâm thu < 90 mmHg (nguy cơ trụy mạch tụt huyết áp không hồi phục!)',
+          'Nếu có tổn thương thất phải: Truyền dịch tĩnh mạch đẳng trương (NaCl 0.9%) để nâng và duy trì tiền tải thất phải; tránh lợi tiểu',
+          'Không dùng chẹn beta đường tĩnh mạch trong giai đoạn tối cấp có nguy cơ nhịp chậm hoặc suy tim'
+        ],
+        further_workup: [
+          'Siêu âm tim tại giường đánh giá vận động vùng, chức năng tâm thu thất trái và phát hiện sớm biến chứng cơ học (thủng vách liên thất, đứt dây chằng van hai lá)',
+          'Theo dõi động học men tim hs-cTnT lặp lại sau 1-3 giờ',
+          'Xét nghiệm đông máu cơ bản, công thức máu và chức năng thận (Creatinine, eGFR) chuẩn bị can thiệp mạch vành'
+        ]
+      }
     },
     afib_rvr: {
       hr: 142, pWave: 'absent', pr: null, rhythm: 'irregular',
@@ -831,7 +1063,41 @@
       },
       sV1: 8, rV56: 14, rAvl: 5, rV1: 2,
       special: 'none',
-      ai_summary: 'Nhịp hoàn toàn không đều, mất hoàn toàn sóng P thay bằng sóng lăn tăn (sóng f nhỏ) ở V1. Tần số thất trung bình 142 l/p. ST chênh xuống nhẹ ở V5, V6 nghi do thiếu máu cơ tim tương đối khi nhịp quá nhanh. Chẩn đoán: Rung nhĩ đáp ứng thất nhanh (AFib with RVR).'
+      vitals: { bp: '115/75', spo2: '97%, mạch 142 l/p không đều' },
+      symptoms: { chestpain: false, dyspnea: true, syncope: false, palpitation: true, dizzy: false, diaphoresis: false, edema: false, onset: 'none' },
+      labs: { troponin: 'hs-cTnT âm tính (12 ng/L)', electrolytes: 'K+ 3.8 mmol/L, Mg2+ 0.85 mmol/L', echo: 'Nhĩ trái giãn nhẹ (LAD = 42mm), EF 52%', meds: 'Đang dùng Amlodipine 5mg' },
+      clinical_notes: `Bệnh nhân nữ 68 tuổi, tiền sử tăng huyết áp 8 năm, khởi phát cảm giác hồi hộp đánh trống ngực dồn dập kèm khó thở khi gắng sức 4 giờ trước, không đau ngực.`,
+      clinical_reasoning: `1. ECG: Mất sóng P thay bằng sóng lăn tăn f ở V1, nhịp thất hoàn toàn không đều với tần số trung bình 142 l/p, QRS hẹp.
+2. Lâm sàng: Bệnh nhân lớn tuổi (68 tuổi), khó thở và hồi hộp, huyết động hiện tại còn ổn định (HA 115/75 mmHg).
+3. Đánh giá nguy cơ tắc mạch: Nữ 68 tuổi có THA -> thang điểm CHA2DS2-VASc = 3 điểm (Chỉ định bắt buộc dùng kháng đông đường uống DOAC).
+4. Hướng xử trí: Kiểm soát tần số thất < 110 l/p bằng thuốc chẹn beta hoặc chẹn calci non-DHP, khởi trị kháng đông phòng đột quỵ não.`,
+      ai_summary: `Rung nhĩ đáp ứng thất nhanh (AFib with RVR, HR 142 l/p). Mất sóng P, nhịp thất không đều hoàn toàn. ST chênh xuống nhẹ ở V5, V6 nghi do nhịp quá nhanh.`,
+      clinical_diagnosis: {
+        primary: 'Rung nhĩ kịch phát đáp ứng thất nhanh (HR 142 l/p) — Huyết động ổn định, CHA₂DS₂-VASc = 3 điểm',
+        risk_level: 'Nguy cơ cao',
+        differentials: ['Cuồng nhĩ dẫn truyền nhĩ thất thay đổi', 'Nhịp nhanh nhĩ đa ổ (MAT)', 'Cơn tim nhanh trên thất (PSVT) kèm ngoại tâm thu']
+      },
+      treatment_plan: {
+        immediate_actions: [
+          'Đánh giá tính ổn định huyết động: Nếu xuất hiện tụt HA (<90mmHg), sốc tim, phù phổi cấp hoặc đau ngực thiếu máu cục bộ -> CHỈ ĐỊNH SỐC ĐIỆN ĐỒNG BỘ KHẨN (100-200J)',
+          'Huyết động ổn định: Ưu tiên chiến lược kiểm soát tần số thất (Rate control) mục tiêu HR < 110 l/p',
+          'Nghỉ ngơi tại giường, thở oxy nếu khó thở, kiểm tra điện giải đồ'
+        ],
+        medications: [
+          'Kiểm soát tần số thất: Metoprolol tartrate 2.5 - 5mg tiêm TM chậm trong 2 phút (lặp lại sau 5 phút nếu cần, tối đa 3 liều) HOẶC Diltiazem 0.25 mg/kg TM chậm trong 2 phút (chỉ dùng khi EF bảo tồn)',
+          'Nếu có suy tim giảm EF: Dùng Digoxin 0.25 - 0.5mg tiêm TM chậm hoặc Amiodarone 150mg truyền TM',
+          'Kháng đông đường uống (DOAC): Khởi động sớm Apixaban 5mg x 2 lần/ngày (hoặc Rivaroxaban 20mg x 1 lần/ngày) do CHA2DS2-VASc = 3 điểm'
+        ],
+        contraindications_warnings: [
+          'CHỐNG CHỈ ĐỊNH dùng Diltiazem/Verapamil nếu bệnh nhân có suy tim giảm phân suất tống máu (EF < 40%) hoặc có dấu hiệu phù phổi',
+          'KHÔNG CHUYỂN NHỊP (bằng thuốc hoặc sốc điện) nếu cơn rung nhĩ đã kéo dài > 48 giờ mà chưa được dùng kháng đông đầy đủ 3 tuần hoặc chưa siêu âm tim qua thực quản (TEE) loại trừ huyết khối tiểu nhĩ (nguy cơ bắn cục máu đông gây nhồi máu não diện rộng!)'
+        ],
+        further_workup: [
+          'Siêu âm tim qua thành ngực (TTE) đánh giá kích thước buồng tim, huyết khối nhĩ trái, van hai lá và EF%',
+          'Xét nghiệm chức năng tuyến giáp (FT4, TSH) tầm soát cơn rung nhĩ do cường giáp',
+          'Theo dõi điện giải đồ (K+, Mg2+) để tránh loạn nhịp kích phát'
+        ]
+      }
     },
     wpw: {
       hr: 82, pWave: 'normal', pr: 98, rhythm: 'regular',
@@ -846,7 +1112,38 @@
       },
       sV1: 6, rV56: 22, rAvl: 7, rV1: 14,
       special: 'wpw',
-      ai_summary: 'Khoảng PR rất ngắn (< 120ms, đo được ~98ms), đoạn khởi đầu phức bộ QRS trườn dốc tạo thành sóng Delta rõ ở DII, V4-V6 làm QRS giãn rộng 128ms. Sóng R cao ưu thế ở V1. Điển hình Hội chứng tiền kích thích Wolff-Parkinson-White (WPW type A).'
+      vitals: { bp: '110/70', spo2: '98%, mạch 82 l/p' },
+      symptoms: { chestpain: false, dyspnea: false, syncope: false, palpitation: true, dizzy: true, diaphoresis: false, edema: false, onset: 'none' },
+      labs: { troponin: 'Âm tính', electrolytes: 'K+ 4.2 mmol/L, bình thường', echo: 'Cấu trúc và chức năng tim bình thường', meds: 'Không dùng thuốc' },
+      clinical_notes: `Nam thanh niên 24 tuổi, tiền sử nhiều đợt hồi hộp đánh trống ngực kịch phát xuất hiện đột ngột và kết thúc đột ngột kèm choáng váng nhẹ, đi khám kiểm tra.`,
+      clinical_reasoning: `1. Khoảng PR rất ngắn 98ms (< 120ms), xuất hiện sóng Delta dốc thoai thoải ở đầu phức bộ QRS làm QRS giãn rộng 128ms.
+2. Sóng R cao ưu thế ở V1 phù hợp đường phụ nằm ở bên trái (WPW Type A).
+3. Lâm sàng có triệu chứng tim nhanh kịch phát nhiều đợt. Nguy cơ chính là xuất hiện cơn nhịp nhanh vào lại nhĩ thất (AVRT) hoặc rung nhĩ dẫn truyền qua đường phụ gây rung thất đột tử.
+4. Chỉ định phương pháp điều trị triệt để: Khảo sát điện sinh lý tim và triệt đốt đường phụ bằng sóng có tần số radio (RF Ablation).`,
+      ai_summary: `Hội chứng tiền kích thích Wolff-Parkinson-White (WPW Type A). PR ngắn 98ms, sóng Delta rõ rệt, QRS giãn rộng 128ms, R cao ưu thế ở V1.`,
+      clinical_diagnosis: {
+        primary: 'Hội chứng Wolff-Parkinson-White (WPW Type A) có triệu chứng cơn tim nhanh kịch phát',
+        risk_level: 'Nguy cơ trung bình',
+        differentials: ['Dày thất trái', 'Block nhánh phải hoàn toàn (RBBB)', 'Nhồi máu cơ tim thành sau cũ']
+      },
+      treatment_plan: {
+        immediate_actions: [
+          'Bản ghi hiện tại ở nhịp xoang ổn định: Chưa cần dùng thuốc cấp cứu',
+          'Hướng dẫn bệnh nhân kỹ thuật nghiệm pháp cường phế vị (Nghiệm pháp Valsalva cải tiến) khi xuất hiện cơn tim nhanh',
+          'Hẹn lịch khám chuyên khoa Rối loạn nhịp tim'
+        ],
+        medications: [
+          'Nếu xuất hiện Cơn nhịp nhanh vào lại nhĩ thất (AVRT QRS hẹp): Lựa chọn đầu tay Adenosine 6mg tiêm TM nhanh (bolus) xả nhanh 20ml NaCl 0.9%; nếu không cắt cơn tiêm tiếp 12mg',
+          'Nếu xuất hiện Rung nhĩ có tiền kích thích (Pre-excited AFib — QRS rộng dị thường, tần số cực nhanh > 200 l/p): SỐC ĐIỆN ĐỒNG BỘ NGAY hoặc dùng Procainamide / Ibutilide tĩnh mạch'
+        ],
+        contraindications_warnings: [
+          'CHỐNG CHỈ ĐỊNH TUYỆT ĐỐI các thuốc ức chế nút nhĩ thất: Digoxin, Verapamil, Diltiazem, Chẹn beta tiêm TM khi bệnh nhân WPW có rung nhĩ (vì sẽ chặn dẫn truyền qua nút AV, thúc đẩy dẫn truyền 1:1 qua đường phụ gây rung thất đột tử ngay lập tức!)'
+        ],
+        further_workup: [
+          'CHỈ ĐỊNH TRIỆT ĐỐT ĐƯỜNG PHỤ BẰNG SÓNG RADIO (RF Catheter Ablation) — Biện pháp điều trị triệt để với tỷ lệ khỏi bệnh vĩnh viễn > 95%',
+          'Holter điện tâm đồ 24 giờ ghi nhận cơn tim nhanh kịch phát'
+        ]
+      }
     },
     avb3: {
       hr: 38, pWave: 'normal', pr: 340, rhythm: 'regular',
@@ -861,7 +1158,41 @@
       },
       sV1: 14, rV56: 12, rAvl: 6, rV1: 2,
       special: 'none',
-      ai_summary: 'Sóng P xuất hiện đều với tần số nhĩ ~80 l/p. Phức bộ QRS tần số chậm ~38 l/p, giãn rộng. Sóng P và QRS độc lập, phân ly nhĩ-thất hoàn toàn. Chẩn đoán: Block nhĩ thất độ III (Block AV hoàn toàn, nhịp thoát thất).'
+      vitals: { bp: '85/50', spo2: '94%, mạch 38 l/p chậm yếu' },
+      symptoms: { chestpain: false, dyspnea: true, syncope: true, palpitation: false, dizzy: true, diaphoresis: false, edema: false, onset: 'none' },
+      labs: { troponin: 'hs-cTnT âm tính (14 ng/L)', electrolytes: 'K+ 4.4 mmol/L, Ca2+ bình thường', echo: 'Giãn nhẹ thất trái, không rối loạn vận động vùng', meds: 'Đang dùng Bisoprolol 5mg (đã ngừng 2 ngày)' },
+      clinical_notes: `Bệnh nhân nam 76 tuổi, tiền sử tăng huyết áp và xơ vữa mạch vành, gần đây xuất hiện hoa mắt chóng mặt liên tục và đã có 2 lần ngất xỉu đột ngột (Adams-Stokes). Huyết áp tụt 85/50 mmHg.`,
+      clinical_reasoning: `1. Sóng P đập đều tần số ~80 l/p. Phức bộ QRS tần số chậm 38 l/p, giãn rộng 135ms.
+2. Sóng P và QRS độc lập, phân ly nhĩ thất hoàn toàn -> Block nhĩ thất độ III với nhịp thoát thất chậm.
+3. Lâm sàng: Tụt huyết áp (85/50 mmHg), thiếu máu não gây ngất tái phát (cơn Adams-Stokes). Đây là tình trạng CẤP CỨU NỘI KHOA KHẨN CẤP.
+4. Chỉ định: Chuẩn bị máy tạo nhịp tạm thời tại giường và chỉ định cấy máy tạo nhịp tim vĩnh viễn.`,
+      ai_summary: `Block nhĩ thất độ III (Block AV hoàn toàn, phân ly nhĩ thất, nhịp thoát thất 38 l/p). Lâm sàng có tụt huyết áp và tiền sử ngất Adams-Stokes đe dọa tính mạng.`,
+      clinical_diagnosis: {
+        primary: 'Block nhĩ thất độ III (Block AV hoàn toàn, nhịp thoát thất 38 l/p) có biến chứng tụt huyết áp & ngất Adams-Stokes',
+        risk_level: 'Nguy cơ rất cao',
+        differentials: ['Block nhĩ thất độ II Mobitz II cao độ', 'Hội chứng suy nút xoang nhịp chậm ngất', 'Nhịp tự thất chậm do ngộ độc thuốc']
+      },
+      treatment_plan: {
+        immediate_actions: [
+          'Đặt bệnh nhân nằm đầu bằng, thở oxy, thiết lập 2 đường truyền tĩnh mạch ngoại vi lớn',
+          'DÁN BẢN CỰC VÀ BẬT SẴN MÁY TẠO NHỊP TẠM THỜI QUA DA (Transcutaneous Pacing) tại giường cấp cứu',
+          'Kích hoạt phòng can thiệp Đặt máy tạo nhịp tạm thời qua đường tĩnh mạch (Transvenous Pacing) cấp cứu'
+        ],
+        medications: [
+          'Atropine 0.5mg tiêm TM (lặp lại mỗi 3-5 phút, tối đa 3mg). Lưu ý: Trong block AV độ 3 tổn thương dưới nút, Atropine thường kém đáp ứng',
+          'Nếu Atropine không đáp ứng: Truyền tĩnh mạch Adrenaline (2-10 mcg/phút) hoặc Dopamine (2-10 mcg/kg/phút) để duy trì nhịp tim và nâng huyết áp trong khi chờ tạo nhịp',
+          'Ngừng ngay toàn bộ thuốc làm chậm nhịp tim: Chẹn beta, chẹn calci non-DHP, Digoxin'
+        ],
+        contraindications_warnings: [
+          'CHỐNG CHỈ ĐỊNH TUYỆT ĐỐI các thuốc chống loạn nhịp làm chậm dẫn truyền như Lidocaine, Amiodarone (có thể triệt tiêu luôn nhịp thoát thất duy nhất gây vô tâm thu ngừng tim!)',
+          'Không được chậm trễ tạo nhịp tạm thời khi bệnh nhân đã có triệu chứng tụt HA hoặc ngất'
+        ],
+        further_workup: [
+          'CHỈ ĐỊNH CẤY MÁY TẠO NHỊP TIM VĨNH VIỄN (Permanent Pacemaker - PPM)',
+          'Xét nghiệm men tim loại trừ nhồi máu cơ tim cấp thành dưới gây thiếu máu nút nhĩ thất',
+          'Định lượng nồng độ Digoxin nếu bệnh nhân có tiền sử sử dụng'
+        ]
+      }
     },
     hyperk: {
       hr: 58, pWave: 'absent', pr: null, rhythm: 'regular',
@@ -876,8 +1207,45 @@
       },
       sV1: 15, rV56: 10, rAvl: 8, rV1: 4,
       special: 'hyperk',
-      clinical_reasoning: '1. Sóng P dẹt và hầu như tiêu biến ở các chuyển đạo.\n2. Phức bộ QRS giãn rộng 145ms với trục vô định.\n3. Sóng T cao nhọn, đối xứng hình lều, đáy hẹp ở V2-V5 (biên độ > 10mm).\n4. Đối chiếu tiêu chuẩn Viện Tim Mạch VN: Hình ảnh tăng Kali máu giai đoạn nặng (> 7.5 mmol/L). Nguy cơ chuyển sang sóng hình sin và rung thất rất cao. Chỉ định cấp cứu: Canxi tiêm tĩnh mạch, Insulin + Glucose, khí dung Albuterol và lọc máu khẩn.',
-      ai_summary: 'Sóng T cao nhọn, đáy hẹp, đối xứng hình lều ở hầu hết các chuyển đạo trước tim (V2-V5). Phức bộ QRS giãn rộng 145ms, sóng P dẹt/mất. Hình ảnh kinh điển của tăng Kali máu nặng đe dọa ngừng tim.'
+      vitals: { bp: '135/85', spo2: '96%, mạch 58 l/p' },
+      symptoms: { chestpain: false, dyspnea: false, syncope: false, palpitation: false, dizzy: true, diaphoresis: false, edema: true, onset: 'none' },
+      labs: { troponin: 'Bình thường', electrolytes: 'K+ 7.4 mmol/L (Tăng rất nặng), Creatinine 520 umol/L', echo: 'Không giảm vận động vùng, dày thất trái nhẹ', meds: 'Đang dùng Valsartan, Spironolactone (đã chỉ định ngừng)' },
+      clinical_notes: `Bệnh nhân nam 58 tuổi, tiền sử bệnh thận mạn giai đoạn 5 đang lọc máu chu kỳ, bỏ lọc 2 buổi trong tuần này. Cảm giác mệt lả cơ, yếu tứ chi hai bên.`,
+      clinical_reasoning: `1. Sóng P dẹt và tiêu biến, QRS giãn rộng 145ms với trục vô định.
+2. Sóng T cao nhọn, đối xứng hình lều, đáy hẹp ở V2-V5 (biên độ rất lớn).
+3. Cận lâm sàng: Kali máu tăng vọt 7.4 mmol/L trên nền bệnh thận mạn giai đoạn cuối.
+4. Đánh giá nguy cơ: Nguy cơ tối khẩn chuyển thành sóng hình sin (Sine wave) và rung thất ngừng tim trong vài phút. Cần xử trí cấp cứu 3 bước ngay lập tức.`,
+      ai_summary: `Hình ảnh kinh điển của Tăng Kali máu nặng đe dọa ngừng tim (sóng T cao nhọn hình lều, QRS giãn rộng 145ms, mất P). Kali máu xét nghiệm 7.4 mmol/L.`,
+      clinical_diagnosis: {
+        primary: 'Tăng Kali máu mức độ rất nặng (K+ = 7.4 mmol/L) có biến đổi điện tim đe dọa ngừng tim trên nền Bệnh thận mạn giai đoạn 5',
+        risk_level: 'Nguy cơ rất cao',
+        differentials: ['Nhồi máu cơ tim tối cấp', 'Ngộ độc thuốc chống trầm cảm ba vòng (TCA)', 'Dẫn truyền lệch hướng thất']
+      },
+      treatment_plan: {
+        immediate_actions: [
+          'BƯỚC 1 — ỔN ĐỊNH MÀNG TẾ BÀO CƠ TIM NGAY: Tiêm tĩnh mạch chậm Calcium gluconate 10% (10-20ml tiêm trong 2-3 phút dưới monitor). Tác dụng bảo vệ tim xuất hiện sau 1-3 phút; lặp lại sau 5 phút nếu QRS chưa co lại',
+          'BƯỚC 2 — ĐẨY KALI VÀO TRONG TẾ BÀO: Truyền Glucose 20% 250ml pha 10 đơn vị Insulin nhanh (Actrapid) truyền tĩnh mạch trong 30 phút',
+          'Khí dung Salbutamol liều cao: 10 - 20mg qua khí dung mask trong 15 phút',
+          'Natri Bicarbonat 8.4% 50-100ml TM nếu có toan chuyển hóa nặng',
+          'BƯỚC 3 — ĐÀO THẢI KALI: KÍCH HOẠT LỌC MÁU CẤP CỨU (Chạy thận nhân tạo cấp cứu) — Biện pháp triệt để nhất'
+        ],
+        medications: [
+          'Calcium gluconate 10%: 1-2 ống tiêm TM chậm',
+          'Insulin nhanh 10 UI + Glucose 20% 250ml truyền TM',
+          'Salbutamol khí dung 10-20mg',
+          'Thuốc gắp Kali qua đường tiêu hóa: Resonium hoặc Lokelma (Sodium zirconium cyclosilicate) 10g uống'
+        ],
+        contraindications_warnings: [
+          'CHỐNG CHỈ ĐỊNH tiêm Canxi nếu nghi ngờ tăng Kali do ngộ độc Digoxin (nguy cơ gây ngừng tim co cứng)',
+          'Phải theo dõi sát đường huyết mao mạch sau 1 giờ và 2 giờ để phòng ngừa hạ đường huyết muộn do Insulin',
+          'Không được trì hoãn lọc máu cấp cứu khi Kali > 7.0 mmol/L kèm giãn rộng QRS'
+        ],
+        further_workup: [
+          'Đo lại ECG ngay sau tiêm Canxi để đánh giá sự thu hẹp của phức bộ QRS',
+          'Xét nghiệm lại điện giải đồ (K+, Na+, Ca2+) mỗi 2 giờ sau can thiệp',
+          'Khí máu động mạch (ABG) đánh giá pH và tình trạng kiềm toan'
+        ]
+      }
     },
     brugada_t1: {
       hr: 72, pWave: 'normal', pr: 160, rhythm: 'regular',
@@ -892,8 +1260,39 @@
       },
       sV1: 8, rV56: 16, rAvl: 5, rV1: 4,
       special: 'brugada',
-      clinical_reasoning: '1. Nhịp xoang đều 72 l/p, PR 160ms bình thường.\n2. Chuyển đạo V1-V2: Điểm J chênh lên >= 2mm (đo được 3.5mm), đoạn ST chênh lên dạng vòm (coved-type) đi dốc xuống liên tục hòa vào sóng T âm sâu đối xứng.\n3. Đối chiếu Bảng 1 - Tiêu chuẩn Brugada (Giáo trình ĐH Y Hà Nội / Viện Tim Mạch VN): Đạt tiêu chuẩn chẩn đoán xác định Hội chứng Brugada Type 1.\n4. Đánh giá nguy cơ: Nguy cơ cao rung thất kịch phát và đột tử do tim ở nam giới trẻ tuổi. Đề nghị chỉ định khảo sát điện sinh lý và cân nhắc cấy máy phá rung tự động (ICD).',
-      ai_summary: 'Hội chứng Brugada Type 1 điển hình: ST chênh lên dạng cong vòm (coved-type) >2mm ở V1-V2 tiếp nối bằng sóng T âm sâu. Bệnh lý kênh Natri có nguy cơ đột tử tim mạch cao.'
+      vitals: { bp: '120/75', spo2: '99%, mạch 72 l/p' },
+      symptoms: { chestpain: false, dyspnea: false, syncope: true, palpitation: true, dizzy: false, diaphoresis: false, edema: false, onset: 'none' },
+      labs: { troponin: 'Âm tính', electrolytes: 'K+ 4.2 mmol/L, bình thường', echo: 'Cấu trúc tim hoàn toàn bình thường, EF 62%', meds: 'Không dùng thuốc' },
+      clinical_notes: `Bệnh nhân nam 34 tuổi, có tiền sử ngất 1 lần trong giấc ngủ ban đêm, gia đình có anh trai ruột đột tử năm 32 tuổi không rõ nguyên nhân.`,
+      clinical_reasoning: `1. Nhịp xoang đều 72 l/p, PR bình thường 160ms.
+2. Chuyển đạo V1-V2: Điểm J chênh lên 3.5mm (>= 2mm), đoạn ST chênh lên dạng vòm (coved-type) đi dốc xuống liên tục hòa vào sóng T âm sâu đối xứng.
+3. Đối chiếu tiêu chuẩn Brugada (ĐH Y Hà Nội / Hội Tim mạch VN): Chẩn đoán xác định Hội chứng Brugada Type 1.
+4. Tiền sử có ngất trong giấc ngủ và tiền sử gia đình có người đột tử trẻ tuổi -> Bệnh nhân thuộc nhóm NGUY CƠ RẤT CAO ĐỘT TỬ DO TIM do rung thất kịch phát.`,
+      ai_summary: `Hội chứng Brugada Type 1 điển hình (ST chênh lên dạng vòm coved-type >2mm ở V1-V2 tiếp nối sóng T âm). Tiền sử ngất và gia đình đột tử nguy cơ cao.`,
+      clinical_diagnosis: {
+        primary: 'Hội chứng Brugada Type 1 điển hình có triệu chứng ngất — Nguy cơ cao ĐỘT TỬ DO TIM',
+        risk_level: 'Nguy cơ cao',
+        differentials: ['Nhồi máu cơ tim trước vách (LAD)', 'Viêm màng ngoài tim cấp', 'Block nhánh phải hoàn toàn kèm biến đổi thứ phát', 'Hội chứng tái cực sớm']
+      },
+      treatment_plan: {
+        immediate_actions: [
+          'Nhập viện khoa Loạn nhịp tim / Hồi sức tim mạch để theo dõi monitor điện tim liên tục',
+          'HẠ SỐT TÍCH CỰC NGAY LẬP TỨC nếu bệnh nhân có sốt (thân nhiệt tăng cao là yếu tố khởi phát cơn rung thất ở bệnh nhân Brugada)',
+          'Chỉ định khảo sát điện sinh lý tim (EPS) đánh giá khả năng kích thích thất'
+        ],
+        medications: [
+          'Nếu xuất hiện bão loạn nhịp thất (cơn rung thất/nhịp nhanh thất đa hình tái phát): Truyền tĩnh mạch Isoproterenol hoặc uống Quinidine',
+          'Cung cấp danh sách các thuốc chống chỉ định (tra cứu tại www.brugadadrugs.org) cho bệnh nhân mang theo người'
+        ],
+        contraindications_warnings: [
+          'CHỐNG CHỈ ĐỊNH TUYỆT ĐỐI các thuốc chẹn kênh Natri nhóm IA, IC (Flecainide, Propafenone, Ajmaline) vì sẽ bộc lộ cơn rung thất chết người',
+          'TRÁNH TUYỆT ĐỐI các thuốc: Thuốc gây mê/gây tê (Bupivacaine), thuốc chống trầm cảm ba vòng (Amitriptyline), thuốc an thần, rượu bia và chất kích thích'
+        ],
+        further_workup: [
+          'CHỈ ĐỊNH CẤY MÁY PHÁ RUNG TỰ ĐỘNG (ICD - Implantable Cardioverter Defibrillator) — Biện pháp duy nhất được chứng minh ngăn ngừa đột tử ở bệnh nhân Brugada Type 1 có triệu chứng',
+          'Sàng lọc điện tâm đồ và tư vấn di truyền (đột biến gen SCN5A) cho tất cả người thân trực hệ thế hệ 1 trong gia đình'
+        ]
+      }
     },
     lqts_torsade: {
       hr: 64, pWave: 'normal', pr: 170, rhythm: 'regular',
@@ -908,8 +1307,42 @@
       },
       sV1: 9, rV56: 18, rAvl: 4, rV1: 3,
       special: 'none',
-      clinical_reasoning: '1. Nhịp xoang đều 64 l/p, PR 170ms, QRS hẹp 88ms.\n2. Khoảng QT đo thủ công tại DII và V5 là 510ms. Tần số 64 l/p (RR = 0.94s) -> QTc tính theo công thức Bazett là 526ms.\n3. Đối chiếu tiêu chuẩn ESC 2015 / Viện Tim Mạch VN: QTc > 480ms ở nữ (vượt ngưỡng 500ms đe dọa tính mạng). Thuộc nhóm nguy cơ rất cao khởi phát ngoại tâm thu thất dạng R/T dẫn đến Cơn xoắn đỉnh (Torsades de Pointes) và rung thất.\n4. Khuyến nghị: Rà soát ngay các thuốc đang sử dụng (Amiodarone, Quinolone, hướng thần...), xét nghiệm ion đồ (K+, Mg2+, Ca2+), tránh vận động gắng sức mạnh.',
-      ai_summary: 'Khoảng QT kéo dài rõ rệt (QT = 510ms, QTc Bazett = 526ms vượt ngưỡng báo động 500ms). Nguy cơ cao biến cố xoắn đỉnh và ngất, nghi ngờ Hội chứng QT dài (LQTS).'
+      vitals: { bp: '105/65', spo2: '98%, mạch 64 l/p' },
+      symptoms: { chestpain: false, dyspnea: false, syncope: true, palpitation: false, dizzy: true, diaphoresis: false, edema: false, onset: 'none' },
+      labs: { troponin: 'Âm tính', electrolytes: 'K+ 3.2 mmol/L (hạ nhẹ), Mg2+ 0.65 mmol/L (giảm)', echo: 'Chức năng và kích thước buồng tim bình thường', meds: 'Đang uống Erythromycin 500mg và Loratadine' },
+      clinical_notes: `Bệnh nhân nữ 28 tuổi, đang điều trị nhiễm trùng hô hấp bằng kháng sinh Erythromycin, đột ngột ngất xỉu 2 lần khi nghe tiếng chuông báo thức to, kèm choáng váng.`,
+      clinical_reasoning: `1. Nhịp xoang đều 64 l/p, QRS hẹp 88ms.
+2. Khoảng QT đo tại DII và V5 là 510ms -> QTc tính theo công thức Bazett là 526ms (vượt xa ngưỡng an toàn 480ms ở nữ và vượt ngưỡng báo động 500ms).
+3. Bệnh nhân có hạ Kali (3.2 mmol/L), giảm Magie (0.65 mmol/L) và đang dùng kháng sinh nhóm Macrolide (Erythromycin) kéo dài QT.
+4. Nguy cơ: Rất cao xuất hiện ngoại tâm thu thất dạng R/T dẫn đến CƠN XOẮN ĐỈNH (Torsades de Pointes) và rung thất đột tử.`,
+      ai_summary: `Hội chứng khoảng QT kéo dài mắc phải (Acquired LQTS, QTc Bazett 526ms vượt ngưỡng 500ms). Nguy cơ rất cao Cơn xoắn đỉnh do hạ K+/Mg2+ và dùng thuốc kéo dài QT.`,
+      clinical_diagnosis: {
+        primary: 'Hội chứng khoảng QT kéo dài (QTc Bazett 526ms) có triệu chứng ngất — Nguy cơ rất cao CƠN XOẮN ĐỈNH (Torsades de Pointes) & Đột tử',
+        risk_level: 'Nguy cơ rất cao',
+        differentials: ['Hội chứng QT dài bẩm sinh (LQT2 do tiếng động giật mình)', 'Hạ điện giải máu đơn thuần', 'Thiếu máu cơ tim dưới nội tâm mạc']
+      },
+      treatment_plan: {
+        immediate_actions: [
+          'NGỪNG NGAY LẬP TỨC toàn bộ thuốc gây kéo dài QT (kháng sinh Macrolide Erythromycin, Quinolone, thuốc chống dị ứng, chống trầm cảm)',
+          'BÙ MAGNESIUM SULFATE TĨNH MẠCH NGAY: Tiêm TM chậm 2g Magnesium sulfate 20% trong 10-15 phút, kể cả khi Magie máu bình thường',
+          'Bù Kali máu tích cực để duy trì nồng độ Kali máu ở mức cao bình thường (4.5 - 5.0 mmol/L)',
+          'Sẵn sàng máy phá rung cạnh giường bệnh'
+        ],
+        medications: [
+          'Magnesium sulfate: 2g tiêm TM bolus, sau đó truyền liên tục 2-4 mg/phút nếu còn tái phát ngoại tâm thu thất',
+          'Bù Kali: KCl đường uống hoặc truyền tĩnh mạch qua catheter tĩnh mạch trung tâm',
+          'Nếu nhịp chậm làm QT dài thêm hoặc khởi phát ngoại tâm thu: Truyền tĩnh mạch Isoproterenol hoặc đặt máy tạo nhịp tạm thời nâng tần số tim lên 90-100 l/p để rút ngắn khoảng QT'
+        ],
+        contraindications_warnings: [
+          'CHỐNG CHỈ ĐỊNH các thuốc chống loạn nhịp nhóm IA (Quinidine, Procainamide), nhóm IC và nhóm III (Amiodarone, Sotalol) vì sẽ làm QT kéo dài thêm gây rung thất khó cứu vãn!',
+          'Tránh vận động gắng sức mạnh, tránh bơi lội và hạn chế tiếng động giật mình'
+        ],
+        further_workup: [
+          'Đo lại ECG mỗi 2-4 giờ theo dõi động học rút ngắn của khoảng QTc sau bù Magie và Kali',
+          'Xét nghiệm lại ion đồ máu (K+, Mg2+, Ca2+) sau truyền',
+          'Tầm soát Hội chứng QT dài bẩm sinh nếu QTc vẫn kéo dài sau khi đã ngừng thuốc và hồi phục điện giải'
+        ]
+      }
     }
   };
 
@@ -1134,36 +1567,23 @@
 
   // System Prompt based on GS. Tran Do Trinh, ThS. Tran Van Dong & Hanoi Medical University guidelines (PGS.TS. Pham Manh Hung, TS. Phan Dinh Phong)
   const ECG_AI_SYSTEM_PROMPT = `
-Bạn là chuyên gia phân tích điện tâm đồ (ECG) hàng đầu, áp dụng nghiêm ngặt quy trình chẩn đoán kinh điển của GS.TS. Trần Đỗ Trinh, ThS. Trần Văn Đồng cùng bộ tiêu chuẩn cập nhật của Bộ môn Tim mạch - Trường Đại học Y Hà Nội & Viện Tim mạch Việt Nam (PGS.TS. Phạm Mạnh Hùng, TS. Phan Đình Phong).
+Bạn là chuyên gia phân tích điện tâm đồ (ECG) và cấp cứu tim mạch hàng đầu, áp dụng nghiêm ngặt quy trình chẩn đoán kinh điển của GS.TS. Trần Đỗ Trinh, ThS. Trần Văn Đồng cùng bộ tiêu chuẩn cập nhật của Bộ môn Tim mạch - Trường Đại học Y Hà Nội & Viện Tim mạch Việt Nam (PGS.TS. Phạm Mạnh Hùng, TS. Phan Đình Phong) kết hợp phác đồ điều trị của Bộ Y tế Việt Nam và Hội Tim mạch học Việt Nam (VNHA / ESC).
 
-Nhiệm vụ: Phân tích toàn diện ảnh chụp bản ghi điện tâm đồ 12 chuyển đạo tiêu chuẩn.
-1. ĐỌC THÔNG SỐ IN SẴN (HEADER OCR):
-   - Tìm các chỉ số do máy in ở góc trên hoặc rìa: Vent. Rate (HR), PR/PQ interval (ms), QRS duration (ms), QT/QTc (ms), Trục P-QRS-T (degrees). Lấy giá trị này đối chiếu kiểm tra.
-2. PHÂN TÍCH THEO QUY TRÌNH HỆ THỐNG:
-   - Kỹ thuật & Điện cực: Kiểm tra test milivolt (10mm/mV, 25mm/s), kiểm tra mắc ngược điện cực chi (nếu DI âm toàn bộ cả P, QRS, T và aVR dương -> nghi mắc lộn tay phải/tay trái RA-LA).
-   - Nhịp: Nhịp xoang (P dương ở DI, DII, aVF, V4-V6; âm ở aVR) hay không, đều hay loạn nhịp (rung nhĩ sóng f lăn tăn, cuồng nhĩ sóng F răng cưa tần số 250-350 l/p, ngoại tâm thu nhĩ/thất).
-   - Sóng P (Tăng gánh nhĩ):
-     + Dày nhĩ trái (P hai lá): P rộng > 100-120ms chẻ đôi 2 đỉnh (đỉnh sau > đỉnh trước) ở DII/DI/V5/V6, biên độ DI > DIII; V1 có pha âm rộng >= 0.04s, sâu >= 1mm (Chỉ số Morris).
-     + Dày nhĩ phải (P phế): P cao nhọn đối xứng >= 2.5mm ở DII, DIII, aVF; V1 pha dương cao > 1.5mm.
-   - Khoảng PR: Bình thường 120-200ms; Ngắn < 120ms (nghi WPW với sóng Delta); Dài > 200ms (Block AV I); Wenckebach (PR dài dần rồi rớt QRS); Mobitz II; Phân ly nhĩ thất (Block AV III).
-   - Phức bộ QRS & Dẫn truyền:
-     + Độ rộng bình thường 60-100ms; giãn rộng >= 120ms.
-     + V1: rSR' (tai thỏ - RBBB); QS hoặc rS rộng sâu (LBBB). V6: S rộng khấc (RBBB) hoặc R rộng đơn pha có khấc (LBBB).
-     + Phân biệt tim nhanh QRS rộng (Thuật toán 4 bước Brugada): vắng mặt dạng RS ở V1-V6, khoảng RS > 100ms, phân ly nhĩ thất (nhát bắt được thất/nhát bóp hỗn hợp) -> Nhịp nhanh thất (VT).
-   - Trục điện tim: Góc alpha (-180 đến +180 độ). Trục trung gian (0 đến +90), Lệch trái (-30 đến -90), Lệch phải (+90 đến +180), Vô định (-90 đến -180).
-   - Phì đại thất:
-     + Dày thất trái: Sokolow-Lyon: S(V1) + R(V5/V6) >= 35mm; Cornell: R(aVL) + S(V3) > 28mm (nam) hoặc > 20mm (nữ); R(aVL) > 11mm; Dấu hiệu strain ST-T âm ở V5-V6.
-     + Dày thất phải: R/S ở V1 > 1, R(V1) >= 7mm, Sokolow-Lyon phải: R(V1) + S(V5/V6) > 10.5mm, trục lệch phải > +110 độ.
-   - Khoảng QT & QTc (Tiêu chuẩn ESC 2015): Đo tại DII và V5. QTc Bazett = QT/căn(RR). Kéo dài khi > 470ms (nam) hoặc > 480ms (nữ). Nguy cơ xoắn đỉnh khi QTc > 500ms (Hội chứng QT dài - LQTS).
-   - Đoạn ST, sóng T & Q hoại tử (Định khu 4 vùng & phân giai đoạn NMCT):
-     + Dưới (II, III, aVF); Vách (V1, V2); Trước (V3, V4); Bên (I, aVL, V5, V6). Soi gương ở chuyển đạo đối diện. Sóng Q hoại tử rộng >= 0.04s hoặc sâu >= 25% R.
-   - Hội chứng & Dấu hiệu đặc biệt:
-     + Brugada Type 1: Điểm J >= 2mm, ST cong vòm (coved-type) dốc xuống hòa vào sóng T âm ở V1-V3. (Bệnh lý kênh Natri nguy cơ đột tử tim mạch).
-     + Brugada Type 2/3: ST dạng yên ngựa (saddleback).
-     + Rối loạn điện giải: Tăng Kali máu (T cao nhọn đối xứng hình lều, PR dài, P dẹt -> QRS giãn rộng hình sin); Hạ Kali máu (T dẹt, sóng U nhô cao ở V2-V4, ST chênh xuống).
-     + Viêm màng ngoài tim: ST chênh lên lan tỏa lõm (hình đáy thuyền) kèm PR chênh xuống.
-     + Ngấm Digoxin: ST lõm đáy chén. Sóng Osborn (hạ thân nhiệt). Sóng Epsilon (ARVC).
-     + Máy tạo nhịp (Pacemaker): Xuất hiện vạch spike thẳng đứng trước sóng P hoặc trước QRS.
+Nhiệm vụ:
+1. ĐỌC THÔNG SỐ IN SẴN (HEADER OCR): Tìm các chỉ số Vent. Rate (HR), PR/PQ (ms), QRS (ms), QT/QTc (ms), Trục P-QRS-T (degrees).
+2. PHÂN TÍCH THEO QUY TRÌNH HỆ THỐNG 6 BƯỚC:
+   - Kỹ thuật & Điện cực: Test 10mm/mV, 25mm/s; loại trừ mắc ngược điện cực RA-LA.
+   - Nhịp: Nhịp xoang hay loạn nhịp (rung nhĩ sóng f, cuồng nhĩ sóng F răng cưa, ngoại tâm thu).
+   - Sóng P: Dày nhĩ trái (P rộng > 120ms chẻ đôi ở DII, pha âm sâu V1 Morris); Dày nhĩ phải (P phế cao nhọn >= 2.5mm ở DII, aVF).
+   - Khoảng PR: Ngắn < 120ms (WPW với sóng Delta); Dài > 200ms (Block AV I); Wenckebach (Mobitz I); Mobitz II; Phân ly nhĩ thất (Block AV III).
+   - Phức bộ QRS: RBBB (rSR' ở V1, S rộng ở V6); LBBB (QS/rS sâu V1, R rộng đơn pha có khấc V6). Phân biệt VT vs SVT lệch hướng bằng thuật toán 4 bước Brugada.
+   - Trục điện tim: Góc alpha (-180 đến +180 độ). Trung gian, Trái, Phải, Vô định.
+   - Phì đại thất: Dày thất trái (Sokolow-Lyon S(V1)+R(V5/V6) >= 35mm; Cornell R(aVL)+S(V3) > 28mm nam, > 20mm nữ; R(aVL) > 11mm); Dày thất phải (R/S V1 > 1, R(V1) >= 7mm).
+   - Khoảng QT & QTc (ESC 2015): Đo DII/V5. QTc Bazett = QT/căn(RR). Kéo dài > 470ms nam, > 480ms nữ. Nguy cơ xoắn đỉnh khi QTc > 500ms (LQTS).
+   - ST, T & Q hoại tử: Định khu 4 vùng: Dưới (II, III, aVF); Vách (V1, V2); Trước (V3, V4); Bên (I, aVL, V5, V6) và đối chiếu soi gương.
+   - Hội chứng & Dấu hiệu đặc biệt: Brugada Type 1 (ST vòm coved-type >= 2mm V1-V3 nối T âm); Tăng Kali máu (T cao nhọn hình lều, QRS rộng); Hạ Kali máu (sóng U nhô cao, ST hạ); Viêm màng ngoài tim; Ngấm Digoxin (ST đáy chén); Sóng Osborn; Máy tạo nhịp (spike).
+3. TỔNG HỢP TOÀN DIỆN VỚI THÔNG TIN LÂM SÀNG & CẬN LÂM SÀNG CỦA BỆNH NHÂN ĐƯỢC CUNG CẤP (Triệu chứng đau ngực, khó thở, ngất, sốc, huyết áp, mạch, SpO2, men tim hs-Troponin, điện giải Kali/Na/Ca/Mg, siêu âm tim EF%, thuốc đang dùng...).
+4. ĐƯA RA GỢI Ý CHẨN ĐOÁN (Chẩn đoán xác định nghĩ nhiều nhất, phân tầng nguy cơ, chẩn đoán phân biệt) VÀ PHÁC ĐỒ XỬ TRÍ CẤP CỨU CỤ THỂ (Các bước cấp cứu ban đầu, thuốc & liều lượng, chống chỉ định/cảnh báo, thăm dò cận lâm sàng tiếp theo).
 
 YÊU CẦU TRẢ VỀ:
 Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau, không kèm bất kỳ giải thích nào khác ngoài JSON:
@@ -1192,10 +1612,214 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
   "rAvl": 6,
   "rV1": 3,
   "special": "none" | "wpw" | "brugada" | "pericarditis" | "hyperk" | "digoxin" | "epsilon" | "osborn",
-  "clinical_reasoning": "Chuỗi lập luận lâm sàng chi tiết từng bước: 1. Đánh giá chất lượng kỹ thuật & dải nhịp; 2. Phân tích hình thái từng đạo trình cụ thể; 3. Đối chiếu tiêu chuẩn GS. Trần Đỗ Trinh và các hội chứng chuyên sâu; 4. Phân tích loại trừ và kết luận.",
-  "ai_summary": "Tóm tắt ngắn gọn các phát hiện trên điện tâm đồ (chuẩn tiếng Việt y khoa)."
+  "clinical_reasoning": "Chuỗi lập luận lâm sàng chi tiết từng bước: 1. Đánh giá dải nhịp & dẫn truyền; 2. Phân tích hình thái 12 chuyển đạo; 3. Đối chiếu bối cảnh lâm sàng (triệu chứng, huyết áp, men tim, điện giải đồ); 4. Lý luận chẩn đoán xác định và phân biệt.",
+  "ai_summary": "Tóm tắt ngắn gọn các phát hiện trên điện tâm đồ (chuẩn tiếng Việt y khoa).",
+  "clinical_diagnosis": {
+    "primary": "Chẩn đoán xác định / nghĩ nhiều nhất (kèm định khu, giai đoạn & biến chứng lâm sàng)",
+    "risk_level": "Nguy cơ rất cao" | "Nguy cơ cao" | "Nguy cơ trung bình" | "Nguy cơ thấp",
+    "differentials": [
+      "Chẩn đoán phân biệt 1 cần loại trừ",
+      "Chẩn đoán phân biệt 2 cần loại trừ"
+    ]
+  },
+  "treatment_plan": {
+    "immediate_actions": [
+      "Hành động cấp cứu ban đầu 1",
+      "Hành động cấp cứu ban đầu 2"
+    ],
+    "medications": [
+      "Tên thuốc 1: Liều lượng, đường dùng, thời điểm dùng theo phác đồ",
+      "Tên thuốc 2: Liều lượng, đường dùng..."
+    ],
+    "contraindications_warnings": [
+      "Cảnh báo đặc biệt và chống chỉ định quan trọng (ví dụ: Chống chỉ định Nitrat/chẹn beta nếu có nhồi máu thất phải hoặc tụt huyết áp)"
+    ],
+    "further_workup": [
+      "Thăm dò cận lâm sàng 1 (vd: Siêu âm tim tại giường, theo dõi động học hs-Troponin sau 1-3h...)",
+      "Thăm dò cận lâm sàng 2..."
+    ]
+  }
 }
 `;
+
+  // Helper to collect all patient clinical symptoms & lab values for AI & Decision Support
+  function buildClinicalContextText(){
+    const bp = document.getElementById('vital-bp')?.value.trim();
+    const spo2 = document.getElementById('vital-spo2')?.value.trim();
+    const troponin = document.getElementById('lab-troponin')?.value.trim();
+    const electrolytes = document.getElementById('lab-electrolytes')?.value.trim();
+    const echo = document.getElementById('lab-echo')?.value.trim();
+    const meds = document.getElementById('lab-meds')?.value.trim();
+    const notes = document.getElementById('clinicalNotesInput')?.value.trim();
+
+    const syms = [];
+    if(val('sym-chestpain')){
+      const onset = val('onsetTime');
+      const onsetStr = { lt2:'< 2 giờ', '2to12':'2–12 giờ', gt12:'> 12 giờ', none:'không rõ thời gian' }[onset] || '';
+      syms.push(`Đau ngực (khởi phát ${onsetStr})`);
+    }
+    if(val('sym-dyspnea')) syms.push('Khó thở');
+    if(val('sym-palpitation')) syms.push('Hồi hộp / trống ngực');
+    if(val('sym-dizzy')) syms.push('Chóng mặt / tiền ngất');
+    if(val('sym-syncope')) syms.push('Ngất (mất ý thức đột ngột)');
+    if(val('sym-diaphoresis')) syms.push('Vã mồ hôi / buồn nôn');
+    if(val('sym-edema')) syms.push('Phù chân');
+
+    const parts = [];
+    if(syms.length > 0) parts.push(`- Triệu chứng lâm sàng: ${syms.join(', ')}`);
+    if(bp) parts.push(`- Huyết áp: ${bp} mmHg`);
+    if(spo2) parts.push(`- SpO2 & Mạch: ${spo2}`);
+    if(troponin) parts.push(`- Men tim: ${troponin}`);
+    if(electrolytes) parts.push(`- Điện giải đồ: ${electrolytes}`);
+    if(echo) parts.push(`- Siêu âm tim: ${echo}`);
+    if(meds) parts.push(`- Thuốc đang dùng & Tiền sử: ${meds}`);
+    if(notes) parts.push(`- Ghi chú / Diễn biến lâm sàng: ${notes}`);
+
+    return parts.length > 0 ? parts.join('\n') : 'Chưa có thông tin lâm sàng/cận lâm sàng bổ sung (bệnh nhân khám thường quy).';
+  }
+
+  // Quick Tags Event Handlers
+  document.querySelectorAll('.tag-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const act = btn.getAttribute('data-action');
+      btn.classList.toggle('active');
+      const isActive = btn.classList.contains('active');
+
+      switch(act){
+        case 'tag-chestpain-acute':
+          setVal('sym-chestpain', isActive);
+          if(isActive) setVal('onsetTime', 'lt2');
+          break;
+        case 'tag-chestpain-radiating':
+          setVal('sym-chestpain', isActive);
+          if(isActive){
+            const cur = document.getElementById('clinicalNotesInput').value;
+            if(!cur.includes('lan vai và tay trái')) document.getElementById('clinicalNotesInput').value = (cur + ' Đau thắt ngực đè nặng sau xương ức lan vai và tay trái.').trim();
+          }
+          break;
+        case 'tag-dyspnea':
+          setVal('sym-dyspnea', isActive);
+          break;
+        case 'tag-syncope':
+          setVal('sym-syncope', isActive);
+          break;
+        case 'tag-shock':
+          if(isActive){
+            setVal('vital-bp', '85/50');
+            setVal('sym-dizzy', true);
+          } else {
+            setVal('vital-bp', '');
+          }
+          break;
+        case 'tag-palpitation':
+          setVal('sym-palpitation', isActive);
+          break;
+        case 'tag-trop-high':
+          setVal('lab-troponin', isActive ? 'hs-cTnT: 1850 ng/L (Dương tính tăng cao)' : '');
+          break;
+        case 'tag-k-high':
+          setVal('lab-electrolytes', isActive ? 'K+ 6.8 mmol/L (Tăng nặng)' : '');
+          break;
+        case 'tag-k-low':
+          setVal('lab-electrolytes', isActive ? 'K+ 2.8 mmol/L (Hạ nặng), Mg2+ 0.65 mmol/L' : '');
+          break;
+        case 'tag-med-digoxin':
+          setVal('lab-meds', isActive ? 'Đang dùng Digoxin 0.25mg/ngày' : '');
+          break;
+        case 'tag-med-amiodarone':
+          setVal('lab-meds', isActive ? 'Đang dùng Amiodarone 200mg/ngày' : '');
+          break;
+        case 'tag-echo-ef':
+          setVal('lab-echo', isActive ? 'EF 35% (Giảm nặng), giảm động thành thất' : '');
+          break;
+      }
+    });
+  });
+
+  // Render Dedicated Clinical Guidance Card
+  function renderClinicalGuidanceCard(diag, txPlan){
+    const card = document.getElementById('aiClinicalGuidanceCard');
+    if(!card) return;
+
+    if(!diag && !txPlan){
+      card.style.display = 'none';
+      return;
+    }
+
+    card.style.display = 'block';
+
+    // 1. Primary Diagnosis & Risk
+    const diagBox = document.getElementById('cgPrimaryDiag');
+    const badge = document.getElementById('cgRiskBadge');
+    if(diag){
+      diagBox.textContent = diag.primary || 'Chưa xác định';
+      const risk = diag.risk_level || 'Nguy cơ trung bình';
+      badge.textContent = risk;
+      badge.className = 'risk-badge';
+      if(risk.includes('rất cao') || risk.includes('Critical')) badge.classList.add('risk-critical');
+      else if(risk.includes('cao') || risk.includes('High')) badge.classList.add('risk-high');
+      else if(risk.includes('thấp') || risk.includes('Low')) badge.classList.add('risk-low');
+      else badge.classList.add('risk-medium');
+
+      // Differentials
+      const diffList = document.getElementById('cgDifferentialsList');
+      const diffWrap = document.getElementById('cgDifferentialsWrap');
+      if(diag.differentials && diag.differentials.length > 0){
+        diffList.innerHTML = diag.differentials.map(d=>`• ${d}`).join('<br>');
+        diffWrap.style.display = 'block';
+      } else {
+        diffWrap.style.display = 'none';
+      }
+    }
+
+    // 2. Treatment Plan
+    if(txPlan){
+      // Immediate Actions Checklist
+      const immList = document.getElementById('cgImmediateList');
+      const immWrap = document.getElementById('cgImmediateWrap');
+      if(txPlan.immediate_actions && txPlan.immediate_actions.length > 0){
+        immList.innerHTML = txPlan.immediate_actions.map((act, idx)=>`
+          <label class="checklist-item" id="chk-item-${idx}">
+            <input type="checkbox" onchange="this.closest('.checklist-item').classList.toggle('done', this.checked)">
+            <span>${act}</span>
+          </label>
+        `).join('');
+        immWrap.style.display = 'block';
+      } else {
+        immWrap.style.display = 'none';
+      }
+
+      // Medications
+      const medsList = document.getElementById('cgMedsList');
+      const medsWrap = document.getElementById('cgMedsWrap');
+      if(txPlan.medications && txPlan.medications.length > 0){
+        medsList.innerHTML = txPlan.medications.map(m=>`• <b>${m}</b>`).join('<br>');
+        medsWrap.style.display = 'block';
+      } else {
+        medsWrap.style.display = 'none';
+      }
+
+      // Warnings & Contraindications
+      const warnList = document.getElementById('cgWarningsList');
+      const warnWrap = document.getElementById('cgWarningsWrap');
+      if(txPlan.contraindications_warnings && txPlan.contraindications_warnings.length > 0){
+        warnList.innerHTML = txPlan.contraindications_warnings.map(w=>`• ${w}`).join('<br>');
+        warnWrap.style.display = 'block';
+      } else {
+        warnWrap.style.display = 'none';
+      }
+
+      // Further Workup
+      const workList = document.getElementById('cgWorkupList');
+      const workWrap = document.getElementById('cgWorkupWrap');
+      if(txPlan.further_workup && txPlan.further_workup.length > 0){
+        workList.innerHTML = txPlan.further_workup.map(wk=>`• ${wk}`).join('<br>');
+        workWrap.style.display = 'block';
+      } else {
+        workWrap.style.display = 'none';
+      }
+    }
+  }
 
   async function analyzeImageWithAI(){
     const provider = getActiveProvider();
@@ -1235,11 +1859,13 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
           setAiStatus(`Đang kết nối siêu mô hình ${model}... Đang phân tích sóng 12 chuyển đạo...`, 'loading');
 
           const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+          const clinicalContextText = buildClinicalContextText();
           const payload = {
             contents: [
               {
                 parts: [
                   { text: ECG_AI_SYSTEM_PROMPT },
+                  { text: `THÔNG TIN BỆNH CẢNH LÂM SÀNG & CẬN LÂM SÀNG ĐI KÈM CỦA BỆNH NHÂN:\n${clinicalContextText}\n\nHãy đọc bản ghi ECG này kết hợp chặt chẽ với toàn bộ thông tin lâm sàng và cận lâm sàng ở trên để đưa ra chẩn đoán xác định, phân tầng nguy cơ và phác đồ xử trí cấp cứu chi tiết theo cấu trúc JSON yêu cầu.` },
                   {
                     inline_data: {
                       mime_type: currentImageMime,
@@ -1320,7 +1946,7 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
           {
             role: 'user',
             content: [
-              { type: 'text', text: 'Hãy phân tích hình ảnh điện tâm đồ 12 chuyển đạo này và trả về JSON chính xác theo yêu cầu.' },
+              { type: 'text', text: `THÔNG TIN BỆNH CẢNH LÂM SÀNG & CẬN LÂM SÀNG ĐI KÈM:\n${buildClinicalContextText()}\n\nHãy phân tích ảnh điện tâm đồ 12 chuyển đạo này kết hợp toàn diện với dữ kiện lâm sàng và cận lâm sàng ở trên, trả về JSON chính xác theo định dạng yêu cầu.` },
               {
                 type: 'image_url',
                 image_url: {
@@ -1366,6 +1992,29 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
   }
 
   function applyAiDataToForm(data, modelName){
+    // Clinical & Lab inputs from Preset / AI
+    if(data.vitals){
+      if(data.vitals.bp) setVal('vital-bp', data.vitals.bp);
+      if(data.vitals.spo2) setVal('vital-spo2', data.vitals.spo2);
+    }
+    if(data.symptoms){
+      if(data.symptoms.chestpain !== undefined) setVal('sym-chestpain', data.symptoms.chestpain);
+      if(data.symptoms.dyspnea !== undefined) setVal('sym-dyspnea', data.symptoms.dyspnea);
+      if(data.symptoms.syncope !== undefined) setVal('sym-syncope', data.symptoms.syncope);
+      if(data.symptoms.palpitation !== undefined) setVal('sym-palpitation', data.symptoms.palpitation);
+      if(data.symptoms.dizzy !== undefined) setVal('sym-dizzy', data.symptoms.dizzy);
+      if(data.symptoms.diaphoresis !== undefined) setVal('sym-diaphoresis', data.symptoms.diaphoresis);
+      if(data.symptoms.edema !== undefined) setVal('sym-edema', data.symptoms.edema);
+      if(data.symptoms.onset) setVal('onsetTime', data.symptoms.onset);
+    }
+    if(data.labs){
+      if(data.labs.troponin) setVal('lab-troponin', data.labs.troponin);
+      if(data.labs.electrolytes) setVal('lab-electrolytes', data.labs.electrolytes);
+      if(data.labs.echo) setVal('lab-echo', data.labs.echo);
+      if(data.labs.meds) setVal('lab-meds', data.labs.meds);
+    }
+    if(data.clinical_notes) setVal('clinicalNotesInput', data.clinical_notes);
+
     if(data.hr !== undefined) setVal('hr', data.hr);
     if(data.pWave) setVal('pWave', data.pWave);
     if(data.pr !== undefined) setVal('pr', data.pr);
@@ -1422,6 +2071,11 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
       reasoningWrap.style.display = 'block';
     } else {
       reasoningWrap.style.display = 'none';
+    }
+
+    // Render Dedicated Clinical Guidance Card
+    if(data.clinical_diagnosis || data.treatment_plan){
+      renderClinicalGuidanceCard(data.clinical_diagnosis, data.treatment_plan);
     }
   }
 
@@ -1697,6 +2351,163 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
       div.innerHTML = `<div class="ftitle">${f.title}</div><div>${f.text}</div>${f.tx ? `<div class="ftx"><b>Xử trí gợi ý:</b> ${f.tx}</div>` : ''}`;
       box.appendChild(div);
     });
+
+    // SYNTHESIZE CLINICAL & LAB DATA INTO DEDICATED GUIDANCE CARD (IF NOT ALREADY RENDERED BY AI/PRESET)
+    const curCard = document.getElementById('aiClinicalGuidanceCard');
+    const isVisible = curCard && curCard.style.display === 'block';
+
+    const bpVal = document.getElementById('vital-bp')?.value.trim() || '';
+    const tropVal = document.getElementById('lab-troponin')?.value.trim().toLowerCase() || '';
+    const kVal = document.getElementById('lab-electrolytes')?.value.trim().toLowerCase() || '';
+    const isHypotension = bpVal.includes('85') || bpVal.includes('80') || bpVal.includes('70') || bpVal.includes('90/60');
+    const isTropPos = tropVal.includes('dương') || tropVal.includes('ng/l') || tropVal.includes('+');
+
+    if(!isVisible || document.getElementById('presetSelect').value === ''){
+      // Rule-based diagnostic synthesis
+      if(elevated.length > 0 || (symChestPain && isTropPos)){
+        renderClinicalGuidanceCard({
+          primary: `Nhồi máu cơ tim cấp có ST chênh lên (STEMI) ${elevated.length>0 ? elevated.map(r=>r.name).join(' + ') : 'vùng tổn thương'} ${isHypotension ? 'kèm TỤT HUYẾT ÁP / NGUY CƠ SỐC TIM' : ''}`,
+          risk_level: 'Nguy cơ rất cao',
+          differentials: ['Viêm màng ngoài tim cấp', 'Bóc tách động mạch chủ ngực', 'Thuyên tắc phổi cấp']
+        }, {
+          immediate_actions: [
+            'Bất động tại giường cấp cứu, theo dõi monitor điện tim & huyết áp liên tục',
+            'Thở oxy qua cannula nếu SpO2 < 90%',
+            'KÍCH HOẠT KHẨN CẤP phòng Can thiệp mạch vành (Cathlab) thực hiện PCI thì đầu < 120 phút',
+            'Đo ngay các chuyển đạo mở rộng: V3R, V4R và V7, V8, V9'
+          ],
+          medications: [
+            'Aspirin 300mg nhai ngay + Ticagrelor 180mg (hoặc Clopidogrel 600mg)',
+            'Kháng đông: Enoxaparin 30mg tiêm TM liều nạp + 1mg/kg TDD',
+            'Atorvastatin 80mg uống ngay 1 liều'
+          ],
+          contraindications_warnings: [
+            elevated.some(r=>r.key==='inf') || isHypotension
+              ? 'CHỐNG CHỈ ĐỊNH dùng Nitroglycerin và các thuốc hạ áp do nguy cơ tổn thương thất phải và tụt huyết áp nghiêm trọng!'
+              : 'Tránh dùng chẹn beta đường tĩnh mạch nếu có nhịp tim chậm hoặc nguy cơ suy tim'
+          ],
+          further_workup: [
+            'Siêu âm tim tại giường đánh giá vận động vùng và biến chứng cơ học',
+            'Theo dõi động học hs-Troponin sau 1-3 giờ',
+            'Điện giải đồ, chức năng thận trước can thiệp'
+          ]
+        });
+      } else if(special === 'hyperk' || kVal.includes('tăng') || (peakedT.length>0 && qrs && qrs>=120)){
+        renderClinicalGuidanceCard({
+          primary: 'Cấp cứu: Tăng Kali máu nặng có biến đổi điện tâm đồ đe dọa ngừng tim',
+          risk_level: 'Nguy cơ rất cao',
+          differentials: ['Thiếu máu cơ tim tối cấp', 'Ngộ độc thuốc chống trầm cảm ba vòng', 'Block nhánh trái']
+        }, {
+          immediate_actions: [
+            'TIÊM TĨNH MẠCH CHẬM Calcium gluconate 10% (10ml trong 2-3 phút) ổn định màng tế bào cơ tim ngay lập tức',
+            'Truyền Glucose 20% 250ml + 10 UI Insulin nhanh trong 30-60 phút để kéo Kali vào tế bào',
+            'Khí dung Salbutamol liều cao 10-20mg',
+            'Liên hệ khẩn cấp lọc máu cấp cứu (chạy thận nhân tạo)'
+          ],
+          medications: [
+            'Calcium gluconate 10%: 1-2 ống tiêm TM chậm',
+            'Insulin 10 UI + Glucose 20% truyền TM',
+            'Salbutamol khí dung qua mask'
+          ],
+          contraindications_warnings: [
+            'Chống chỉ định tiêm Canxi nếu nghi ngờ ngộ độc Digoxin',
+            'Theo dõi sát đường huyết mao mạch phòng ngừa hạ đường huyết muộn'
+          ],
+          further_workup: [
+            'Kiểm tra lại điện giải đồ (K+, Na+, Ca2+) sau 1-2 giờ',
+            'Đo lại ECG ngay sau tiêm Canxi để đánh giá độ co hẹp QRS'
+          ]
+        });
+      } else if(dissociation || special==='avb3'){
+        renderClinicalGuidanceCard({
+          primary: 'Block nhĩ thất độ III (Block AV hoàn toàn, phân ly nhĩ thất) — CẤP CỨU TIM MẠCH',
+          risk_level: 'Nguy cơ rất cao',
+          differentials: ['Block AV độ II Mobitz II', 'Nhịp tự thất chậm do ngộ độc thuốc', 'Suy nút xoang']
+        }, {
+          immediate_actions: [
+            'Dán bản cực chuẩn bị Máy tạo nhịp tạm thời qua da tại giường bệnh',
+            'Kích hoạt phòng can thiệp đặt máy tạo nhịp tạm thời qua đường tĩnh mạch',
+            'Thở oxy, thiết lập đường truyền tĩnh mạch'
+          ],
+          medications: [
+            'Atropine 0.5mg tiêm TM (lặp lại mỗi 3-5 phút, tối đa 3mg)',
+            'Nếu không đáp ứng: Truyền tĩnh mạch Adrenaline (2-10 mcg/phút) hoặc Dopamine nâng nhịp tim'
+          ],
+          contraindications_warnings: [
+            'CHỐNG CHỈ ĐỊNH các thuốc chống loạn nhịp làm chậm dẫn truyền (Lidocaine, Amiodarone, chẹn beta)'
+          ],
+          further_workup: [
+            'Chỉ định cấy máy tạo nhịp tim vĩnh viễn (PPM)',
+            'Xét nghiệm men tim loại trừ nhồi máu cơ tim thành dưới'
+          ]
+        });
+      } else if(special === 'brugada'){
+        renderClinicalGuidanceCard({
+          primary: 'Hội chứng Brugada Type 1 điển hình (ST chênh dạng vòm V1-V2 dốc xuống sóng T âm)',
+          risk_level: 'Nguy cơ cao',
+          differentials: ['Nhồi máu cơ tim trước vách', 'Viêm màng ngoài tim', 'Block nhánh phải']
+        }, {
+          immediate_actions: [
+            'Nhập viện theo dõi monitor điện tim liên tục tại khoa Tim mạch',
+            'Hạ sốt tích cực ngay nếu có sốt',
+            'Khảo sát điện sinh lý tim (EPS)'
+          ],
+          medications: [
+            'Isoproterenol truyền TM hoặc Quinidine nếu có bão loạn nhịp thất'
+          ],
+          contraindications_warnings: [
+            'TRÁNH TUYỆT ĐỐI các thuốc chẹn kênh Natri nhóm I (Flecainide, Propafenone), thuốc chống trầm cảm 3 vòng và rượu bia (tra cứu www.brugadadrugs.org)'
+          ],
+          further_workup: [
+            'Chỉ định cấy máy phá rung tự động (ICD) phòng ngừa đột tử',
+            'Tầm soát ECG gia đình trực hệ'
+          ]
+        });
+      } else if(qtc && qtc > 500){
+        renderClinicalGuidanceCard({
+          primary: 'Hội chứng khoảng QT kéo dài (QTc > 500 ms) — Nguy cơ CƠN XOẮN ĐỈNH & ĐỘT TỬ',
+          risk_level: 'Nguy cơ rất cao',
+          differentials: ['Hội chứng QT dài bẩm sinh', 'Hạ Kali/Magie máu', 'Thiếu máu cơ tim']
+        }, {
+          immediate_actions: [
+            'Ngừng ngay toàn bộ thuốc gây kéo dài QT (kháng sinh Macrolide/Quinolone, hướng thần)',
+            'BÙ MAGNESIUM SULFATE TM NGAY (2g tiêm TM trong 10-15 phút)',
+            'Bù Kali máu duy trì nồng độ 4.5 - 5.0 mmol/L'
+          ],
+          medications: [
+            'Magnesium sulfate 20%: 2g tiêm TM chậm, sau đó truyền liên tục nếu cần'
+          ],
+          contraindications_warnings: [
+            'CHỐNG CHỈ ĐỊNH các thuốc chống loạn nhịp nhóm IA, IC, III (Amiodarone, Sotalol)'
+          ],
+          further_workup: [
+            'Đo lại ECG mỗi 2-4 giờ theo dõi động học rút ngắn QTc',
+            'Xét nghiệm điện giải đồ (K+, Mg2+, Ca2+)'
+          ]
+        });
+      } else if(rhythm === 'irregular' && pWave === 'absent'){
+        renderClinicalGuidanceCard({
+          primary: `Rung nhĩ ${hr && hr>100 ? 'đáp ứng thất nhanh (AFib with RVR)' : ''} ${isHypotension ? 'huyết động không ổn định' : ''}`,
+          risk_level: isHypotension ? 'Nguy cơ rất cao' : 'Nguy cơ cao',
+          differentials: ['Cuồng nhĩ dẫn truyền thay đổi', 'Nhịp nhanh nhĩ đa ổ']
+        }, {
+          immediate_actions: [
+            isHypotension ? 'Huyết động không ổn định: SỐC ĐIỆN CHUYỂN NHỊP ĐỒNG BỘ KHẨN (100-200J)' : 'Huyết động ổn định: Kiểm soát tần số thất mục tiêu HR < 110 l/p'
+          ],
+          medications: [
+            'Metoprolol TM hoặc Bisoprolol uống; Diltiazem TM nếu EF bảo tồn',
+            'Kháng đông đường uống (DOAC): Apixaban, Rivaroxaban theo thang điểm CHA2DS2-VASc'
+          ],
+          contraindications_warnings: [
+            'Không chuyển nhịp nếu rung nhĩ > 48h chưa dùng đủ 3 tuần kháng đông hoặc chưa làm TEE loại trừ huyết khối tiểu nhĩ'
+          ],
+          further_workup: [
+            'Siêu âm tim TTE đánh giá nhĩ trái và EF%',
+            'Xét nghiệm FT4, TSH tầm soát cường giáp'
+          ]
+        });
+      }
+    }
   }
 
   // Copy clinical summary to clipboard
@@ -1708,15 +2519,26 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
     const qtc = document.getElementById('rt-qtc').textContent;
     const axis = document.getElementById('rt-axis').textContent;
 
+    const clinicalContext = buildClinicalContextText();
+
+    const primDiag = document.getElementById('cgPrimaryDiag')?.textContent || '';
+    const riskBadge = document.getElementById('cgRiskBadge')?.textContent || '';
+
     const findingsEls = document.querySelectorAll('#findings .finding .ftitle');
     const conclusions = Array.from(findingsEls).map(el=>el.textContent).join('; ');
 
-    const textToCopy = `TÓM TẮT ĐIỆN TÂM ĐỒ (ECG):
+    const textToCopy = `TÓM TẮT ĐIỆN TÂM ĐỒ & BỆNH CẢNH LÂM SÀNG (ECG CONSOLE):
+THÔNG TIN LÂM SÀNG & CẬN LÂM SÀNG:
+${clinicalContext}
+
+KẾT QUẢ ĐỌC ĐIỆN TÂM ĐỒ 12 CHUYỂN ĐẠO:
 - Nhịp: ${rhythm} | Tần số: ${hr}
 - Khoảng PR/PQ: ${pr} | Độ rộng QRS: ${qrs}
 - QTc: ${qtc} | Trục điện tim: ${axis}
-- Kết luận & Hướng xử trí: ${conclusions || 'Bình thường'}
-(Nguồn: ECG Console - Theo tài liệu GS. Trần Đỗ Trinh)`;
+- Dấu hiệu điện học: ${conclusions || 'Trong giới hạn bình thường'}
+${primDiag ? `\nGỢI Ý CHẨN ĐOÁN & PHÂN TẦNG NGUY CƠ:
+- Chẩn đoán: ${primDiag} (${riskBadge})` : ''}
+(Nguồn: ECG Console — Chuẩn hóa theo tài liệu GS. Trần Đỗ Trinh & Viện Tim Mạch VN)`;
 
     navigator.clipboard.writeText(textToCopy).then(()=>{
       alert('Đã sao chép tóm tắt điện tim vào bộ nhớ tạm! Bạn có thể dán (Ctrl+V) vào bệnh án điện tử.');
@@ -1729,14 +2551,18 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
   document.getElementById('printBtn').addEventListener('click', ()=> window.print());
   document.getElementById('resetBtn').addEventListener('click', ()=>{
     document.querySelectorAll('input[type=number]').forEach(i=>i.value='');
+    document.querySelectorAll('input[type=text]').forEach(i=>i.value='');
+    document.querySelectorAll('textarea').forEach(t=>t.value='');
     document.querySelectorAll('select').forEach(s=>s.selectedIndex=0);
     document.querySelectorAll('input[type=checkbox]').forEach(c=>c.checked=false);
+    document.querySelectorAll('.tag-btn').forEach(b=>b.classList.remove('active'));
     document.querySelector('input[name="rhythm"][value="regular"]').checked = true;
     document.getElementById('qtcOut').textContent = '—';
     ['rt-rhythm','rt-hr','rt-pr','rt-qrs','rt-qtc','rt-axis'].forEach(id=>document.getElementById(id).textContent='—');
     document.getElementById('findings').innerHTML = '<p class="empty-state">Nhập thông số hoặc tải ảnh điện tim để nhận kết quả phân tích tự động.</p>';
     document.getElementById('aiNotesBox').style.display = 'none';
     document.getElementById('aiStatusBar').style.display = 'none';
+    document.getElementById('aiClinicalGuidanceCard').style.display = 'none';
     document.getElementById('presetSelect').value = '';
     currentImageBase64 = null;
     ecgImg.src = '';

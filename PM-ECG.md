@@ -191,6 +191,74 @@ Hệ thống đã tiếp nhận, phân tích toàn văn và nạp vào bộ nh�
    - Ca 6: Hội chứng Brugada Type 1 điển hình (ST cong vòm ở $V_1-V_2$, T âm sâu).
    - Ca 7: Hội chứng QT dài (LQTS — $QTc = 526\text{ ms}$, nguy cơ cơn xoắn đỉnh).
 
+---
 
+## 10. TÍCH HỢP DỮ LIỆU LÂM SÀNG & CẬN LÂM SÀNG: HỆ THỐNG HỖ TRỢ RA QUYẾT ĐỊNH CHẨN ĐOÁN & XỬ TRÍ CẤP CỨU (CLINICAL DECISION SUPPORT)
 
+**Ngày thực hiện:** 15/09/2026  
+**Yêu cầu người dùng:**
+> *"đọc các file trong thư mục để biết những gì đã hoàn thành trước đó, bây giờ các tài liệu huấn luyện sẽ lưu vào thư mục tai-lieu-tham-khao, khi nào cho thêm tài liệu sẽ báo sau. Bây giờ khi đưa ảnh lên và sẽ có ô nhập thêm triệu chứng lâm sàng hay các giá trị cận lâm sàng khác, từ đó đưa ra gợi ý chẩn đoán và xử trí được không"*
 
+### 1. Quy hoạch & Tái cấu trúc Thư mục Tài liệu Tham khảo (`tai-lieu-tham-khao/`)
+* Toàn bộ 10 tài liệu, giáo trình, bài giảng và ngân hàng ca bệnh điện tâm đồ đã được di chuyển ngăn nắp vào thư mục `tai-lieu-tham-khao/`:
+  1. `4.-Bai-giang-dien-tam-do.pdf` (GS. Trần Đỗ Trinh)
+  2. `huong-dan-doc-ecg.pdf` (GS. Trần Đỗ Trinh)
+  3. `PDF-Huong-dan-doc-dien-tim-nhathuocngocanh.pdf` (GS. Trần Đỗ Trinh & ThS. Trần Văn Đồng)
+  4. `Thực Hành Đọc Điện Tim.pdf`
+  5. `Đọc điện tâm đồ dễ hơn.pdf`
+  6. `Điện Tâm Đồ Trong Thực Hành Lâm Sàng.pdf`
+  7. `Sổ tay điện tâm đồ.pdf`
+  8. `CLS ECG.pdf`
+  9. `bai-giang-dien-tam-do-vieclamvui.pdf`
+  10. `bai-giang-dien-tam-do-vieclamvui.pptx`
+* Thư mục gốc dự án được dọn sạch hoàn toàn, sẵn sàng đón nhận thêm các tài liệu mới khi người dùng bổ sung trong tương lai.
+
+### 2. Thiết kế Khu vực Nhập liệu Lâm sàng & Cận lâm sàng (Card 0)
+* Tích hợp ngay dưới kính soi bản ghi ECG khu vực: **"📋 Thông tin Lâm sàng & Cận lâm sàng kèm theo (Tùy chọn)"**.
+* **12 Thẻ chọn nhanh dấu hiệu then chốt (Quick Tags):**
+  * `+ Đau ngực cấp <2h`, `+ Đau sau xương ức lan tay T`, `+ Khó thở khi nằm (Orthopnea)`, `+ Ngất đột ngột / Choáng`, `+ Tụt HA / Sốc tim (<90mmHg)`, `+ Hồi hộp trống ngực`.
+  * `+ Troponin (+) tăng cao`, `+ Kali máu tăng (>6.5 mmol/L)`, `+ Hạ Kali máu (<3.0 mmol/L)`, `+ Đang dùng Digoxin`, `+ Đang dùng Amiodarone`, `+ EF giảm (<40%)`.
+* **Hệ thống trường dữ liệu lâm sàng chi tiết:**
+  * *Dấu hiệu sinh tồn:* Huyết áp (HA tâm thu / tâm trương), Mạch, $SpO_2$ (%).
+  * *Dấu ấn sinh học cơ tim:* hs-Troponin T/I, CK-MB.
+  * *Điện giải đồ:* $K^+$, $Na^+$, $Ca^{2+}$, $Mg^{2+}$.
+  * *Siêu âm tim:* Phân suất tống máu $EF\%$, rối loạn vận động vùng (vô động, giảm động thành tim), tràn dịch màng ngoài tim.
+  * *Thuốc đang sử dụng & Tiền sử:* Digoxin, Amiodarone, chẹn beta, thuốc kéo dài QT, bệnh thận mạn, ĐTĐ, THA.
+  * *Ghi chú bệnh cảnh tự do:* Ô textarea mô tả diễn biến cấp cứu và tiền sử chi tiết.
+
+### 3. Nâng cấp Bộ não AI Multimodal Vision (Google Gemini / OpenAI / OpenRouter)
+* Nâng cấp `ECG_AI_SYSTEM_PROMPT`: Yêu cầu AI không chỉ đọc sóng điện tim mà phải **tổng hợp đa phương thức** giữa hình ảnh 12 chuyển đạo và toàn bộ bệnh cảnh lâm sàng + xét nghiệm cận lâm sàng.
+* Cấu trúc JSON chuẩn y khoa mới bổ sung:
+  * `clinical_diagnosis`: Chẩn đoán xác định nghĩ nhiều nhất, phân tầng nguy cơ (`Nguy cơ rất cao`, `Nguy cơ cao`, `Nguy cơ trung bình`, `Nguy cơ thấp`), và danh sách chẩn đoán phân biệt cần loại trừ.
+  * `treatment_plan`:
+    - `immediate_actions`: Danh sách các hành động cấp cứu ban đầu khẩn cấp.
+    - `medications`: Tên thuốc, liều lượng, đường dùng theo khuyến cáo Bộ Y tế & VNHA/ESC.
+    - `contraindications_warnings`: Cảnh báo chống chỉ định đặc biệt (chống chỉ định Nitrat trong NMCT thất phải/tụt HA; chống chỉ định chẹn AV trong WPW có rung nhĩ...).
+    - `further_workup`: Đề xuất thăm dò cận lâm sàng tiếp theo và động học men tim/ion đồ.
+
+### 4. Thẻ Gợi ý Chẩn đoán & Phác đồ Xử trí Chuyên biệt (`#aiClinicalGuidanceCard`)
+* Thiết kế card y khoa nổi bật ở đầu cột kết quả bên phải:
+  * **Huy hiệu phân tầng nguy cơ:** Hiển thị màu sắc cảnh báo trực quan (`risk-critical` màu đỏ cấp cứu, `risk-high` màu cam, `risk-medium` màu xanh dương, `risk-low` màu xanh lá).
+  * **Chẩn đoán xác định / nghĩ nhiều nhất:** Nổi bật trên khung viền teal y tế.
+  * **Danh sách Chẩn đoán phân biệt:** Giúp bác sĩ không bỏ sót bệnh lý nguy hiểm.
+  * **Interactive Checklist cấp cứu ban đầu:** Cho phép bác sĩ/điều dưỡng tích chọn từng bước cấp cứu đã thực hiện (gạch ngang và mờ đi khi hoàn thành).
+  * **Phác đồ thuốc cụ thể:** Liều nạp, liều duy trì, đường tiêm/uống.
+  * **Khung cảnh báo chống chỉ định màu đỏ:** Cảnh báo các sai lầm y khoa chết người có thể gặp trong ca bệnh.
+  * **Thăm dò cận lâm sàng tiếp theo:** Hướng dẫn theo dõi động học và xét nghiệm bổ sung.
+
+### 5. Tự động Tổng hợp Lâm sàng Cục bộ (Offline Rule Engine)
+* Ngay cả khi người dùng không dùng API AI Vision mà nhập tay thông số hoặc phân tích offline, hàm `analyze()` tự động đối chiếu các triệu chứng lâm sàng và cận lâm sàng đã nhập để kích hoạt card chẩn đoán & xử trí cấp cứu phù hợp (STEMI, Tăng Kali máu nặng, Block AV III ngất Adams-Stokes, LQTS xoắn đỉnh, Brugada, Rung nhĩ sốc tim).
+
+### 6. Cập nhật Toàn diện 7 Ca mẫu Thử nghiệm (Presets)
+* Cả 7 ca mẫu đều được nạp đầy đủ dấu hiệu sinh tồn, triệu chứng lâm sàng, men tim, điện giải đồ, siêu âm tim, tiền sử thuốc và phác đồ xử trí tương ứng:
+  1. *Ca 1 (STEMI thành dưới):* Đau ngực cấp $<2\text{h}$, vã mồ hôi, HA $90/60\text{ mmHg}$, hs-cTnT $1850\text{ ng/L}$, phác đồ DAPT + PCI thì đầu, cảnh báo chống chỉ định Nitrat.
+  2. *Ca 2 (Rung nhĩ đáp ứng thất nhanh):* Hồi hộp trống ngực, khó thở, $HR = 142\text{ l/p}$, phác đồ kiểm soát tần số + kháng đông DOAC (CHA2DS2-VASc = 3).
+  3. *Ca 3 (WPW Type A):* Cơn tim nhanh kịch phát, PR $98\text{ ms}$, sóng Delta, chỉ định triệt đốt RF đường phụ, cảnh báo chống chỉ định Digoxin/Verapamil khi có rung nhĩ.
+  4. *Ca 4 (Block AV độ III):* Tụt HA $85/50\text{ mmHg}$, $HR = 38\text{ l/p}$, 2 lần ngất Adams-Stokes, chuẩn bị máy tạo nhịp tạm thời cấp cứu và cấy PPM.
+  5. *Ca 5 (Tăng Kali máu nặng):* $K^+ = 7.4\text{ mmol/L}$ trên nền CKD 5, phác đồ cấp cứu 3 bước (Calcium gluconate TM $\to$ Insulin + Glucose $\to$ Lọc máu khẩn).
+  6. *Ca 6 (Brugada Type 1):* Tiền sử ngất khi ngủ, gia đình có người đột tử, chỉ định cấy ICD và hạ sốt tích cực.
+  7. *Ca 7 (Hội chứng QT dài LQTS):* $QTc = 526\text{ ms}$, ngất khi nghe chuông báo thức, đang dùng Erythromycin hạ K+/Mg2+, tiêm TM Magnesium sulfate $2\text{ g}$ cấp cứu.
+
+### 7. Nâng cấp Tiện ích Bệnh án Điện tử (EMR)
+* Nút **"📋 Sao chép tóm tắt"** tự động định dạng đầy đủ: Thông tin lâm sàng & sinh hiệu + Cận lâm sàng + Kết quả điện tim 12 chuyển đạo + Gợi ý chẩn đoán & phân tầng nguy cơ, sẵn sàng dán ngay vào hồ sơ bệnh án.
+* Chế độ in ấn chuyên nghiệp chuẩn A4 (`@media print`) hiển thị sắc nét toàn bộ chẩn đoán và hướng dẫn xử trí.

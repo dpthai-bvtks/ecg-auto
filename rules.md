@@ -249,3 +249,51 @@ Khi AI Vision phân tích ảnh bản ghi điện tâm đồ, kết quả phải
 * **Tạo nhịp thất (V-pacing):** Spike đi ngay trước phức bộ QRS. Do dây điện cực thường đặt tại mỏm thất phải, phức bộ QRS khử cực bất thường sẽ có dạng **giãn rộng giống Block nhánh trái (LBBB)** với trục lệch trái.
 * **Tạo nhịp hai buồng (DDD):** Có 2 spike liên tiếp (1 trước P và 1 trước QRS).
 
+---
+
+## VII. QUY TẮC TỔNG HỢP LÂM SÀNG & CẬN LÂM SÀNG TRONG CHẨN ĐOÁN VÀ XỬ TRÍ CẤP CỨU (CLINICAL & PARACLINICAL DECISION SUPPORT)
+### Chuẩn hóa theo khuyến cáo của Bộ Y tế Việt Nam & Hội Tim Mạch Học Việt Nam (VNHA / ESC / ACC)
+
+Nguyên tắc cốt lõi: Điện tâm đồ luôn là một thăm dò cận lâm sàng; giá trị chẩn đoán và quyết định điều trị phải luôn được đặt trong bức tranh lâm sàng toàn cảnh (triệu chứng cơ năng, dấu hiệu sinh tồn) kết hợp động học men tim, điện giải đồ và siêu âm tim.
+
+### 1. Phối hợp Triệu chứng Lâm sàng & Động học Men tim trong Hội chứng Vành Cấp (ACS)
+* **Thời gian vàng can thiệp tái tưới máu (Door-to-Balloon / FMC-to-Device):**
+  * *Đau ngực cấp tính $< 2\text{ giờ}$ kèm ST chênh lên:* Giai đoạn cơ tim còn khả năng cứu sống tối đa $\rightarrow$ Kích hoạt báo động đỏ phòng Can thiệp mạch vành (Cathlab) thực hiện PCI thì đầu trong vòng $< 120\text{ phút}$ (hoặc dùng thuốc tiêu sợi huyết nếu thời gian vận chuyển đến trung tâm PCI $> 120\text{ phút}$).
+  * *Đau ngực $2 - 12\text{ giờ}$:* Vẫn giữ chỉ định can thiệp tái tưới máu thì đầu khẩn cấp.
+  * *Đau ngực $> 12\text{ giờ}$:* Chỉ định PCI khi còn đau ngực dai dẳng, huyết động không ổn định hoặc có loạn nhịp thất nguy hiểm.
+* **Động học men tim (Cardiac Biomarkers):**
+  * *hs-cTnT / hs-cTnI:* Xét nghiệm theo phác đồ $0\text{h}/1\text{h}$ hoặc $0\text{h}/3\text{h}$ của ESC. Men tim tăng gấp $\ge 5$ lần giới hạn trên khẳng định hoại tử cơ tim cấp (STEMI hoặc NSTEMI).
+  * *Phân biệt NSTEMI vs Viêm cơ tim (Myocarditis):* Viêm cơ tim thường gặp ở người trẻ sau sốt siêu vi, ST chênh lên lõm lan tỏa không theo vùng tưới máu, men tim tăng rất cao không tương xứng mức độ biến đổi sóng Q.
+* **Lưu ý tối khẩn với Nhồi máu cơ tim thành dưới (DII, DIII, aVF):**
+  * Bắt buộc đo ngay $V_3R, V_4R$ (loại trừ nhồi máu thất phải) và $V_7 - V_9$ (thành sau).
+  * **CHỐNG CHỈ ĐỊNH TUYỆT ĐỐI:** Nitroglycerin và các thuốc giãn mạch nếu $V_4R$ có ST chênh lên $\ge 0.5\text{ mm}$ hoặc Huyết áp tâm thu $< 90\text{ mmHg}$ (nguy cơ tụt huyết áp trụy mạch không hồi phục).
+  * Xử trí tụt huyết áp do nhồi máu thất phải: Truyền dịch tĩnh mạch đẳng trương ($NaCl\text{ }0.9\%$) nâng tiền tải, tránh tuyệt đối thuốc lợi tiểu.
+
+### 2. Phối hợp Dấu hiệu Sinh tồn & Huyết động trong Rối loạn Nhịp
+* **Rung nhĩ (Atrial Fibrillation):**
+  * *Huyết động không ổn định:* Tụt huyết áp ($HA < 90\text{ mmHg}$), sốc tim, phù phổi cấp, đau thắt ngực thiếu máu cục bộ $\rightarrow$ **SỐC ĐIỆN CHUYỂN NHỊP ĐỒNG BỘ KHẨN CẤP (100 - 200J)**.
+  * *Huyết động ổn định:* Kiểm soát tần số thất (Rate control) mục tiêu $HR < 110\text{ l/p}$ bằng chẹn beta (Metoprolol/Bisoprolol) hoặc Diltiazem. Nếu $EF < 40\%$ dùng Digoxin hoặc Amiodarone.
+  * *Phòng ngừa đột quỵ:* Bắt buộc khởi trị thuốc chống đông đường uống thế hệ mới (DOAC: Apixaban, Rivaroxaban, Dabigatran) khi điểm $CHA_2DS_2-VASc \ge 2$ ở nam hoặc $\ge 3$ ở nữ.
+* **Block nhĩ - thất độ III (Complete AV Block):**
+  * Có triệu chứng thiếu máu não (hoa mắt, chóng mặt, ngất Adams-Stokes) hoặc tụt huyết áp $\rightarrow$ Đặt máy tạo nhịp tạm thời cấp cứu (qua da / tĩnh mạch), dùng Atropine hoặc truyền Adrenaline/Dopamine duy trì trong lúc chờ tạo nhịp.
+  * Chỉ định cấy **Máy tạo nhịp tim vĩnh viễn (PPM)**.
+
+### 3. Phối hợp Điện giải đồ ($K^+, Mg^{2+}, Ca^{2+}$) trong Cấp cứu Loạn nhịp
+* **Phác đồ Cấp cứu Tăng Kali máu nặng ($K^+ > 6.5\text{ mmol/L}$ có biến đổi QRS/T):**
+  1. *Bước 1 (Ổn định màng cơ tim):* Calcium gluconate $10\%$ $10 - 20\text{ ml}$ tiêm tĩnh mạch chậm trong $2 - 3\text{ phút}$ (bảo vệ tim sau $1 - 3\text{ phút}$; chống chỉ định nếu ngộ độc Digoxin).
+  2. *Bước 2 (Đưa Kali vào tế bào):* Glucose $20\%$ $250\text{ ml}$ pha $10\text{ UI}$ Insulin nhanh truyền tĩnh mạch trong $30\text{ phút}$; Khí dung Salbutamol $10 - 20\text{ mg}$; Natri bicarbonat $8.4\%$ nếu có toan hóa máu.
+  3. *Bước 3 (Thải Kali khỏi cơ thể):* Kích hoạt chạy thận nhân tạo (lọc máu cấp cứu), dùng nhựa trao đổi ion (Resonium/Lokelma) đường uống.
+* **Hội chứng QT dài & Cơn xoắn đỉnh (Torsades de Pointes):**
+  * Ngưỡng nguy hiểm: $QTc > 500\text{ ms}$ kèm hạ $K^+ < 3.5\text{ mmol/L}$ hoặc hạ $Mg^{2+} < 0.7\text{ mmol/L}$.
+  * Xử trí: Tiêm tĩnh mạch ngay **Magnesium sulfate** $2\text{ g}$ trong $10 - 15\text{ phút}$; bù Kali duy trì mức $4.5 - 5.0\text{ mmol/L}$; ngừng ngay các thuốc kéo dài QT; cấy máy ICD nếu là LQTS bẩm sinh nguy cơ cao.
+
+### 4. Bảng Tra cứu Cảnh báo & Chống chỉ định Tuyệt đối trong Cấp cứu Tim mạch
+| Tình trạng Điện tim / Lâm sàng | Chống chỉ định Tuyệt đối | Lý do Nguy hiểm | Thuốc / Biện pháp Thay thế Ưu tiên |
+|---|---|---|---|
+| **Nhồi máu cơ tim thất phải / Thành dưới có tụt HA** | Nitroglycerin, Isosorbide dinitrate, Lợi tiểu quai (Furosemide) | Giảm tiền tải thất phải làm tụt huyết áp nghiêm trọng, sốc tim không hồi phục | Truyền dịch tĩnh mạch đẳng trương ($NaCl\text{ }0.9\%$), PCI khẩn cấp |
+| **Rung nhĩ có tiền kích thích (WPW + AFib)** | Digoxin, Verapamil, Diltiazem, Chẹn beta tiêm tĩnh mạch | Ức chế nút AV làm toàn bộ xung động dẫn truyền $1:1$ qua đường phụ $\rightarrow$ Rung thất đột tử | Sốc điện chuyển nhịp đồng bộ, Procainamide TM, Triệt đốt RF |
+| **Block AV độ III / Nhịp tự thất chậm** | Thuốc chống loạn nhịp làm chậm dẫn truyền (Lidocaine, Amiodarone, chẹn beta) | Triệt tiêu nhịp thoát thất duy nhất gây vô tâm thu ngừng tim | Tạo nhịp tạm thời, Adrenaline/Dopamine, cấy PPM |
+| **Hội chứng Brugada Type 1** | Thuốc chẹn kênh Natri (Flecainide, Propafenone, Ajmaline), thuốc chống trầm cảm 3 vòng | Làm nặng thêm khiếm khuyết kênh ion Natri gây bão rung thất kịch phát | Cấy máy phá rung tự động (ICD), hạ sốt tích cực, Isoproterenol |
+| **QT kéo dài ($QTc > 500\text{ ms}$)** | Thuốc chống loạn nhịp nhóm IA, IC, III (Amiodarone, Sotalol), Quinolone, Macrolide | Kéo dài thêm thời gian tái cực gây Cơn xoắn đỉnh (Torsades de Pointes) | Bù Magnesium sulfate TM, duy trì $K^+ \ge 4.5\text{ mmol/L}$ |
+
+
