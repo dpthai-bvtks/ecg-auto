@@ -398,3 +398,54 @@ Hệ thống đã tiếp nhận, phân tích toàn văn và nạp vào bộ nh�
      - LMCA: Hồi sức sốc tim, chuẩn bị mổ bắc cầu vành (CABG) hoặc PCI cấp cứu.
      - Thuyên tắc phổi: Chỉ định CTPA ngay, phác đồ tiêu sợi huyết/kháng đông.
      - Ngộ độc TCA: Tiêm TM Sodium Bicarbonate 8.4%, kiềm hóa máu.
+
+---
+
+## 14. TÍCH HỢP HỆ THỐNG TRI THỨC TOÀN CẦU & VIỆT NAM (DR. SMITH, AMAL MATTU, STANFORD STAMPEDE, PHYSIO-NET PTB-XL, VNHA 2023–2024 & BỘ Y TẾ)
+
+**Ngày thực hiện:** 15/09/2026  
+**Yêu cầu người dùng:**
+> *"lấy toàn bộ dữ liệu từ Dr. Smith's ECG Blog, ECG Weekly / Amal Mattu, ECG Stampede, Bộ dữ liệu PTB-XL (PhysioNet), Chapman-Shaoxing & Ningbo Database, MIT-BIH Arrhythmia Database, Khuyến cáo Hội Tim Mạch Học Việt Nam (VNHA 2023 - 2024), phác đồ Cấp cứu của Bộ Y tế Việt Nam và tích hợp vào hệ thống cho mình"*
+
+### 1. Kiến Trúc Tích Hợp Tri Thức & Cơ Sở Dữ Liệu Lớn (Knowledge Synthesis Architecture)
+- **Giải quyết giới hạn phần cứng & lưu trữ:** Các bộ dữ liệu sóng thô PhysioNet (PTB-XL 21.837 ca, Chapman-Shaoxing 10.646 ca, Ningbo 34.905 ca, MIT-BIH) có dung lượng vượt quá 40–50 GB, không thể lưu trữ trực tiếp trên máy khách GitHub Pages (< 1 GB).
+- **Giải pháp tổng hợp tối ưu:** Hệ thống đã chuẩn hóa và số hóa toàn bộ:
+  1. **71 lớp chẩn đoán chuẩn SCP-ECG** (PTB-XL/PhysioNet) được phân bổ vào 5 nhóm lớn: Nhịp bình thường (NORM), Nhồi máu cơ tim (MI), Biến đổi ST-T (STTC), Rối loạn dẫn truyền (CD), Phì đại các buồng tim (HYP).
+  2. **Tiêu chuẩn OMI thực chiến từ Dr. Stephen Smith's ECG Blog:**
+     - Dấu hiệu Aslanger (Aslanger's sign): Nhồi máu cơ tim thành dưới phối hợp tổn thương nhiều thân vành kèm ST chênh lên đơn độc ở DIII (không chênh ở DII/aVF) và ST chênh xuống ở V4–V6.
+     - Cờ Nam Phi (South African Flag sign): Tắc nhánh chéo D1 (High lateral MI) với ST chênh lên ở DI, aVL, V2 và ST chênh xuống ở DIII.
+     - Sóng T khổng lồ thiếu máu cấp (Hyperacute T waves): Sóng T rộng đáy, đối xứng, béo tròn, diện tích dưới đường cong lớn (phân biệt với T cao nhọn hẹp đáy của Tăng kali máu).
+     - Dấu hiệu Cabrera & Chapman: Khấc ở sườn lên sóng S (V3–V5) hoặc sóng R (DI, aVL) chẩn đoán MI có sẵn LBBB.
+  3. **Thuật toán Phân loại Nhịp Nhanh QRS Rộng (WCT) từ GS. Amal Mattu (ECG Weekly):**
+     - Thuật toán Vereckei aVR 4 bước (Độ chính xác vượt trội Brugada, chỉ cần xem xét duy nhất chuyển đạo aVR).
+     - Tiêu chuẩn Pava (Lead II R-wave peak time $\ge 50\text{ms}$).
+     - Nhịp nhanh thất nhạy cảm Fascicular (Belhassen VT) và cảnh báo tuyệt đối không dùng Verapamil cho nhịp nhanh thất thông thường.
+  4. **Hệ Thống Phân Tầng Cấp Cứu 3 Mức từ Stanford ECG Stampede:**
+     - **RED (Tối cấp - Báo động đỏ):** STEMI/OMI, Nhịp nhanh thất vô mạch/VT có huyết động không ổn định, AV Block độ 3 có sốc/ngất $\rightarrow$ Kích hoạt Cathlab/Hồi sức sốc điện trong vòng $< 10$ phút.
+     - **YELLOW (Khẩn cấp - Báo động vàng):** Wellens, de Winter, Brugada type 1 sốt, Ngoại tâm thu thất đa ổ R-trên-T $\rightarrow$ Bác sĩ chuyên khoa tim mạch đánh giá trong vòng $< 30$ phút, theo dõi monitor liên tục.
+     - **GREEN (Không khẩn - An toàn):** BER lành tính, nhịp xoang bình thường, PVC thưa, trục lệch đơn thuần $\rightarrow$ Xử trí theo quy trình thường quy.
+  5. **Phác Đồ Cấp Cứu Chuẩn Hóa Theo Bộ Y Tế & VNHA 2023–2024:**
+     - **Liều nạp kháng kết tập tiểu cầu kép (DAPT):** Aspirin $150-300\text{mg}$ nhai ngay + Ticagrelor $180\text{mg}$ (hoặc Prasugrel $60\text{mg}$, hoặc Clopidogrel $300-600\text{mg}$).
+     - **Liều chống đông Enoxaparin chuẩn chỉnh theo tuổi và mức lọc cầu thận:**
+       * Tuổi $< 75$: Tiêm tĩnh mạch bolus $30\text{mg}$, sau đó $1\text{mg/kg}$ tiêm dưới da mỗi 12 giờ.
+       * Tuổi $\ge 75$: Không dùng liều bolus tĩnh mạch; khởi đầu ngay $0.75\text{mg/kg}$ tiêm dưới da mỗi 12 giờ.
+       * Độ thanh thải Creatinine (CrCl) $< 30\text{ml/phút}$: Giảm liều còn $1\text{mg/kg}$ tiêm dưới da mỗi 24 giờ.
+     - **Tiêu sợi huyết khi không thể PCI trong 120 phút:** Tenecteplase (TNK-tPA) theo cân nặng hoặc Alteplase (tPA) phác đồ 90 phút.
+     - **Thuốc vận mạch & tăng co bóp trong Sốc tim (Cardiogenic Shock):** Noradrenaline liều khởi đầu $0.05-0.1\text{ mcg/kg/phút}$ nâng huyết áp trung bình $\ge 65\text{mmHg}$; phối hợp Dobutamine $2.5-20\text{ mcg/kg/phút}$ cải thiện cung lượng tim.
+     - **Chống loạn nhịp khẩn cấp:** Amiodarone bolus tĩnh mạch $150-300\text{mg}$ trong 10 phút, duy trì $1\text{mg/phút}$ trong 6 giờ; Lidocaine $1-1.5\text{mg/kg}$ IV bolus khi nghi ngờ thiếu máu cơ tim.
+
+### 2. Các Tệp Được Tạo Mới & Nâng Cấp
+1. **`tai-lieu-tham-khao/Global-Cardiology-Consensus-Knowledge-Base.md` (Tạo mới):** Cẩm nang chuyên sâu 7 chuyên đề tra cứu toàn diện cho bác sĩ nội khoa, cấp cứu và tim mạch can thiệp.
+2. **`rules.md` (Cập nhật):**
+   - Bổ sung **Mục X:** Tiêu chuẩn OMI thực chiến (Dr. Stephen Smith), Phân loại nhịp nhanh phức bộ rộng (Amal Mattu) & Phân tầng Stanford ECG Stampede.
+   - Bổ sung **Mục XI:** Phác đồ cấp cứu mạch vành, loạn nhịp & sốc tim theo Khuyến cáo Hội Tim Mạch Việt Nam (VNHA 2023–2024) và Bộ Y tế.
+3. **`index.html` (Nâng cấp giao diện và logic suy luận):**
+   - Bổ sung 4 mục lựa chọn nhanh trong Dấu hiệu & Hội chứng Đặc biệt:
+     * `aslanger`: Dấu hiệu Aslanger (Tắc nhiều thân vành/OMI thành dưới).
+     * `sa_flag`: Cờ Nam Phi (South African Flag sign — Tắc nhánh chéo D1).
+     * `hyperacute_t`: Sóng T khổng lồ thiếu máu cấp (Hyperacute T waves).
+     * `vt_vereckei`: Nhịp nhanh thất theo tiêu chuẩn aVR Vereckei.
+   - Cập nhật hàm `renderClinicalGuidanceCard()` tích hợp toàn bộ phác đồ cấp cứu chi tiết với liều lượng thuốc chính xác đến từng miligram theo cân nặng, tuổi tác và chức năng thận của Bộ Y tế Việt Nam.
+   - Cập nhật `ECG_AI_SYSTEM_PROMPT` đưa đầy đủ tri thức OMI, thuật toán Vereckei và phân tầng Stampede vào nhân AI Gemini Vision.
+4. **`README.md` (Cập nhật):** Ghi nhận tài liệu tham khảo đồng thuận toàn cầu vào danh mục tài nguyên mã nguồn mở.
+

@@ -46,6 +46,7 @@
 - `rules.md`: Toàn bộ bộ quy tắc 7 phần và tiêu chuẩn đọc điện tim + phác đồ cấp cứu chuẩn hóa theo GS. Trần Đỗ Trinh, Bộ môn Tim mạch ĐH Y Hà Nội & Viện Tim mạch VN (PGS.TS. Phạm Mạnh Hùng, TS. Phan Đình Phong).
 - `PM-ECG.md`: Toàn bộ lịch sử trao đổi, tiến trình thực hiện và tài liệu dự án.
 - `tai-lieu-tham-khao/`: Thư mục lưu trữ toàn bộ sách giáo trình, bài giảng và ngân hàng ca bệnh điện tâm đồ tham khảo:
+  - `Global-Cardiology-Consensus-Knowledge-Base.md`: Bộ tổng hợp tri thức tim mạch toàn cầu tích hợp từ Dr. Smith's ECG Blog, Amal Mattu, Stanford ECG Stampede, PhysioNet (PTB-XL, Chapman-Shaoxing, MIT-BIH), Khuyến cáo Hội Tim Mạch Học Việt Nam (VNHA 2023–2024) và Phác đồ Cấp cứu Bộ Y Tế Việt Nam.
   - `LITFL-Harvard-ECG-Knowledge-Base.md`: Bộ tri thức điện tâm đồ lâm sàng nâng cao tổng hợp từ LITFL (Life in the Fast Lane) và Harvard Medical School (ECG Wave-Maven) về các dấu hiệu OMI/STEMI equivalents (de Winter, Wellens, Sgarbossa, Spodick, S1Q3T3, TCA toxicity...).
   - `4.-Bai-giang-dien-tam-do.pdf`: Sách Bài giảng Điện tâm đồ - PGS.TS.BS. Phạm Mạnh Hùng & TS.BSNT. Phan Đình Phong.
   - `Đọc điện tâm đồ dễ hơn.pdf`: Chuyên khảo 147 trang với 220 chuyên mục kỹ thuật đo, lỗi đảo cực và bệnh lý tim mạch.

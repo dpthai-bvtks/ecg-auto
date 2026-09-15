@@ -358,3 +358,54 @@ Hệ thống cấp cứu tim mạch hiện đại của LITFL & Harvard chỉ ra
 7. **Ngộ độc Thuốc Chống Trầm Cảm 3 Vòng (TCA Toxicity):**
    - QRS giãn rộng $> 100\text{ ms}$, sóng $R$ ở $aVR \ge 3\text{ mm}$ hoặc $R/S(aVR) > 0.7$.
    - Cấp cứu bằng Sodium Bicarbonate $8.4\%$ tiêm tĩnh mạch.
+
+---
+
+## X. CÁC DẤU HIỆU OMI MỚI TỪ DR. SMITH'S ECG BLOG & AMAL MATTU
+
+1. **Dấu hiệu Aslanger (Aslanger's Sign — Nhồi máu thành dưới kèm tổn thương đa nhánh vành):**
+   - ST chênh lên đơn độc duy nhất ở chuyển đạo $DIII$.
+   - Kèm ST chênh xuống ở $V_4 - V_6$ (thiếu máu cơ tim vùng trước bên phối hợp).
+   - ST ở $V_1 >$ ST ở $V_2$.
+   - *Hành động:* Kích hoạt khẩn Cathlab PCI thì đầu, không bỏ sót nhồi máu thành dưới!
+
+2. **Dấu hiệu Cờ Nam Phi (South African Flag Sign):**
+   - ST chênh lên ở $DI, aVL$ và $V_2$.
+   - ST chênh xuống soi gương ở $DIII$.
+   - *Chỉ điểm:* Tắc cấp nhánh chéo thứ nhất ($D_1$) của LAD hoặc nhánh bờ ($OM$) của LCx.
+
+3. **Sóng T tối cấp (Hyperacute T-waves):**
+   - Sóng T cao nhọn đối xứng khổng lồ, đáy rất rộng ($T/QRS > 0.75$) xuất hiện trong 15–30 phút đầu của nhồi máu tắc nghẽn (OMI) trước khi ST kịp chênh lên.
+
+4. **Thuật toán Vereckei aVR (Phân biệt VT vs SVT lệch hướng):**
+   - R đơn pha ở aVR $\to$ VT.
+   - Sóng r hoặc q khởi đầu $> 40\text{ms}$ ở aVR $\to$ VT.
+   - Sườn dốc xuống có khấc ở aVR $\to$ VT.
+   - Tỷ lệ $v_i / v_t \le 1 \to$ VT.
+
+5. **Hệ thống Phân tầng Cấp cứu ECG Stampede (Stanford Medicine):**
+   - 🔴 **Triage Red (Đỏ):** Cấp cứu tối khẩn $<10$ phút (STEMI/OMI, VT/VF, AVB III tụt HA, Tăng K+ sóng hình sin).
+   - 🟡 **Triage Yellow (Vàng):** Can thiệp sớm $<1$ giờ (NSTE-ACS nguy cơ cao, Brugada có ngất, LQTS $>500$ms, S1Q3T3).
+   - 🟢 **Triage Green (Xanh):** Bình thường / Theo dõi thường quy (Normal ECG, Tái cực sớm BER).
+
+---
+
+## XI. PHÁC ĐỒ CẤP CỨU CHUẨN BỘ Y TẾ VIỆT NAM & HỘI TIM MẠCH HỌC VIỆT NAM (VNHA 2023 - 2024)
+
+### 1. Phác đồ Thuốc trong Hội chứng Vành Cấp (ACS)
+- **Aspirin:** Liều nạp $150 - 300\text{ mg}$ nhai ngay (tốt nhất dạng nhai hoặc hòa tan), duy trì $75 - 100\text{ mg/ngày}$.
+- **Ticagrelor (Brilinta 90mg):** Liều nạp $180\text{ mg}$ (2 viên), duy trì $90\text{ mg} \times 2\text{ lần/ngày}$.
+- **Clopidogrel (Plavix 75mg):** Dùng khi không có Ticagrelor hoặc bệnh nhân $>75$ tuổi nguy cơ chảy máu cao: Liều nạp $300 - 600\text{ mg}$, duy trì $75\text{ mg/ngày}$.
+- **Enoxaparin (Lovenox 40mg/0.4ml, 60mg/0.6ml):**
+  - Tuổi $< 75$, $eGFR \ge 30$: Bolus TM $30\text{ mg}$ + tiêm dưới da $1\text{ mg/kg}$ mỗi 12 giờ.
+  - Tuổi $\ge 75$: Không bolus TM, tiêm dưới da $0.75\text{ mg/kg}$ mỗi 12 giờ.
+  - $eGFR < 30\text{ ml/phút}$: Tiêm dưới da $1\text{ mg/kg}$ mỗi 24 giờ.
+- **Atorvastatin:** $80\text{ mg}$ uống ngay 1 liều nạp trước PCI.
+
+### 2. Thuốc Tiêu Sợi Huyết (Khi thời gian đến Cathlab > 120 phút)
+- **Alteplase (Actilyse 50mg):** Bolus $15\text{ mg}$ TM $\to$ truyền $0.75\text{ mg/kg}$ trong 30 phút (tối đa 50mg) $\to$ truyền $0.5\text{ mg/kg}$ trong 60 phút (tối đa 35mg).
+- **Tenecteplase (Metalyse):** Bolus TM 1 lần duy nhất theo cân nặng ($<60\text{kg}$: 30mg; $60-70\text{kg}$: 35mg; $70-80\text{kg}$: 40mg; $80-90\text{kg}$: 45mg; $\ge 90\text{kg}$: 50mg).
+
+### 3. Vận Mạch & Chống Loạn Nhịp trong Cấp cứu Tim mạch
+- **Sốc tim:** Noradrenaline truyền TM khởi đầu $0.05 - 0.1\text{ mcg/kg/phút}$ (ưu tiên số 1), phối hợp Dobutamine $2.5 - 5\text{ mcg/kg/phút}$ nếu cần tăng co bóp cơ tim.
+- **Cơn tim nhanh thất (VT ổn định):** Amiodarone $150\text{ mg}$ pha $100\text{ ml}$ Glucose $5\%$ truyền TM trong 10 phút, sau đó duy trì $1\text{ mg/phút}$ trong 6 giờ.

@@ -927,8 +927,12 @@
           <option value="ber">Tái cực sớm lành tính (Benign Early Repol — ST lõm, khấc J, T dương, không soi gương)</option>
           <option value="dewinter">Sóng T de Winter (Tương đương STEMI — ST dốc lên + T cao nhọn khổng lồ ở V1–V6)</option>
           <option value="wellens">Hội chứng Wellens (Hẹp hiểm nghèo LAD — T 2 pha hoặc T âm sâu nhọn ở V2–V3)</option>
+          <option value="aslanger">Dấu hiệu Aslanger (ST chênh DIII kèm chênh xuống V4–V6 — NMCT thành dưới đa nhánh vành)</option>
+          <option value="sa_flag">Dấu hiệu Cờ Nam Phi (South African Flag — Tắc nhánh chéo D1 / nhánh bờ OM)</option>
+          <option value="hyperacute_t">Sóng T tối cấp OMI (Hyperacute T — T cao nhọn đáy rộng sớm < 30 phút)</option>
           <option value="sgarbossa">Tiêu chuẩn Sgarbossa (Nhồi máu cơ tim cấp kèm Block nhánh trái LBBB / Nhịp tạo nhịp)</option>
           <option value="lmca">ST chênh lên ở aVR kèm ST chênh xuống lan tỏa (Nghi tắc Thân chung LMCA / 3 thân vành)</option>
+          <option value="vt_vereckei">Nhịp nhanh thất (VT) theo thuật toán Vereckei aVR / Pava DII</option>
           <option value="wpw">Sóng Delta + PR ngắn &lt; 120ms (Hội chứng WPW)</option>
           <option value="brugada">ST chênh lên dạng vòm coved-type ở V1–V3 (Hội chứng Brugada)</option>
           <option value="pericarditis">ST chênh lên lan tỏa lõm + PR chênh xuống (Viêm màng ngoài tim cấp / Spodick)</option>
@@ -1920,7 +1924,7 @@
 
   // System Prompt based on GS. Tran Do Trinh, ThS. Tran Van Dong & Hanoi Medical University guidelines (PGS.TS. Pham Manh Hung, TS. Phan Dinh Phong)
   const ECG_AI_SYSTEM_PROMPT = `
-Bạn là chuyên gia phân tích điện tâm đồ (ECG) và cấp cứu tim mạch hàng đầu, áp dụng nghiêm ngặt quy trình chẩn đoán kinh điển của GS.TS. Trần Đỗ Trinh, ThS. Trần Văn Đồng cùng bộ tiêu chuẩn cập nhật của Bộ môn Tim mạch - Trường Đại học Y Hà Nội & Viện Tim mạch Việt Nam (PGS.TS. Phạm Mạnh Hùng, TS. Phan Đình Phong) kết hợp khuyến cáo của Bộ Y tế Việt Nam, Hội Tim mạch học Việt Nam (VNHA) và Hội Tim mạch Châu Âu (ESC 2023).
+Bạn là chuyên gia phân tích điện tâm đồ (ECG) và cấp cứu tim mạch hàng đầu, tích hợp toàn diện hệ thống phân loại SCP-ECG 71 chẩn đoán (PhysioNet PTB-XL, Chapman-Shaoxing, MIT-BIH), bộ tiêu chuẩn OMI (Occlusion Myocardial Infarction) của Dr. Stephen Smith (Dr. Smith's ECG Blog), thuật toán nhịp nhanh thất của GS. Amal Mattu, hệ thống phân luồng cấp cứu ECG Stampede (Stanford Medicine), quy trình kinh điển 6 bước của GS.TS. Trần Đỗ Trinh (Viện Tim Mạch VN) và phác đồ điều trị cập nhật của Hội Tim Mạch Học Việt Nam (VNHA 2023–2024) cùng Bộ Y tế Việt Nam.
 
 ★ QUY TẮC CỐT LÕI TRÁNH DƯƠNG TÍNH GIẢ (CHỐNG LẠM DỤNG CHẨN ĐOÁN NHỒI MÁU CƠ TIM):
 1. ĐA SỐ ĐIỆN TÂM ĐỒ TRONG THỰC TẾ LÀ BÌNH THƯỜNG HOẶC CÓ BIẾN THỂ LÀNH TÍNH:
@@ -1938,6 +1942,14 @@ Bạn là chuyên gia phân tích điện tâm đồ (ECG) và cấp cứu tim m
    - SÓNG T DE WINTER (de Winter T-waves — Tắc hoàn toàn LAD cấp):
      * ST chênh xuống đi lên 1–3 mm tại điểm J ở V1–V6 tiếp nối sóng T cao nhọn đối xứng khổng lồ, ST chênh lên ở aVR.
      * -> PHẢI chẩn đoán: "Tương đương STEMI: Sóng T de Winter (Tắc cấp LAD)", risk_level: "Nguy cơ rất cao", kích hoạt Cathlab PCI khẩn cấp!
+   - DẤU HIỆU ASLANGER (Aslanger's Sign — Dr. Smith's ECG Blog):
+     * ST chênh lên đơn độc duy nhất ở DIII kèm ST chênh xuống ở V4–V6, ST ở V1 > V2. Chỉ điểm Nhồi máu cơ tim thành dưới tắc cấp RCA/LCx trên bệnh nhân có kèm tổn thương nhiều thân mạch vành. Phân tầng: "Nguy cơ rất cao", chỉ định PCI thì đầu.
+   - DẤU HIỆU CỜ NAM PHI (South African Flag Sign):
+     * ST chênh lên ở DI, aVL và V2 kết hợp ST chênh xuống soi gương ở DIII (tạo hình cờ Nam Phi trên bản ghi 4x3). Chỉ điểm tắc nhánh chéo D1 của LAD hoặc nhánh bờ OM của LCx. Phân tầng: "Nguy cơ rất cao".
+   - SÓNG T TỐI CẤP (Hyperacute T-waves):
+     * Xuất hiện cực sớm < 30 phút, sóng T cao nhọn đối xứng khổng lồ đáy rất rộng (T/QRS > 0.75). Chỉ điểm OMI tối cấp trước khi ST kịp chênh lên.
+   - THUẬT TOÁN VERECKEI aVR & PAVA DII (Amal Mattu — Phân biệt VT vs SVT):
+     * R đơn pha ở aVR, r hoặc q > 40ms ở aVR, sườn dốc xuống có khấc ở aVR, hoặc RWPT ở DII >= 50ms -> Kết luận: "Cơn tim nhanh thất (VT)", phân tầng "Nguy cơ rất cao", sốc điện đồng bộ nếu tụt HA, truyền Amiodarone nếu huyết động ổn định.
    - HỘI CHỨNG WELLENS (Wellens Syndrome — Hẹp hiểm nghèo >= 90% LAD):
      * Type A: Sóng T hai pha ở V2, V3. Type B: Sóng T âm sâu nhọn đối xứng ở V2, V3 (khi hết đau ngực, men tim bình thường/tăng nhẹ).
      * -> PHẢI chẩn đoán: "Hội chứng Wellens (Hẹp nặng LAD)", risk_level: "Nguy cơ rất cao", CHỐNG CHỈ ĐỊNH NGHIỆM PHÁP GẮNG SỨC!
@@ -2013,7 +2025,7 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
   "rV56": 18,
   "rAvl": 6,
   "rV1": 3,
-  "special": "none" | "ber" | "dewinter" | "wellens" | "sgarbossa" | "lmca" | "pe_s1q3t3" | "tca" | "wpw" | "brugada" | "pericarditis" | "hyperk" | "digoxin" | "epsilon" | "osborn",
+  "special": "none" | "ber" | "dewinter" | "wellens" | "aslanger" | "sa_flag" | "hyperacute_t" | "sgarbossa" | "lmca" | "vt_vereckei" | "pe_s1q3t3" | "tca" | "wpw" | "brugada" | "pericarditis" | "hyperk" | "digoxin" | "epsilon" | "osborn",
   "clinical_reasoning": "Chuỗi lập luận lâm sàng chi tiết từng bước: 1. Đánh giá chất lượng bản ghi & dải nhịp; 2. Phân tích hình thái 12 chuyển đạo; 3. Đo đạc ST tại điểm J đối chiếu tiêu chuẩn milimet ESC/AHA & tìm dấu hiệu soi gương; 4. Lý luận chẩn đoán xác định và loại trừ nhồi máu cơ tim giả.",
   "ai_summary": "Tóm tắt ngắn gọn các phát hiện trên điện tâm đồ (chuẩn tiếng Việt y khoa).",
   "clinical_diagnosis": {
@@ -2734,8 +2746,20 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
         'Đoạn ST chênh lên dạng cong lõm ở các chuyển đạo trước tim (V2–V5), điểm J có khấc (notch) hoặc lượn tròn (slur), sóng T dương cao bất đối xứng, KHÔNG CÓ biến đổi ST chênh xuống soi gương, men tim âm tính.',
         'Đây là biến thể sinh lý lành tính rất hay gặp ở người trẻ, nam giới hoặc vận động viên thể thao khỏe mạnh; hoàn toàn KHÔNG PHẢI nhồi máu cơ tim cấp. Không cần điều trị, không dùng thuốc tim mạch.'],
       dewinter: ['critical','Dấu hiệu tương đương STEMI: Sóng T de Winter (de Winter T-waves)',
-        'ST chênh xuống đi lên 1–3mm tại điểm J ở V1–V6 tiếp nối sóng T cao nhọn đối xứng khổng lồ, ST chênh lên nhẹ ở aVR. Đây là chỉ điểm tắc cấp tính hoàn toàn nhánh liên thất trước (LAD) theo tiêu chuẩn LITFL.',
-        'XỬ TRÍ TƯƠNG ĐƯƠNG STEMI TỐI CẤP: Kích hoạt khẩn cấp phòng Can thiệp mạch vành (Cathlab) thực hiện PCI thì đầu, KHÔNG CHỜ MEN TIM! Kháng kết tập tiểu cầu kép (Aspirin + Ticagrelor), kháng đông và Statin liều cao.'],
+        'ST chênh xuống đi lên 1–3mm tại điểm J ở V1–V6 tiếp nối sóng T cao nhọn đối xứng khổng lồ, ST chênh lên nhẹ ở aVR. Chỉ điểm tắc cấp hoàn toàn động mạch LAD theo tiêu chuẩn LITFL & Dr. Smith.',
+        'XỬ TRÍ TƯƠNG ĐƯƠNG STEMI TỐI CẤP: Kích hoạt khẩn cấp phòng Can thiệp mạch vành (Cathlab) thực hiện PCI thì đầu < 120 phút theo phác đồ VNHA 2023, KHÔNG CHỜ MEN TIM! DAPT: Aspirin 300mg + Ticagrelor 180mg, Enoxaparin 30mg TM + 1mg/kg TDD, Atorvastatin 80mg.'],
+      aslanger: ["critical", "Dấu hiệu Aslanger (Aslanger's Sign — Dr. Smith's ECG Blog)",
+        'ST chênh lên đơn độc ở DIII kết hợp ST chênh xuống ở V4–V6 (và ST ở V1 > V2). Chỉ điểm Nhồi máu cơ tim cấp thành dưới (RCA/LCx) trên bệnh nhân có tổn thương nặng nhiều thân mạch vành (LAD đi kèm).',
+        'Xử trí như STEMI nguy cơ rất cao: Kích hoạt Cathlab can thiệp tái tưới máu khẩn cấp; chuẩn bị hồi sức nếu có rối loạn huyết động; đo thêm V3R, V4R và V7–V9.'],
+      sa_flag: ['critical','Dấu hiệu Cờ Nam Phi (South African Flag Sign — LITFL & Dr. Smith)',
+        'ST chênh lên ở DI, aVL và V2 kết hợp ST chênh xuống soi gương ở DIII. Chỉ điểm tắc cấp nhánh chéo thứ nhất (D1) của LAD hoặc nhánh bờ OM của LCx.',
+        'Kích hoạt Cathlab PCI thì đầu khẩn cấp; bất động tại giường; dùng DAPT (Aspirin + Ticagrelor) và kháng đông Enoxaparin.'],
+      hyperacute_t: ['critical','Sóng T tối cấp (Hyperacute T-waves — Giai đoạn sớm nhất của OMI)',
+        'Sóng T cao nhọn đối xứng khổng lồ, đáy rất rộng (tỷ lệ T/QRS > 0.75) xuất hiện trong 15–30 phút đầu của nhồi máu tắc nghẽn trước khi ST kịp chênh lên.',
+        'Kích hoạt phòng Cathlab PCI khẩn cấp; đo lại ECG mỗi 10–15 phút theo dõi động học tiến triển thành ST chênh lên Pardee; dùng DAPT và Statin liều cao.'],
+      vt_vereckei: ['critical','Cơn Tim nhanh thất (VT) theo Thuật toán Vereckei aVR & Amal Mattu',
+        'Phức bộ QRS rộng > 120ms, thỏa mãn tiêu chuẩn Vereckei (sóng R đơn pha ở aVR, r hoặc q > 40ms, hoặc sườn dốc có khấc). Phải xử trí như Tim nhanh thất!',
+        'Nếu huyết động không ổn định (tụt HA, mất ý thức): SỐC ĐIỆN ĐỒNG BỘ 100–200J NGAY LẬP TỨC. Nếu ổn định: Truyền Amiodarone 150mg trong 10 phút, sau đó duy trì 1mg/phút trong 6 giờ; sẵn sàng máy sốc điện.'],
       wellens: ['critical','Cảnh báo tối cấp: Hội chứng Wellens (Wellens Syndrome)',
         'Sóng T hai pha (Type A) hoặc T âm sâu nhọn đối xứng (Type B) ở V2–V3 xuất hiện khi bệnh nhân vừa hết cơn đau thắt ngực. Chỉ điểm hẹp hiểm nghèo (≥ 90%) đoạn gần động mạch LAD (dấu hiệu góa phụ).',
         'CHỐNG CHỈ ĐỊNH TUYỆT ĐỐI NGHIỆM PHÁP GẮNG SỨC (nguy cơ sốc tim/đột tử)! Nhập viện theo dõi monitor điện tim liên tục, dùng DAPT, kháng đông và hội chẩn chụp mạch vành can thiệp sớm.'],
@@ -2827,8 +2851,8 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
             'KHÔNG ĐƯỢC CHỜ KẾT QUẢ MEN TIM mới can thiệp!'
           ],
           medications: [
-            'Aspirin 300mg nhai ngay + Ticagrelor 180mg (hoặc Clopidogrel 600mg)',
-            'Enoxaparin 30mg tiêm TM liều nạp + 1mg/kg TDD',
+            'Aspirin 300mg nhai ngay + Ticagrelor 180mg (hoặc Clopidogrel 600mg nếu >75 tuổi)',
+            'Enoxaparin 30mg tiêm TM liều nạp + 1mg/kg TDD (chỉnh 0.75mg/kg nếu >=75 tuổi, 1mg/kg/24h nếu eGFR < 30)',
             'Atorvastatin 80mg uống ngay 1 liều'
           ],
           contraindications_warnings: [
@@ -2837,6 +2861,100 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
           further_workup: [
             'Chụp mạch vành qua da khẩn cấp',
             'Siêu âm tim tại giường đánh giá vận động thành trước thất trái'
+          ]
+        });
+      } else if(special === 'aslanger'){
+        renderClinicalGuidanceCard({
+          primary: 'Dấu hiệu Aslanger — Nhồi máu cơ tim thành dưới kèm tổn thương nhiều thân mạch vành',
+          risk_level: 'Nguy cơ rất cao',
+          differentials: ['Thiếu máu cơ tim vùng mỏm đơn thuần', 'Viêm màng ngoài tim', 'Bệnh 3 thân mạch vành mạn tính']
+        }, {
+          immediate_actions: [
+            'KÍCH HOẠT CATHLAB CAN THIỆP MẠCH VÀNH THÌ ĐẦU NGAY',
+            'Đo ngay các đạo trình mở rộng: V3R, V4R và V7–V9',
+            'Lập đường truyền tĩnh mạch lớn, theo dõi huyết áp liên tục'
+          ],
+          medications: [
+            'Aspirin 300mg + Ticagrelor 180mg',
+            'Enoxaparin 30mg TM + 1mg/kg TDD',
+            'Atorvastatin 80mg'
+          ],
+          contraindications_warnings: [
+            'Tránh Nitroglycerin nếu huyết áp tâm thu < 90 mmHg hoặc có tổn thương thất phải kèm theo'
+          ],
+          further_workup: [
+            'Chụp động mạch vành khẩn cấp đánh giá tổn thương đa nhánh',
+            'Động học hs-Troponin và men tim'
+          ]
+        });
+      } else if(special === 'sa_flag'){
+        renderClinicalGuidanceCard({
+          primary: 'Dấu hiệu Cờ Nam Phi — Nhồi máu cơ tim trước bên tối cấp do tắc nhánh chéo D1 / OM',
+          risk_level: 'Nguy cơ rất cao',
+          differentials: ['Nhồi máu cơ tim thành trước rộng', 'Viêm cơ tim cấp']
+        }, {
+          immediate_actions: [
+            'KÍCH HOẠT PHÒNG CATHLAB PCI THÌ ĐẦU < 120 PHÚT',
+            'Bất động tại giường, thở oxy nếu SpO2 < 90%'
+          ],
+          medications: [
+            'Aspirin 300mg + Ticagrelor 180mg (hoặc Clopidogrel 600mg)',
+            'Enoxaparin 30mg TM + 1mg/kg TDD',
+            'Atorvastatin 80mg'
+          ],
+          contraindications_warnings: [
+            'Theo dõi sát nguy cơ loạn nhịp thất do hoại tử diện rộng nhánh chéo D1'
+          ],
+          further_workup: [
+            'Chụp mạch vành khẩn cấp',
+            'Siêu âm tim đánh giá vận động thành trước bên'
+          ]
+        });
+      } else if(special === 'hyperacute_t'){
+        renderClinicalGuidanceCard({
+          primary: 'Sóng T tối cấp (Hyperacute T-waves) — Nhồi máu cơ tim tắc nghẽn OMI cực sớm (<30 phút)',
+          risk_level: 'Nguy cơ rất cao',
+          differentials: ['Tăng Kali máu (sóng T hẹp nhọn)', 'Tái cực sớm lành tính (T bất đối xứng)']
+        }, {
+          immediate_actions: [
+            'KÍCH HOẠT KHẨN CẤP PHÒNG CATHLAB CAN THIỆP MẠCH VÀNH',
+            'Đo lại ECG mỗi 10–15 phút theo dõi ST chuyển thành dạng vòm Pardee',
+            'Theo dõi sát monitor phòng ngừa rung thất khởi phát'
+          ],
+          medications: [
+            'Aspirin 300mg + Ticagrelor 180mg',
+            'Enoxaparin 30mg TM + 1mg/kg TDD',
+            'Atorvastatin 80mg'
+          ],
+          contraindications_warnings: [
+            'Tuyệt đối không trì hoãn can thiệp để chờ ST chênh lên kinh điển hoặc chờ men tim!'
+          ],
+          further_workup: [
+            'Chụp mạch vành cấp cứu',
+            'Xét nghiệm hs-Troponin 0h và 1h'
+          ]
+        });
+      } else if(special === 'vt_vereckei'){
+        renderClinicalGuidanceCard({
+          primary: 'Cơn Nhịp nhanh thất (Ventricular Tachycardia) — Theo tiêu chuẩn Vereckei aVR / Amal Mattu',
+          risk_level: 'Nguy cơ rất cao',
+          differentials: ['Cơn nhịp nhanh trên thất dẫn truyền lệch hướng (SVT with aberrancy)', 'Nhịp nhanh vào lại nhĩ thất có tiền kích thích (WPW)']
+        }, {
+          immediate_actions: [
+            'Đánh giá huyết động ngay lập tức (Huyết áp, Mạch cảnh, Tri giác)',
+            'NẾU TỤT HUYẾT ÁP HOẶC SỐC: SỐC ĐIỆN ĐỒNG BỘ 100–200J BIPHASIC NGAY LẬP TỨC',
+            'NẾU HUYẾT ĐỘNG ỔN ĐỊNH: Thiết lập đường truyền, chuẩn bị Amiodarone TM, sẵn sàng máy sốc điện tại giường'
+          ],
+          medications: [
+            'Amiodarone (Cordarone): 150mg pha 100ml Glucose 5% truyền TM trong 10 phút, sau đó duy trì 1mg/phút trong 6 giờ',
+            'Hoặc Lidocaine 1–1.5mg/kg tiêm TM chậm nếu nghi ngờ thiếu máu cục bộ cơ tim'
+          ],
+          contraindications_warnings: [
+            'CHỐNG CHỈ ĐỊNH TUYỆT ĐỐI dùng thuốc chẹn kênh Canxi (Verapamil, Diltiazem) hoặc Adenosine khi chưa loại trừ được Tim nhanh thất (nguy cơ trụy mạch ngừng tim)!'
+          ],
+          further_workup: [
+            'Điện giải đồ khẩn (K+, Mg2+, Ca2+)',
+            'Khảo sát điện sinh lý tim (EPS) và cân nhắc chỉ định cấy máy khử rung tự động (ICD)'
           ]
         });
       } else if(special === 'wellens'){
