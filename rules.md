@@ -320,5 +320,41 @@ Trong thực hành lâm sàng và phân tích ảnh chụp điện thoại, bi�
 - **Hiện tượng trôi đường đẳng điện (Baseline Drift):** Khi ảnh chụp bị cong, nghiêng hoặc nhiễu cơ vân, điểm J phải được đo so với đoạn PR kế cận, không lấy đường nằm ngang tuyệt đối của trang giấy.
 - **Tiêu chuẩn Điện tâm đồ Bình thường:** Nếu không có tiêu chuẩn milimet bệnh lý, không có biến đổi soi gương và không có sóng Q hoại tử, hệ thống mặc định kết luận **"Điện tâm đồ trong giới hạn bình thường"** với phân tầng **Nguy cơ thấp**.
 
+---
 
+## IX. TIÊU CHUẨN ĐẶC BIỆT & DẤU HIỆU "TỬ THẦN" TỪ LITFL (LIFE IN THE FAST LANE) & HARVARD MEDICAL SCHOOL (ECG WAVE-MAVEN)
 
+### 1. Khái niệm OMI (Occlusion Myocardial Infarction) & Dấu hiệu Tương đương STEMI
+Hệ thống cấp cứu tim mạch hiện đại của LITFL & Harvard chỉ ra rằng mô hình cổ điển STEMI/NSTEMI bỏ sót gần 30% các ca tắc cấp hoàn toàn động mạch vành (OMI). AI cần nhận diện các dấu hiệu tương đương STEMI sau để kích hoạt PCI thì đầu khẩn cấp:
+
+1. **Sóng T de Winter (Tắc cấp LAD đoạn gần không ST chênh lên):**
+   - ST chênh xuống đi lên $1 - 3\text{ mm}$ tại điểm J ở $V_1 - V_6$.
+   - Sóng T cao nhọn đối xứng khổng lồ nối tiếp ngay sau điểm J.
+   - ST chênh lên $0.5 - 1.0\text{ mm}$ ở $aVR$.
+   - *Xử trí:* Kích hoạt Cathlab PCI thì đầu khẩn cấp tương đương STEMI, không chờ men tim!
+
+2. **Hội chứng Wellens (Hẹp hiểm nghèo $\ge 90\%$ LAD đoạn gần):**
+   - *Type A (25%):* Sóng T hai pha ở $V_2, V_3$.
+   - *Type B (75%):* Sóng T âm sâu nhọn đối xứng ở $V_2, V_3$.
+   - Xuất hiện khi bệnh nhân vừa hết đau ngực, men tim bình thường hoặc tăng nhẹ.
+   - *Cảnh báo tử thần:* **CHỐNG CHỈ ĐỊNH NGHIỆP PHÁP GẮNG SỨC!** Chụp mạch vành sớm.
+
+3. **Tiêu chuẩn Sgarbossa & Smith Sửa Đổi (Bắt nhồi máu trong LBBB hoặc Nhịp máy tạo nhịp):**
+   - Tiêu chuẩn 1 (5 điểm): ST chênh lên đồng hướng $\ge 1\text{ mm}$ ở đạo trình QRS dương.
+   - Tiêu chuẩn 2 (3 điểm): ST chênh xuống đồng hướng $\ge 1\text{ mm}$ ở $V_1, V_2, V_3$.
+   - Tiêu chuẩn 3 Smith sửa đổi: ST chênh lên ngược hướng có tỷ lệ $|ST/S| \ge 0.25$ ($25\%$).
+
+4. **ST chênh lên ở aVR kèm ST chênh xuống đa chuyển đạo:**
+   - ST chênh lên $\ge 1\text{ mm}$ ở $aVR$ ($\ge V_1$).
+   - ST chênh xuống ở $\ge 6$ chuyển đạo khác ($V_4-V_6, DI, DII, aVL$).
+   - *Chỉ điểm:* Tắc thân chung động mạch vành trái (LMCA) hoặc tổn thương nặng 3 thân mạch vành.
+
+5. **Dấu hiệu Spodick (Spodick's Sign trong Viêm màng ngoài tim cấp):**
+   - Đoạn TP dốc xuống (**downsloping TP segment**), xuất hiện ở 80% bệnh nhân viêm màng ngoài tim cấp, phân biệt với STEMI.
+
+6. **Dấu hiệu McGinn-White (S1Q3T3 trong Thuyên tắc phổi cấp):**
+   - S sâu ở DI + Q sâu ở DIII + T âm ở DIII, kèm nhịp nhanh xoang hoặc RBBB mới xuất hiện.
+
+7. **Ngộ độc Thuốc Chống Trầm Cảm 3 Vòng (TCA Toxicity):**
+   - QRS giãn rộng $> 100\text{ ms}$, sóng $R$ ở $aVR \ge 3\text{ mm}$ hoặc $R/S(aVR) > 0.7$.
+   - Cấp cứu bằng Sodium Bicarbonate $8.4\%$ tiêm tĩnh mạch.

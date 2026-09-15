@@ -348,3 +348,53 @@ Hệ thống đã tiếp nhận, phân tích toàn văn và nạp vào bộ nh�
 - **Test 1 (Bình thường):** Nhịp xoang 75 l/p, PR 160ms, QRS 85ms $\rightarrow$ Kết luận: *"Điện tâm đồ trong giới hạn bình thường (Normal ECG)"*, Nguy cơ thấp. Không có bất kỳ cảnh báo STEMI nào.
 - **Test 2 (Tái cực sớm lành tính):** ST chênh lên ở trước mỏm + chọn Tái cực sớm $\rightarrow$ Kết luận: *"Biến thể Tái cực sớm lành tính (Benign Early Repolarization - BER)"*, Nguy cơ thấp.
 - **Test 3 (STEMI thực thụ - Ca 1):** ST chênh lên DII/DIII/aVF kèm soi gương và đau ngực cấp $\rightarrow$ Kết luận chính xác: *"Nhồi máu cơ tim cấp có ST chênh lên (STEMI) thành dưới"*, Nguy cơ rất cao, kích hoạt phác đồ DAPT + PCI và cảnh báo chống chỉ định Nitroglycerin.
+
+---
+
+## 13. TÍCH HỢP BỘ TRI THỨC ĐIỆN TÂM ĐỒ LÂM SÀNG TỪ LITFL (LIFE IN THE FAST LANE) & HARVARD MEDICAL SCHOOL (ECG WAVE-MAVEN)
+
+**Ngày thực hiện:** 15/09/2026  
+**Yêu cầu người dùng:**
+> *"phương án 1 đi"* (Trích xuất toàn bộ bộ tri thức chẩn đoán, tiêu chuẩn OMI/tương đương STEMI và các killer patterns từ LITFL & Harvard Wave-Maven nạp vào bộ nhớ AI và tài liệu tham khảo)
+
+### 1. Bổ sung Tài liệu Tham khảo Chuyên sâu
+* Đã tạo tệp chuyên khảo: `tai-lieu-tham-khao/LITFL-Harvard-ECG-Knowledge-Base.md`.
+* Bao quát toàn diện 6 chuyên đề lớn:
+  1. *Khái niệm OMI (Occlusion Myocardial Infarction):* Mô hình hiện đại thay thế tư duy STEMI/NSTEMI cứng nhắc, tránh bỏ sót 30% ca tắc cấp mạch vành.
+  2. *Các Dạng Điện Tim "Tử Thần" Tương Đương STEMI:*
+     - Sóng T de Winter (Tắc hoàn toàn LAD đoạn gần không ST chênh lên).
+     - Hội chứng Wellens (Type A hai pha & Type B âm sâu nhọn ở V2–V3, hẹp hiểm nghèo LAD, chống chỉ định nghiệm pháp gắng sức).
+     - Tiêu chuẩn Sgarbossa & Smith sửa đổi (Bắt nhồi máu cơ tim khi có sẵn LBBB hoặc nhịp máy tạo nhịp).
+     - ST chênh lên ở aVR kèm ST chênh xuống lan tỏa $\ge 6$ đạo trình (Tắc Thân chung LMCA / 3 thân vành).
+     - Nhồi máu cơ tim thành sau thực thụ (Soi gương ở V1–V3, đo V7–V9).
+     - Nhồi máu cơ tim thất phải (V3R, V4R, chống chỉ định Nitrat/lợi tiểu).
+  3. *Dấu hiệu Phân biệt Cấp cứu Tim Phổi:*
+     - Dấu hiệu Spodick (Đoạn TP dốc xuống trong Viêm màng ngoài tim cấp).
+     - Công thức phân biệt Tái cực sớm lành tính (BER) vs STEMI trước vách sớm (TS. Stephen Smith).
+     - Dấu hiệu McGinn-White (S1Q3T3 trong Thuyên tắc động mạch phổi cấp).
+  4. *Hội chứng Kênh Ion & Đột tử do Tim:* Brugada 3 Type, LQTS, Hội chứng QT ngắn (SQTS QTc < 330ms), Sóng J/Osborn trong Hạ thân nhiệt, Sóng Epsilon trong ARVC.
+  5. *Độc chất học Tim mạch:* Ngộ độc thuốc chống trầm cảm 3 vòng (TCA Toxicity - QRS rộng, R ở aVR $\ge 3\text{ mm}$), Ngộ độc Digoxin (ST đáy chén Salvador Dali, nhịp nhanh thất 2 chiều), Tăng/Hạ Kali máu cấp cứu.
+  6. *Bảng Tra cứu Nhanh & Cạm bẫy Lâm sàng (Clinical Pitfalls).*
+
+### 2. Cập nhật Bộ Quy tắc Y khoa `rules.md`
+* Bổ sung **Mục IX**: Tiêu chuẩn đặc biệt & Dấu hiệu tử thần từ LITFL & Harvard Wave-Maven.
+
+### 3. Nâng cấp Ứng dụng Web `index.html`
+1. **Nâng cấp `ECG_AI_SYSTEM_PROMPT`:**
+   - Đưa trực tiếp bộ tiêu chuẩn OMI / STEMI equivalents từ Harvard & LITFL vào hệ thống suy luận của AI Vision.
+   - Mở rộng cấu trúc JSON của AI hỗ trợ đầy đủ các hội chứng: `"dewinter"`, `"wellens"`, `"sgarbossa"`, `"lmca"`, `"pe_s1q3t3"`, `"tca"`.
+2. **Mở rộng Menu Card 7 (Dấu hiệu & Hội chứng Đặc biệt):**
+   - Bổ sung tùy chọn chọn nhanh cho bác sĩ tại giường bệnh:
+     - `dewinter`: Sóng T de Winter.
+     - `wellens`: Hội chứng Wellens.
+     - `sgarbossa`: Tiêu chuẩn Sgarbossa trong LBBB.
+     - `lmca`: ST chênh lên ở aVR (Nghi tắc thân chung LMCA).
+     - `pe_s1q3t3`: Dấu hiệu S1Q3T3 (Nghi Thuyên tắc phổi).
+     - `tca`: QRS rộng + Sóng R ở aVR $\ge 3\text{mm}$ (Nghi ngộ độc TCA).
+3. **Đồng bộ hóa Phác đồ Xử trí Cấp cứu (`renderClinicalGuidanceCard`):**
+   - Mỗi hội chứng đều kích hoạt phác đồ xử trí khẩn cấp tương ứng:
+     - de Winter / Sgarbossa: Kích hoạt khẩn Cathlab PCI thì đầu không chờ men tim.
+     - Wellens: Chống chỉ định nghiệm pháp gắng sức, chụp mạch vành sớm.
+     - LMCA: Hồi sức sốc tim, chuẩn bị mổ bắc cầu vành (CABG) hoặc PCI cấp cứu.
+     - Thuyên tắc phổi: Chỉ định CTPA ngay, phác đồ tiêu sợi huyết/kháng đông.
+     - Ngộ độc TCA: Tiêm TM Sodium Bicarbonate 8.4%, kiềm hóa máu.

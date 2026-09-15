@@ -925,10 +925,16 @@
         <select id="special">
           <option value="none">Không có dấu hiệu đặc biệt (Bình thường)</option>
           <option value="ber">Tái cực sớm lành tính (Benign Early Repol — ST lõm, khấc J, T dương, không soi gương)</option>
+          <option value="dewinter">Sóng T de Winter (Tương đương STEMI — ST dốc lên + T cao nhọn khổng lồ ở V1–V6)</option>
+          <option value="wellens">Hội chứng Wellens (Hẹp hiểm nghèo LAD — T 2 pha hoặc T âm sâu nhọn ở V2–V3)</option>
+          <option value="sgarbossa">Tiêu chuẩn Sgarbossa (Nhồi máu cơ tim cấp kèm Block nhánh trái LBBB / Nhịp tạo nhịp)</option>
+          <option value="lmca">ST chênh lên ở aVR kèm ST chênh xuống lan tỏa (Nghi tắc Thân chung LMCA / 3 thân vành)</option>
           <option value="wpw">Sóng Delta + PR ngắn &lt; 120ms (Hội chứng WPW)</option>
           <option value="brugada">ST chênh lên dạng vòm coved-type ở V1–V3 (Hội chứng Brugada)</option>
-          <option value="pericarditis">ST chênh lên lan tỏa lõm + PR chênh xuống (Viêm màng ngoài tim cấp)</option>
+          <option value="pericarditis">ST chênh lên lan tỏa lõm + PR chênh xuống (Viêm màng ngoài tim cấp / Spodick)</option>
+          <option value="pe_s1q3t3">Dấu hiệu S1Q3T3 + Nhịp nhanh xoang (Nghi Thuyên tắc động mạch phổi cấp - PE)</option>
           <option value="hyperk">T cao nhọn đối xứng, QRS giãn rộng, mất P (Nghi tăng Kali máu)</option>
+          <option value="tca">QRS rộng + Sóng R ưu thế ở aVR ≥ 3mm (Nghi ngộ độc thuốc chống trầm cảm 3 vòng - TCA)</option>
           <option value="digoxin">ST lõm hình đáy chén (Ngấm / ngộ độc Digoxin)</option>
           <option value="epsilon">Sóng Epsilon ở V1–V3 (Loạn sản thất phải gây loạn nhịp – ARVC)</option>
           <option value="osborn">Sóng J / Osborn (Hạ thân nhiệt)</option>
@@ -1928,7 +1934,22 @@ Bạn là chuyên gia phân tích điện tâm đồ (ECG) và cấp cứu tim m
        + Nam >= 40 tuổi: Điểm J phải chênh lên >= 2.0 mm (0.2 mV).
        + Nữ (mọi lứa tuổi): Điểm J phải chênh lên >= 1.5 mm (0.15 mV).
      * Chuyển đạo V1, V4, V5, V6: Điểm J chênh lên >= 1.0 mm (0.1 mV).
-3. HÌNH THÁI ST & HÌNH ẢNH SOI GƯƠNG (RECIPROCAL DEPRESSION) — TIÊU CHÍ VÀNG QUYẾT ĐỊNH:
+3. CÁC DẠNG ĐIỆN TIM "TỬ THẦN" TƯƠNG ĐƯƠNG STEMI (LITFL & HARVARD CRITERIA):
+   - SÓNG T DE WINTER (de Winter T-waves — Tắc hoàn toàn LAD cấp):
+     * ST chênh xuống đi lên 1–3 mm tại điểm J ở V1–V6 tiếp nối sóng T cao nhọn đối xứng khổng lồ, ST chênh lên ở aVR.
+     * -> PHẢI chẩn đoán: "Tương đương STEMI: Sóng T de Winter (Tắc cấp LAD)", risk_level: "Nguy cơ rất cao", kích hoạt Cathlab PCI khẩn cấp!
+   - HỘI CHỨNG WELLENS (Wellens Syndrome — Hẹp hiểm nghèo >= 90% LAD):
+     * Type A: Sóng T hai pha ở V2, V3. Type B: Sóng T âm sâu nhọn đối xứng ở V2, V3 (khi hết đau ngực, men tim bình thường/tăng nhẹ).
+     * -> PHẢI chẩn đoán: "Hội chứng Wellens (Hẹp nặng LAD)", risk_level: "Nguy cơ rất cao", CHỐNG CHỈ ĐỊNH NGHIỆM PHÁP GẮNG SỨC!
+   - TIÊU CHUẨN SGARBOSSA & SMITH SỬA ĐỔI (Bắt nhồi máu cơ tim khi có Block nhánh trái LBBB hoặc Nhịp máy tạo nhịp):
+     * ST chênh lên đồng hướng >= 1mm ở đạo trình QRS dương HOẶC ST chênh xuống đồng hướng >= 1mm ở V1–V3 HOẶC tỷ lệ |ST/S| >= 0.25.
+   - ST CHÊNH LÊN Ở aVR KÈM ST CHÊNH XUỐNG ĐA CHUYỂN ĐẠO:
+     * Chỉ điểm tắc Thân chung ĐM vành trái (LMCA) hoặc tổn thương nặng 3 thân mạch vành. Nguy cơ sốc tim rất cao!
+   - DẤU HIỆU SPODICK (Viêm màng ngoài tim cấp): Đoạn TP dốc xuống (downsloping TP) phân biệt với STEMI.
+   - DẤU HIỆU McGINN-WHITE (S1Q3T3): S sâu ở DI, Q sâu ở DIII, T âm ở DIII kèm nhịp nhanh xoang gợi ý Thuyên tắc phổi cấp (PE).
+   - NGỘ ĐỘC THUỐC CHỐNG TRẦM CẢM 3 VÒNG (TCA Toxicity): QRS giãn rộng > 100ms, sóng R ở aVR >= 3mm (R/S > 0.7). Cấp cứu Natri Bicarbonat 8.4%.
+
+4. HÌNH THÁI ST & HÌNH ẢNH SOI GƯƠNG (RECIPROCAL DEPRESSION) — TIÊU CHÍ VÀNG QUYẾT ĐỊNH:
    - NHỒI MÁU CƠ TIM CẤP (STEMI): Đoạn ST chênh lên dạng VÒM LỒI (Convex / Pardee), đỉnh hòa vào sóng T, VÀ PHẢI CÓ hình ảnh ST chênh xuống soi gương ở các đạo trình đối diện (Thành dưới II, III, aVF có soi gương chênh xuống ở I, aVL; Thành bên cao I, aVL có soi gương ở III, aVF; Thành sau có soi gương ST chênh xuống ở V1–V3).
    - BIẾN THỂ TÁI CỰC SỚM LÀNH TÍNH (BENIGN EARLY REPOLARIZATION - BER) — RẤT HAY GẶP Ở NGƯỜI BÌNH THƯỜNG / NGƯỜI TRẺ:
      * ST chênh lên dạng CONG LÕM (Concave) 1–2 mm ở V2–V5.
@@ -1992,7 +2013,7 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
   "rV56": 18,
   "rAvl": 6,
   "rV1": 3,
-  "special": "none" | "ber" | "wpw" | "brugada" | "pericarditis" | "hyperk" | "digoxin" | "epsilon" | "osborn",
+  "special": "none" | "ber" | "dewinter" | "wellens" | "sgarbossa" | "lmca" | "pe_s1q3t3" | "tca" | "wpw" | "brugada" | "pericarditis" | "hyperk" | "digoxin" | "epsilon" | "osborn",
   "clinical_reasoning": "Chuỗi lập luận lâm sàng chi tiết từng bước: 1. Đánh giá chất lượng bản ghi & dải nhịp; 2. Phân tích hình thái 12 chuyển đạo; 3. Đo đạc ST tại điểm J đối chiếu tiêu chuẩn milimet ESC/AHA & tìm dấu hiệu soi gương; 4. Lý luận chẩn đoán xác định và loại trừ nhồi máu cơ tim giả.",
   "ai_summary": "Tóm tắt ngắn gọn các phát hiện trên điện tâm đồ (chuẩn tiếng Việt y khoa).",
   "clinical_diagnosis": {
@@ -2712,6 +2733,24 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
       ber: ['info','Biến thể Tái cực sớm lành tính (Benign Early Repolarization - BER)',
         'Đoạn ST chênh lên dạng cong lõm ở các chuyển đạo trước tim (V2–V5), điểm J có khấc (notch) hoặc lượn tròn (slur), sóng T dương cao bất đối xứng, KHÔNG CÓ biến đổi ST chênh xuống soi gương, men tim âm tính.',
         'Đây là biến thể sinh lý lành tính rất hay gặp ở người trẻ, nam giới hoặc vận động viên thể thao khỏe mạnh; hoàn toàn KHÔNG PHẢI nhồi máu cơ tim cấp. Không cần điều trị, không dùng thuốc tim mạch.'],
+      dewinter: ['critical','Dấu hiệu tương đương STEMI: Sóng T de Winter (de Winter T-waves)',
+        'ST chênh xuống đi lên 1–3mm tại điểm J ở V1–V6 tiếp nối sóng T cao nhọn đối xứng khổng lồ, ST chênh lên nhẹ ở aVR. Đây là chỉ điểm tắc cấp tính hoàn toàn nhánh liên thất trước (LAD) theo tiêu chuẩn LITFL.',
+        'XỬ TRÍ TƯƠNG ĐƯƠNG STEMI TỐI CẤP: Kích hoạt khẩn cấp phòng Can thiệp mạch vành (Cathlab) thực hiện PCI thì đầu, KHÔNG CHỜ MEN TIM! Kháng kết tập tiểu cầu kép (Aspirin + Ticagrelor), kháng đông và Statin liều cao.'],
+      wellens: ['critical','Cảnh báo tối cấp: Hội chứng Wellens (Wellens Syndrome)',
+        'Sóng T hai pha (Type A) hoặc T âm sâu nhọn đối xứng (Type B) ở V2–V3 xuất hiện khi bệnh nhân vừa hết cơn đau thắt ngực. Chỉ điểm hẹp hiểm nghèo (≥ 90%) đoạn gần động mạch LAD (dấu hiệu góa phụ).',
+        'CHỐNG CHỈ ĐỊNH TUYỆT ĐỐI NGHIỆM PHÁP GẮNG SỨC (nguy cơ sốc tim/đột tử)! Nhập viện theo dõi monitor điện tim liên tục, dùng DAPT, kháng đông và hội chẩn chụp mạch vành can thiệp sớm.'],
+      sgarbossa: ['critical','Tiêu chuẩn Sgarbossa dương tính: Nhồi máu cơ tim cấp kèm Block nhánh trái (LBBB)',
+        'ST chênh lên đồng hướng ≥ 1mm ở đạo trình QRS dương HOẶC ST chênh xuống đồng hướng ≥ 1mm ở V1–V3 HOẶC tỷ lệ |ST/S| ≥ 0.25 (tiêu chuẩn Smith sửa đổi).',
+        'Xử trí như STEMI tối cấp: Kích hoạt Cathlab PCI thì đầu khẩn cấp, thuốc kháng đông và chống ngưng tập tiểu cầu kép.'],
+      lmca: ['critical','Cảnh báo tối cấp: Nghi tắc Thân chung ĐM Vành trái (LMCA) hoặc 3 thân mạch vành',
+        'ST chênh lên ≥ 1mm ở aVR (mức chênh aVR ≥ V1) kết hợp ST chênh xuống lan tỏa ở ≥ 6 chuyển đạo khác. Nguy cơ sốc tim và tử vong rất cao.',
+        'Hồi sức huyết động tích cực, chuẩn bị mổ bắc cầu vành (CABG) khẩn cấp hoặc PCI can thiệp thân chung cấp cứu.'],
+      pe_s1q3t3: ['caution','Dấu hiệu McGinn-White (S1Q3T3) — Nghi Thuyên tắc động mạch phổi cấp (PE)',
+        'Sóng S sâu ở DI, sóng Q ở DIII, sóng T âm ở DIII, thường kèm nhịp nhanh xoang hoặc RBBB mới xuất hiện. Gợi ý tăng gánh thất phải cấp tính.',
+        'Làm ngay khí máu động mạch, định lượng D-Dimer, siêu âm tim tại giường và chỉ định Chụp cắt lớp vi tính mạch máu phổi (CTPA) có cản quang; khởi động chống đông Heparin trọng lượng phân tử thấp nếu nguy cơ cao.'],
+      tca: ['critical','Cấp cứu Độc chất: Nghi Ngộ độc thuốc chống trầm cảm 3 vòng (TCA Toxicity)',
+        'Phức bộ QRS giãn rộng > 100ms, trục tim lệch phải cực độ, sóng R tận cùng ở aVR ≥ 3mm (tỷ lệ R/S ở aVR > 0.7) do chẹn kênh Natri cơ tim.',
+        'Tiêm tĩnh mạch chậm Natri Bicarbonat 8.4% (1–2 mmol/kg) để kiềm hóa máu (pH mục tiêu 7.45–7.55) và ổn định màng tế bào tim; chuẩn bị thuốc chống co giật (Benzodiazepine).'],
       wpw: ['critical','Hội chứng tiền kích thích Wolff – Parkinson – White (WPW)',
         'Đoạn PR ngắn < 120ms kết hợp sóng Delta ở đầu phức bộ QRS. Nguy cơ xuất hiện cơn nhịp nhanh vào lại nhĩ thất (AVRT) hoặc rung nhĩ dẫn truyền qua đường phụ gây rung thất đột tử.',
         'Nếu rung nhĩ có dẫn truyền qua đường phụ: CHỐNG CHỈ ĐỊNH dùng Digoxin, Verapamil, Diltiazem và chẹn beta TM (có thể làm tăng dẫn truyền qua đường phụ gây rung thất). Ưu tiên Sốc điện đồng bộ hoặc Procainamide/Ibutilide; hội chẩn thăm dò điện sinh lý để triệt đốt (RF ablation).'],
@@ -2776,7 +2815,149 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
 
     {
       // Rule-based diagnostic synthesis
-      if(special === 'ber' || (elevated.length > 0 && !hasIschemicSigns)){
+      if(special === 'dewinter'){
+        renderClinicalGuidanceCard({
+          primary: 'Tương đương STEMI: Sóng T de Winter (Tắc cấp tính hoàn toàn LAD đoạn gần)',
+          risk_level: 'Nguy cơ rất cao',
+          differentials: ['Thiếu máu cơ tim dưới nội tâm mạc', 'Tăng Kali máu tối cấp']
+        }, {
+          immediate_actions: [
+            'Bất động tuyệt đối tại giường cấp cứu, theo dõi monitor điện tim liên tục',
+            'KÍCH HOẠT KHẨN CẤP PHÒNG CAN THIỆP MẠCH VÀNH (CATHLAB) THỰC HIỆN PCI THÌ ĐẦU < 120 PHÚT',
+            'KHÔNG ĐƯỢC CHỜ KẾT QUẢ MEN TIM mới can thiệp!'
+          ],
+          medications: [
+            'Aspirin 300mg nhai ngay + Ticagrelor 180mg (hoặc Clopidogrel 600mg)',
+            'Enoxaparin 30mg tiêm TM liều nạp + 1mg/kg TDD',
+            'Atorvastatin 80mg uống ngay 1 liều'
+          ],
+          contraindications_warnings: [
+            'Tránh dùng chẹn beta đường tĩnh mạch nếu có dấu hiệu suy tim hoặc huyết động không ổn định'
+          ],
+          further_workup: [
+            'Chụp mạch vành qua da khẩn cấp',
+            'Siêu âm tim tại giường đánh giá vận động thành trước thất trái'
+          ]
+        });
+      } else if(special === 'wellens'){
+        renderClinicalGuidanceCard({
+          primary: 'Hội chứng Wellens — Hẹp hiểm nghèo (≥ 90%) Động mạch Liên thất trước (LAD)',
+          risk_level: 'Nguy cơ rất cao',
+          differentials: ['Viêm cơ tim cấp', 'Tăng gánh thất trái', 'Bệnh cơ tim phì đại']
+        }, {
+          immediate_actions: [
+            'Nhập khoa Hồi sức Tim mạch (CCU / ICU) theo dõi liên tục',
+            'Bất động tại giường, giải thích trấn an bệnh nhân',
+            'Hội chẩn khẩn can thiệp mạch vành trong vòng 24–48 giờ'
+          ],
+          medications: [
+            'Kháng kết tập tiểu cầu kép: Aspirin 100mg/ngày + Ticagrelor 90mg x 2 lần/ngày',
+            'Kháng đông Enoxaparin liều điều trị',
+            'Statin cường độ cao (Atorvastatin 40–80mg), chẹn beta đường uống nếu huyết áp ổn định'
+          ],
+          contraindications_warnings: [
+            'CHỐNG CHỈ ĐỊNH TUYỆT ĐỐI NGHIỆM PHÁP GẮNG SỨC (Thảm cuốn, xe đạp lực kế)! Nguy cơ gây nhồi máu cơ tim diện rộng hoặc ngừng tim đột tử!'
+          ],
+          further_workup: [
+            'Chụp động mạch vành sớm',
+            'Theo dõi ECG mỗi 4–6 giờ hoặc ngay khi bệnh nhân tái phát đau ngực'
+          ]
+        });
+      } else if(special === 'sgarbossa'){
+        renderClinicalGuidanceCard({
+          primary: 'Nhồi máu cơ tim cấp có ST chênh lên trên nền Block nhánh trái (Sgarbossa +)',
+          risk_level: 'Nguy cơ rất cao',
+          differentials: ['Block nhánh trái đơn thuần', 'Tăng gánh thất trái nặng']
+        }, {
+          immediate_actions: [
+            'KÍCH HOẠT KHẨN CẤP PHÒNG CATHLAB PCI THÌ ĐẦU < 120 PHÚT',
+            'Thở oxy nếu SpO2 < 90%, theo dõi monitor'
+          ],
+          medications: [
+            'Aspirin 300mg + Ticagrelor 180mg liều nạp',
+            'Kháng đông Enoxaparin / Heparin',
+            'Atorvastatin 80mg'
+          ],
+          contraindications_warnings: [
+            'Không trì hoãn can thiệp mạch vành chỉ vì có block nhánh trái'
+          ],
+          further_workup: [
+            'Chụp mạch vành cấp cứu',
+            'Động học hs-Troponin sau 1–3 giờ'
+          ]
+        });
+      } else if(special === 'lmca'){
+        renderClinicalGuidanceCard({
+          primary: 'Tắc Thân chung ĐM Vành trái (LMCA) hoặc Tổn thương nặng 3 thân mạch vành',
+          risk_level: 'Nguy cơ rất cao',
+          differentials: ['Thiếu máu toàn thể dưới nội tâm mạc nặng', 'Bóc tách động mạch chủ ngực']
+        }, {
+          immediate_actions: [
+            'Báo động đỏ Tim mạch: Hội chẩn khẩn giữa Bác sĩ Can thiệp tim mạch và Phẫu thuật viên Tim mạch',
+            'Chuẩn bị bóng đối xung nội động mạch chủ (IABP) hoặc ECMO nếu có sốc tim',
+            'Chuyển phòng Cathlab / Phòng mổ bắc cầu vành (CABG) khẩn cấp'
+          ],
+          medications: [
+            'Aspirin + Thuốc ức chế P2Y12 (cân nhắc khả năng mổ CABG cấp cứu)',
+            'Heparin không phân đoạn truyền TM chỉnh theo aPTT',
+            'Thuốc vận mạch Noradrenaline nếu tụt huyết áp'
+          ],
+          contraindications_warnings: [
+            'Nguy cơ sốc tim và phù phổi cấp rất cao; tránh dùng chẹn beta nếu có tụt huyết áp'
+          ],
+          further_workup: [
+            'Chụp mạch vành khẩn cấp',
+            'Siêu âm tim tại giường đánh giá chức năng tâm thu thất trái'
+          ]
+        });
+      } else if(special === 'pe_s1q3t3'){
+        renderClinicalGuidanceCard({
+          primary: 'Nghi Thuyên tắc Động mạch Phổi cấp (Dấu hiệu McGinn-White S1Q3T3 / Tâm phế cấp)',
+          risk_level: 'Nguy cơ cao',
+          differentials: ['Hội chứng vành cấp', 'Viêm màng ngoài tim cấp', 'Tràn khí màng phổi']
+        }, {
+          immediate_actions: [
+            'Thở oxy nồng độ cao, lập 2 đường truyền tĩnh mạch lớn',
+            'Định lượng D-Dimer và Khí máu động mạch (ABG) khẩn',
+            'CHỈ ĐỊNH CHỤP CẮT LỚP VI TÍNH MẠCH MÁU PHỔI (CTPA) CÓ CẢN QUANG NGAY',
+            'Siêu âm tim tại giường tìm dấu hiệu giãn thất phải, McConnell sign'
+          ],
+          medications: [
+            'Khởi động ngay Kháng đông: Enoxaparin 1mg/kg mỗi 12 giờ hoặc Heparin không phân đoạn',
+            'Nếu huyết động không ổn định (sốc / tụt HA): Chỉ định THUỐC TIÊU SỢI HUYẾT (Alteplase 100mg truyền TM trong 2 giờ)'
+          ],
+          contraindications_warnings: [
+            'Rà soát kỹ chống chỉ định tiêu sợi huyết (tiền sử xuất huyết não, phẫu thuật lớn < 3 tuần)'
+          ],
+          further_workup: [
+            'Siêu âm Doppler tĩnh mạch sâu chi dưới tìm huyết khối (DVT)',
+            'Theo dõi chỉ số sốc (Shock Index = HR / SBP)'
+          ]
+        });
+      } else if(special === 'tca'){
+        renderClinicalGuidanceCard({
+          primary: 'Cấp cứu Độc chất: Nghi Ngộ độc Thuốc chống trầm cảm 3 vòng (TCA Toxicity)',
+          risk_level: 'Nguy cơ rất cao',
+          differentials: ['Ngộ độc thuốc chẹn kênh Natri (Flecainide, Cocaine)', 'Nhịp nhanh thất', 'Tăng Kali máu']
+        }, {
+          immediate_actions: [
+            'TIÊM TĨNH MẠCH NHANH SODIUM BICARBONATE 8.4% (1–2 mmol/kg trong 2–3 phút)',
+            'Lặp lại mỗi 5–10 phút cho đến khi QRS co hẹp lại < 100ms và huyết áp cải thiện (pH máu mục tiêu 7.45–7.55)',
+            'Đặt nội khí quản bảo vệ đường thở nếu tri giác suy giảm hoặc co giật'
+          ],
+          medications: [
+            'Sodium Bicarbonate 8.4%: 50–100 ml tiêm TM trực tiếp, sau đó truyền duy trì',
+            'Diazepam / Midazolam tiêm TM nếu có co giật'
+          ],
+          contraindications_warnings: [
+            'CHỐNG CHỈ ĐỊNH TUYỆT ĐỐI các thuốc chống loạn nhịp nhóm IA, IC (Procainamide, Flecainide) và Amiodarone (làm nặng thêm tắc nghẽn kênh Natri gây ngừng tim)!'
+          ],
+          further_workup: [
+            'Khí máu động mạch theo dõi pH và nồng độ Natri máu (duy trì Na < 155 mmol/L)',
+            'Đo lại ECG mỗi 15–30 phút theo dõi độ rộng phức bộ QRS'
+          ]
+        });
+      } else if(special === 'ber' || (elevated.length > 0 && !hasIschemicSigns)){
         // Benign Early Repolarization or isolated mild elevation without ischemic features
         renderClinicalGuidanceCard({
           primary: special === 'ber'
