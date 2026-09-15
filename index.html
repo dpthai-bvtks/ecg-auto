@@ -2,7 +2,11 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<meta name="theme-color" content="#0f4a43">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="format-detection" content="telephone=no">
 <title>ECG Console — Hỗ trợ đọc điện tâm đồ (Tích hợp AI Vision)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -310,6 +314,244 @@
     background: #f0f4f3;
   }
 
+
+  /* ==========================================================================
+     RESPONSIVE DESIGN SYSTEM (MOBILE, TABLET, LAPTOP, DESKTOP)
+     ========================================================================== */
+
+  /* Mobile Tabs Navigation (Sticky on screens <= 960px) */
+  .mobile-tabs-wrap{
+    display: none;
+  }
+  @media (max-width: 960px){
+    .mobile-tabs-wrap{
+      display: block;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(238, 241, 239, 0.95);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 10px 14px 8px;
+      border-bottom: 1px solid var(--line);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .mobile-tabs-inner{
+      display: flex;
+      background: #e2e8e5;
+      border-radius: 9px;
+      padding: 3px;
+      max-width: 500px;
+      margin: 0 auto;
+      gap: 3px;
+    }
+    .m-tab{
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 9px 10px;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 7px;
+      border: none;
+      background: transparent;
+      color: var(--ink-soft);
+      cursor: pointer;
+      transition: all .2s cubic-bezier(.16,1,.3,1);
+      position: relative;
+    }
+    .m-tab.active{
+      background: #fff;
+      color: var(--teal-deep);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+    .m-tab-badge{
+      background: var(--red);
+      color: #fff;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 10px;
+      font-family: var(--mono);
+      font-weight: 700;
+      animation: pulseBadge 1.8s infinite;
+    }
+    @keyframes pulseBadge {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    /* Tab View Switching */
+    body[data-mobile-tab="inputs"] #colInputs { display: block !important; }
+    body[data-mobile-tab="inputs"] #colResults { display: none !important; }
+    body[data-mobile-tab="results"] #colInputs { display: none !important; }
+    body[data-mobile-tab="results"] #colResults { display: block !important; }
+
+    .wrap {
+      display: block !important;
+      padding: 12px 14px 70px !important;
+    }
+    .panel { position: static !important; }
+  }
+
+  @media (min-width: 961px){
+    .mobile-tabs-wrap { display: none !important; }
+    #colInputs { display: block !important; }
+    #colResults { display: block !important; }
+  }
+
+  /* Floating Quick Results Jump Button on Mobile */
+  .floating-results-btn{
+    display: none;
+  }
+  @media (max-width: 960px){
+    .floating-results-btn{
+      display: flex;
+      position: fixed;
+      bottom: 18px;
+      right: 14px;
+      z-index: 99;
+      background: var(--teal-deep);
+      color: #fff;
+      border: 1.5px solid rgba(255,255,255,0.3);
+      border-radius: 28px;
+      padding: 10px 16px;
+      font-size: 12.5px;
+      font-weight: 600;
+      box-shadow: 0 4px 18px rgba(15,74,67,0.38);
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: transform .15s ease, box-shadow .15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .floating-results-btn:active{
+      transform: scale(0.95);
+    }
+    .floating-dot{
+      width: 8px;
+      height: 8px;
+      background: #38d39f;
+      border-radius: 50%;
+      box-shadow: 0 0 6px #38d39f;
+      display: inline-block;
+    }
+    body[data-mobile-tab="results"] .floating-results-btn{
+      display: none !important;
+    }
+  }
+
+  /* Responsive Grids */
+  @media (max-width: 960px){
+    .grid3 { grid-template-columns: 1fr 1fr; gap: 10px 14px; }
+  }
+  @media (max-width: 600px){
+    .grid2, .grid3 { grid-template-columns: 1fr !important; gap: 10px !important; }
+  }
+
+  /* Touch-friendly Form Controls */
+  @media (max-width: 600px){
+    .check-row, .radio-row { gap: 8px; }
+    .check-row label, .radio-row label {
+      background: #fbfdfc;
+      border: 1px solid #dbe6e3;
+      padding: 9px 12px;
+      border-radius: 8px;
+      font-size: 12.5px;
+      flex: 1 1 calc(50% - 8px);
+      min-width: 135px;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      transition: background .15s, border-color .15s;
+    }
+    .check-row label:active, .radio-row label:active {
+      background: #e9f4f1;
+      border-color: var(--teal);
+    }
+    
+    /* Inputs font-size 16px to prevent iOS auto-zoom */
+    input[type=number], input[type=text], select, textarea {
+      font-size: 15px !important;
+      padding: 9px 10px !important;
+      border-radius: 7px !important;
+    }
+
+    /* Action Buttons Row */
+    .btnrow { gap: 8px !important; }
+    .btnrow button {
+      flex: 1 1 calc(50% - 6px);
+      padding: 12px 10px !important;
+      font-size: 13px !important;
+      text-align: center;
+      justify-content: center;
+    }
+    .btnrow button.primary {
+      flex: 1 1 100% !important;
+      font-size: 15px !important;
+      padding: 13px !important;
+    }
+
+    /* Topbar compact */
+    .topbar { padding: 12px 14px 10px !important; }
+    .brand svg { width: 30px; height: 30px; }
+    .brand h1 { font-size: 15px !important; }
+    .brand p { font-size: 11px !important; }
+    .btn-top { font-size: 11.5px !important; padding: 5px 9px !important; }
+    .api-status-badge { font-size: 10.5px !important; padding: 4px 8px !important; }
+
+    /* Card padding */
+    .card { padding: 14px 14px !important; border-radius: 9px !important; margin-bottom: 12px !important; }
+
+    /* Upload Actions */
+    .upload-actions { flex-direction: column !important; align-items: stretch !important; }
+    .upload-btn { justify-content: center !important; padding: 9px 12px !important; font-size: 12.5px !important; }
+
+    /* Tag buttons on mobile */
+    .tag-btn {
+      font-size: 12px !important;
+      padding: 6px 12px !important;
+      min-height: 32px !important;
+      border-radius: 16px !important;
+    }
+
+    /* Checklist items touch padding */
+    .checklist-item {
+      padding: 10px 12px !important;
+      font-size: 13px !important;
+      border-radius: 8px !important;
+    }
+    .checklist-item input[type=checkbox] {
+      width: 18px !important;
+      height: 18px !important;
+    }
+  }
+
+  /* Table Responsive Container */
+  .table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 4px 0 8px;
+    border-radius: 6px;
+  }
+  @media (max-width: 600px) {
+    .region-table { min-width: 480px; font-size: 12px; }
+    .region-table th, .region-table td { padding: 6px 4px !important; }
+    .region-table select { font-size: 12px !important; padding: 6px 4px !important; }
+  }
+
+  /* Responsive Viewport Height */
+  .ecg-viewport {
+    height: 360px;
+  }
+  @media (max-width: 960px) {
+    .ecg-viewport { height: 300px; }
+  }
+  @media (max-width: 600px) {
+    .ecg-viewport { height: 250px; }
+  }
+
   /* Print Styles */
   @media print{
     .topbar, .ai-card, .btnrow, .modal-overlay, .footer-credit, .upload-dropzone, .ecg-viewer-wrap{ display:none !important; }
@@ -344,9 +586,24 @@
     </div>
   </div>
 
+    <!-- MOBILE VIEW TABS (Visible only on screens <= 960px) -->
+  <div class="mobile-tabs-wrap" id="mobileTabsWrap">
+    <div class="mobile-tabs-inner">
+      <button type="button" class="m-tab active" id="tabBtnInputs" data-tab="inputs">
+        <span>📋</span>
+        <span>Nhập liệu &amp; ECG</span>
+      </button>
+      <button type="button" class="m-tab" id="tabBtnResults" data-tab="results">
+        <span>🩺</span>
+        <span>Chẩn đoán &amp; Xử trí</span>
+        <span class="m-tab-badge" id="resultsBadge" style="display:none;">Có kết quả</span>
+      </button>
+    </div>
+  </div>
+
   <div class="wrap">
     <!-- LEFT COLUMN: INPUTS -->
-    <div>
+    <div id="colInputs" class="col-inputs">
 
       <!-- CARD 0: AI VISION UPLOAD -->
       <div class="card ai-card" id="aiCard">
@@ -628,12 +885,14 @@
       <!-- CARD 5: ST & T & Q BY REGIONS -->
       <div class="card">
         <h2><span class="idx">5</span>Đoạn ST &amp; sóng T theo vùng tưới máu giải phẫu</h2>
+        <div class="table-responsive">
         <table class="region-table">
           <thead>
             <tr><th style="width:28%">Vùng giải phẫu</th><th>Đoạn ST</th><th>Sóng T</th><th style="width:16%">Q hoại tử</th></tr>
           </thead>
           <tbody id="regionBody"></tbody>
         </table>
+        </div>
         <p class="hint">Q bệnh lý (hoại tử): thời gian rộng ≥ 0,04s (1 ô nhỏ) hoặc sâu ≥ 25% biên độ sóng R cùng chuyển đạo (theo GS. Trần Đỗ Trinh).</p>
       </div>
 
@@ -684,7 +943,7 @@
     </div>
 
     <!-- RIGHT COLUMN: RESULTS STICKY -->
-    <div class="panel">
+    <div id="colResults" class="panel col-results">
       <div class="readout" id="readout">
         <div class="rline"><span class="rlabel">NHỊP</span><span id="rt-rhythm">—</span></div>
         <div class="rline"><span class="rlabel">TẦN SỐ</span><span id="rt-hr">—</span></div>
@@ -757,6 +1016,12 @@
       </div>
     </div>
   </div>
+
+    <!-- FLOATING QUICK JUMP BUTTON (Mobile only) -->
+  <button type="button" class="floating-results-btn" id="floatingResultsBtn" title="Xem kết quả chẩn đoán">
+    <span>🩺 Xem Chẩn đoán &amp; Xử trí</span>
+    <span class="floating-dot" id="floatingDot" style="display:none;"></span>
+  </button>
 
   <div class="footer-credit">
     ECG Console — Tích hợp AI Vision đọc ảnh điện tim
@@ -967,6 +1232,86 @@
     viewState.scale = Math.max(0.4, Math.min(viewState.scale * factor, 6));
     updateTransform();
   }, { passive: false });
+
+  // ==========================================================================
+  // MOBILE TOUCH GESTURES (Single finger pan, Two fingers pinch-to-zoom)
+  // ==========================================================================
+  let initialPinchDistance = null;
+  let initialScale = 1;
+
+  function getTouchDistance(t1, t2){
+    const dx = t1.clientX - t2.clientX;
+    const dy = t1.clientY - t2.clientY;
+    return Math.hypot(dx, dy);
+  }
+
+  ecgViewport.addEventListener('touchstart', (e)=>{
+    if(e.touches.length === 1){
+      isDragging = true;
+      startX = e.touches[0].clientX - viewState.x;
+      startY = e.touches[0].clientY - viewState.y;
+    } else if(e.touches.length === 2){
+      isDragging = false;
+      initialPinchDistance = getTouchDistance(e.touches[0], e.touches[1]);
+      initialScale = viewState.scale;
+    }
+  }, { passive: false });
+
+  ecgViewport.addEventListener('touchmove', (e)=>{
+    if(e.touches.length === 1 && isDragging){
+      e.preventDefault();
+      viewState.x = e.touches[0].clientX - startX;
+      viewState.y = e.touches[0].clientY - startY;
+      updateTransform();
+    } else if(e.touches.length === 2 && initialPinchDistance !== null){
+      e.preventDefault();
+      const currentDistance = getTouchDistance(e.touches[0], e.touches[1]);
+      const factor = currentDistance / initialPinchDistance;
+      viewState.scale = Math.max(0.4, Math.min(initialScale * factor, 6));
+      updateTransform();
+    }
+  }, { passive: false });
+
+  ecgViewport.addEventListener('touchend', (e)=>{
+    if(e.touches.length < 2){
+      initialPinchDistance = null;
+    }
+    if(e.touches.length === 0){
+      isDragging = false;
+    }
+  });
+
+  // ==========================================================================
+  // MOBILE / TABLET VIEW TABS SWITCHER
+  // ==========================================================================
+  document.body.setAttribute('data-mobile-tab', 'inputs');
+
+  function switchMobileTab(tabName, smoothScroll=true){
+    document.body.setAttribute('data-mobile-tab', tabName);
+    document.querySelectorAll('.m-tab').forEach(b => {
+      b.classList.toggle('active', b.getAttribute('data-tab') === tabName);
+    });
+    if(tabName === 'results' && smoothScroll){
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  document.getElementById('tabBtnInputs')?.addEventListener('click', ()=> switchMobileTab('inputs'));
+  document.getElementById('tabBtnResults')?.addEventListener('click', ()=> switchMobileTab('results'));
+  document.getElementById('floatingResultsBtn')?.addEventListener('click', ()=> switchMobileTab('results'));
+
+  // Notify mobile user when results are ready
+  function notifyMobileResultsReady(){
+    const badge = document.getElementById('resultsBadge');
+    const dot = document.getElementById('floatingDot');
+    if(badge) badge.style.display = 'inline-block';
+    if(dot) dot.style.display = 'inline-block';
+
+    // If on mobile / tablet screen, automatically switch to results view
+    if(window.innerWidth <= 960){
+      setTimeout(()=> switchMobileTab('results'), 350);
+    }
+  }
 
   // Load Image into Viewer
   function loadFile(file){
@@ -2076,6 +2421,7 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
     // Render Dedicated Clinical Guidance Card
     if(data.clinical_diagnosis || data.treatment_plan){
       renderClinicalGuidanceCard(data.clinical_diagnosis, data.treatment_plan);
+      notifyMobileResultsReady();
     }
   }
 
@@ -2339,6 +2685,7 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
     document.getElementById('rt-qrs').textContent = qrs!==null ? `${qrs} ms` : '—';
     document.getElementById('rt-axis').textContent = axisWord;
     updateQTcDisplay();
+    notifyMobileResultsReady();
 
     // Render Findings List
     const box = document.getElementById('findings');
@@ -2563,6 +2910,9 @@ ${primDiag ? `\nGỢI Ý CHẨN ĐOÁN & PHÂN TẦNG NGUY CƠ:
     document.getElementById('aiNotesBox').style.display = 'none';
     document.getElementById('aiStatusBar').style.display = 'none';
     document.getElementById('aiClinicalGuidanceCard').style.display = 'none';
+    const mBadge = document.getElementById('resultsBadge'); if(mBadge) mBadge.style.display='none';
+    const mDot = document.getElementById('floatingDot'); if(mDot) mDot.style.display='none';
+    switchMobileTab('inputs', false);
     document.getElementById('presetSelect').value = '';
     currentImageBase64 = null;
     ecgImg.src = '';

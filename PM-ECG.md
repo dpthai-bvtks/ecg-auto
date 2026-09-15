@@ -262,3 +262,50 @@ Hệ thống đã tiếp nhận, phân tích toàn văn và nạp vào bộ nh�
 ### 7. Nâng cấp Tiện ích Bệnh án Điện tử (EMR)
 * Nút **"📋 Sao chép tóm tắt"** tự động định dạng đầy đủ: Thông tin lâm sàng & sinh hiệu + Cận lâm sàng + Kết quả điện tim 12 chuyển đạo + Gợi ý chẩn đoán & phân tầng nguy cơ, sẵn sàng dán ngay vào hồ sơ bệnh án.
 * Chế độ in ấn chuyên nghiệp chuẩn A4 (`@media print`) hiển thị sắc nét toàn bộ chẩn đoán và hướng dẫn xử trí.
+
+---
+
+## 11. THIẾT KẾ ĐÁP ỨNG ĐA THIẾT BỊ TOÀN DIỆN (RESPONSIVE SYSTEM CHO MOBILE, TABLET & LAPTOP/PC)
+
+**Ngày thực hiện:** 15/09/2026  
+**Yêu cầu người dùng:**
+> *"thiết kế giao diện phù hợp để dùng cho cả màn hình điện thoại/máy tính bảng và laptop/pc"*
+
+### 1. Phân tích Hiện trạng & Thách thức UX Y khoa Đa nền tảng
+* **Thách thức cuộn dài trên Mobile/Tablet:**
+  - Bố cục 2 cột ban đầu trên màn hình hẹp ($\le 960\text{px}$) tự động gập thành 1 cột dọc liên tục.
+  - Cột trái chứa kính soi ECG, 12 thẻ chọn nhanh, thông số sinh tồn và cận lâm sàng, cùng 8 card nhập liệu chuyển đạo có tổng chiều cao hơn $4000\text{px}$.
+  - Hậu quả: Bác sĩ sau khi chụp/tải ảnh điện tim trên điện thoại phải cuộn tay qua một quãng rất dài mới nhìn thấy được kết quả chẩn đoán và phác đồ xử trí cấp cứu.
+* **Thách thức thao tác cảm ứng (Touch ergonomics):**
+  - Kính soi bản ghi ECG trước đây chỉ bắt sự kiện chuột (`mousedown`, `wheel`), không hỗ trợ vuốt chạm hay thu phóng hai ngón tay trên màn hình cảm ứng di động.
+  - Các ô checkbox, radio button nhỏ khó bấm chính xác bằng ngón tay tại giường bệnh.
+  - Lỗi Safari trên iPhone/iPad tự động phóng to trang (auto-zoom) khi nhấp vào ô nhập liệu có cỡ chữ $< 16\text{px}$.
+  - Bảng 4 phân vùng cơ tim (Card 5) bị tràn màn hình nếu không có cơ chế cuộn ngang chuyên biệt.
+
+### 2. Giải pháp Kiến trúc Giao diện Di động & Máy tính bảng
+1. **Thanh Tab di động dính đỉnh (Sticky Mobile Segmented Control):**
+   - Ghim cố định ở đỉnh màn hình điện thoại/tablet với 2 tab chuyển đổi tức thì:
+     - `[ 📋 Nhập liệu & ECG ]`: Kính soi bản ghi, triệu chứng lâm sàng & cận lâm sàng, các đạo trình.
+     - `[ 🩺 Chẩn đoán & Xử trí ]`: Thẻ phân tầng nguy cơ, chẩn đoán xác định/phân biệt, phác đồ cấp cứu ban đầu, cảnh báo chống chỉ định và kết quả 12 chuyển đạo.
+   - Có huy hiệu thông báo `Có kết quả` sáng xanh nhấp nháy ngay khi hoàn thành phân tích.
+2. **Cơ chế Chuyển Tab Tự động Thông minh (Smart Auto-Switching):**
+   - Khi người dùng nạp ca mẫu (Preset), chụp/tải ảnh AI phân tích xong hoặc bấm nút "Phân tích ECG", hệ thống tự động gọi hàm `notifyMobileResultsReady()` để chuyển ngay sang tab `[ 🩺 Chẩn đoán & Xử trí ]` và cuộn nhẹ lên đầu, giúp bác sĩ xem kết luận ngay trong 0.1 giây.
+3. **Nút Nổi Hành động Di động (Floating Action Button):**
+   - Nút nổi `🩺 Xem Chẩn đoán & Xử trí` ghim ở góc dưới bên phải màn hình di động, có đèn LED xanh trạng thái nhấp nháy khi có kết quả mới, bấm vào là chuyển tab tức thì.
+4. **Kính soi ECG Cảm ứng Đa điểm (Native Touch Gestures):**
+   - Bổ sung bộ lắng nghe sự kiện cảm ứng chạm (`touchstart`, `touchmove`, `touchend`).
+   - Hỗ trợ vuốt 1 ngón tay để di chuyển kính soi (Pan).
+   - Hỗ trợ cử chỉ 2 ngón tay chụm / mở để phóng to / thu nhỏ bản ghi ECG theo khoảng cách Euclidean $d = \sqrt{\Delta x^2 + \Delta y^2}$ (Pinch-to-zoom).
+   - Chiều cao kính soi co giãn thích ứng: 250px trên điện thoại, 300px trên tablet, 360px trên laptop/PC.
+5. **Công thái học Nút bấm & Ô chọn Cảm ứng (Touch-Friendly Controls):**
+   - Biến đổi toàn bộ checkbox và radio button trong các vùng chuyển đạo thành các thẻ chip bo tròn viền mềm mại, chiều cao đạt chuẩn tối thiểu $\ge 40-44\text{px}$ cho ngón tay.
+   - 12 thẻ chọn nhanh lâm sàng tự động xuống dòng linh hoạt (`flex-wrap: wrap; gap: 6px;`).
+   - Cố định cỡ chữ tối thiểu $16\text{px}$ trên ô input/select của mobile để vô hiệu hóa lỗi auto-zoom của trình duyệt iOS Safari.
+   - Bọc bảng 4 phân vùng chuyển đạo trong container `.table-responsive` chống tràn trang.
+6. **Bảo tồn Hoàn hảo Bố cục Máy tính (Desktop/Laptop):**
+   - Trên màn hình $> 960\text{px}$, các thành phần di động (Tab bar, Floating button) tự động ẩn (`display: none`).
+   - Giữ nguyên bố cục 2 cột song song (Side-by-side Grid Layout) chuyên nghiệp, tối ưu tối đa không gian làm việc rộng rãi của màn hình máy tính.
+
+### 3. Kết quả Kiểm thử Trực quan (Visual Verification)
+* **Mobile (390x844):** Thử nghiệm trên browser giả lập iPhone: Thanh tab dính chặt đỉnh trang; nạp Ca 1 tự động chuyển sang tab chẩn đoán; checklist cấp cứu và bảng phân biệt hiển thị vừa vặn, không có thanh cuộn ngang tràn trang; bấm chuyển lại tab nhập liệu tức thì.
+* **Desktop (1440x900):** Thanh tab di động ẩn hoàn toàn; giao diện hiển thị 2 cột song song chuẩn mực; kính soi ECG mượt mà.
