@@ -296,4 +296,29 @@ Nguyên tắc cốt lõi: Điện tâm đồ luôn là một thăm dò cận lâ
 | **Hội chứng Brugada Type 1** | Thuốc chẹn kênh Natri (Flecainide, Propafenone, Ajmaline), thuốc chống trầm cảm 3 vòng | Làm nặng thêm khiếm khuyết kênh ion Natri gây bão rung thất kịch phát | Cấy máy phá rung tự động (ICD), hạ sốt tích cực, Isoproterenol |
 | **QT kéo dài ($QTc > 500\text{ ms}$)** | Thuốc chống loạn nhịp nhóm IA, IC, III (Amiodarone, Sotalol), Quinolone, Macrolide | Kéo dài thêm thời gian tái cực gây Cơn xoắn đỉnh (Torsades de Pointes) | Bù Magnesium sulfate TM, duy trì $K^+ \ge 4.5\text{ mmol/L}$ |
 
+---
+
+## VIII. TIÊU CHUẨN PHÂN BIỆT RÕ RÀNG GIỮA NHỒI MÁU CƠ TIM CẤP (STEMI) VỚI TÁI CỰC SỚM LÀNH TÍNH (BER) VÀ CÁC BIẾN THỂ BÌNH THƯỜNG (CHỐNG DƯƠNG TÍNH GIẢ)
+
+### 1. Bối cảnh Lâm sàng & Nguyên tắc Phân biệt
+Trong thực hành lâm sàng và phân tích ảnh chụp điện thoại, biến thể Tái cực sớm lành tính (Benign Early Repolarization - BER) và nhiễu đường đẳng điện (baseline wander / cong giấy) là nguyên nhân hàng đầu gây chẩn đoán dương tính giả thành Nhồi máu cơ tim cấp (STEMI), dẫn đến kích hoạt báo động đỏ Cathlab không cần thiết hoặc gây hoang mang cho người bệnh.
+
+### 2. Bảng Tiêu chuẩn So sánh Đối chiếu (STEMI vs Tái cực sớm lành tính)
+| Tiêu chí | Nhồi máu cơ tim cấp (STEMI) | Tái cực sớm lành tính (BER) | Viêm màng ngoài tim cấp |
+|---|---|---|---|
+| **Hình thái đoạn ST** | **Chênh lồi lên dạng vòm (Convex / Pardee)**, đỉnh ST hòa lẫn vào sóng T | **Chênh cong lõm (Concave - hình lòng máng)**, võng xuống | Cong lõm lan tỏa hầu hết các đạo trình |
+| **Độ cao tại điểm J** | Đạt ngưỡng milimet: $\ge 1\text{ mm}$ ở chi; V2–V3: $\ge 2.5\text{ mm}$ (nam <40t), $\ge 2.0\text{ mm}$ (nam $\ge 40$t), $\ge 1.5\text{ mm}$ (nữ) | Thường $1 - 2\text{ mm}$ ở V2–V5 | Thường $1 - 2\text{ mm}$ lan tỏa |
+| **Điểm nối J** | Không có khấc, chuyển tiếp liên tục vào ST vòm | **Có khấc (J-point notch)** hoặc lượn tròn (slurring) rõ nét | Thường nhẵn, không có khấc |
+| **Hình ảnh soi gương (Reciprocal)** | **BẮT BUỘC CÓ** ST chênh xuống đối diện (DII/DIII/aVF $\leftrightarrow$ DI/aVL) | **TUYỆT ĐỐI KHÔNG CÓ** biến đổi soi gương | Không có soi gương (trừ aVR có ST chênh xuống + PR chênh lên) |
+| **Sóng T** | T đối xứng hoặc đảo ngược âm theo thời gian | T dương cao, bất đối xứng, đáy rộng | T dương, sau đó âm dẹt khi ST về đẳng điện |
+| **Đoạn PR** | Bình thường hoặc đẳng điện | Đẳng điện bình thường | **PR chênh xuống** ở các đạo trình ST chênh lên |
+| **Động học (Thời gian)** | **Biến đổi rất nhanh** qua từng giờ (giai đoạn cấp $\to$ xuất hiện sóng Q) | **Cố định, ổn định** nhiều tháng nhiều năm | Tiến triển chậm qua 4 giai đoạn trong vài tuần |
+| **Bối cảnh lâm sàng** | Đau thắt ngực đè nặng sau xương ức lan vai/tay, men tim Troponin tăng vọt | Thường ở người trẻ, nam giới, vận động viên khỏe mạnh; không đau ngực; men tim âm tính | Đau ngực kiểu màng phổi (tăng khi hít sâu/nằm ngửa, giảm khi cúi ra trước) |
+
+### 3. Quy tắc Đo đạc Tránh Nhiễu Ảnh chụp Thực tế
+- **Đường đẳng điện chuẩn:** Luôn lấy đoạn PR (nối điểm kết thúc sóng P đến bắt đầu QRS) hoặc đoạn TP làm chuẩn đẳng điện.
+- **Hiện tượng trôi đường đẳng điện (Baseline Drift):** Khi ảnh chụp bị cong, nghiêng hoặc nhiễu cơ vân, điểm J phải được đo so với đoạn PR kế cận, không lấy đường nằm ngang tuyệt đối của trang giấy.
+- **Tiêu chuẩn Điện tâm đồ Bình thường:** Nếu không có tiêu chuẩn milimet bệnh lý, không có biến đổi soi gương và không có sóng Q hoại tử, hệ thống mặc định kết luận **"Điện tâm đồ trong giới hạn bình thường"** với phân tầng **Nguy cơ thấp**.
+
+
 

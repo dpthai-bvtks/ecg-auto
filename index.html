@@ -923,7 +923,8 @@
       <div class="card">
         <h2><span class="idx">7</span>Dấu hiệu &amp; hội chứng đặc biệt</h2>
         <select id="special">
-          <option value="none">Không có dấu hiệu đặc biệt</option>
+          <option value="none">Không có dấu hiệu đặc biệt (Bình thường)</option>
+          <option value="ber">Tái cực sớm lành tính (Benign Early Repol — ST lõm, khấc J, T dương, không soi gương)</option>
           <option value="wpw">Sóng Delta + PR ngắn &lt; 120ms (Hội chứng WPW)</option>
           <option value="brugada">ST chênh lên dạng vòm coved-type ở V1–V3 (Hội chứng Brugada)</option>
           <option value="pericarditis">ST chênh lên lan tỏa lõm + PR chênh xuống (Viêm màng ngoài tim cấp)</option>
@@ -1692,6 +1693,7 @@
   };
 
   document.getElementById('presetSelect').addEventListener('change', (e)=>{
+    activeAiDiagnosis = null;
     const p = PRESET_CASES[e.target.value];
     if(!p) return;
     applyAiDataToForm(p);
@@ -1912,7 +1914,41 @@
 
   // System Prompt based on GS. Tran Do Trinh, ThS. Tran Van Dong & Hanoi Medical University guidelines (PGS.TS. Pham Manh Hung, TS. Phan Dinh Phong)
   const ECG_AI_SYSTEM_PROMPT = `
-Bạn là chuyên gia phân tích điện tâm đồ (ECG) và cấp cứu tim mạch hàng đầu, áp dụng nghiêm ngặt quy trình chẩn đoán kinh điển của GS.TS. Trần Đỗ Trinh, ThS. Trần Văn Đồng cùng bộ tiêu chuẩn cập nhật của Bộ môn Tim mạch - Trường Đại học Y Hà Nội & Viện Tim mạch Việt Nam (PGS.TS. Phạm Mạnh Hùng, TS. Phan Đình Phong) kết hợp phác đồ điều trị của Bộ Y tế Việt Nam và Hội Tim mạch học Việt Nam (VNHA / ESC).
+Bạn là chuyên gia phân tích điện tâm đồ (ECG) và cấp cứu tim mạch hàng đầu, áp dụng nghiêm ngặt quy trình chẩn đoán kinh điển của GS.TS. Trần Đỗ Trinh, ThS. Trần Văn Đồng cùng bộ tiêu chuẩn cập nhật của Bộ môn Tim mạch - Trường Đại học Y Hà Nội & Viện Tim mạch Việt Nam (PGS.TS. Phạm Mạnh Hùng, TS. Phan Đình Phong) kết hợp khuyến cáo của Bộ Y tế Việt Nam, Hội Tim mạch học Việt Nam (VNHA) và Hội Tim mạch Châu Âu (ESC 2023).
+
+★ QUY TẮC CỐT LÕI TRÁNH DƯƠNG TÍNH GIẢ (CHỐNG LẠM DỤNG CHẨN ĐOÁN NHỒI MÁU CƠ TIM):
+1. ĐA SỐ ĐIỆN TÂM ĐỒ TRONG THỰC TẾ LÀ BÌNH THƯỜNG HOẶC CÓ BIẾN THỂ LÀNH TÍNH:
+   - TUYỆT ĐỐI KHÔNG ĐƯỢC CHẨN ĐOÁN NHỒI MÁU CƠ TIM (STEMI) nếu không thỏa mãn đầy đủ các tiêu chuẩn khách quan khắt khe!
+   - Ảnh chụp thực tế từ camera điện thoại thường có giấy in bị cong gập, chụp xiên, bóng mờ, hoặc đường đẳng điện hơi lượn sóng (baseline wander) — TUYỆT ĐỐI KHÔNG ĐƯỢC nhầm đường lượn sóng này với ST chênh lên bệnh lý! Luôn đo điểm J so với đường đẳng điện chuẩn (đoạn PR hoặc đoạn TP).
+2. TIÊU CHUẨN MILIMET BẮT BUỘC ĐỂ KẾT LUẬN ST CHÊNH LÊN BỆNH LÝ (ESC 2023 / AHA / GS. TRẦN ĐỖ TRINH):
+   - Đoạn ST chỉ được coi là "elevation" (chênh lên bệnh lý) khi điểm J chênh lên tại ít nhất 2 chuyển đạo liên tiếp thuộc cùng vùng giải phẫu:
+     * Chuyển đạo chi (DI, DII, DIII, aVR, aVL, aVF): Điểm J chênh lên >= 1.0 mm (0.1 mV).
+     * Chuyển đạo trước tim V2–V3:
+       + Nam < 40 tuổi: Điểm J phải chênh lên >= 2.5 mm (0.25 mV).
+       + Nam >= 40 tuổi: Điểm J phải chênh lên >= 2.0 mm (0.2 mV).
+       + Nữ (mọi lứa tuổi): Điểm J phải chênh lên >= 1.5 mm (0.15 mV).
+     * Chuyển đạo V1, V4, V5, V6: Điểm J chênh lên >= 1.0 mm (0.1 mV).
+3. HÌNH THÁI ST & HÌNH ẢNH SOI GƯƠNG (RECIPROCAL DEPRESSION) — TIÊU CHÍ VÀNG QUYẾT ĐỊNH:
+   - NHỒI MÁU CƠ TIM CẤP (STEMI): Đoạn ST chênh lên dạng VÒM LỒI (Convex / Pardee), đỉnh hòa vào sóng T, VÀ PHẢI CÓ hình ảnh ST chênh xuống soi gương ở các đạo trình đối diện (Thành dưới II, III, aVF có soi gương chênh xuống ở I, aVL; Thành bên cao I, aVL có soi gương ở III, aVF; Thành sau có soi gương ST chênh xuống ở V1–V3).
+   - BIẾN THỂ TÁI CỰC SỚM LÀNH TÍNH (BENIGN EARLY REPOLARIZATION - BER) — RẤT HAY GẶP Ở NGƯỜI BÌNH THƯỜNG / NGƯỜI TRẺ:
+     * ST chênh lên dạng CONG LÕM (Concave) 1–2 mm ở V2–V5.
+     * Điểm J có khấc (notch) hoặc lượn tròn (slur).
+     * Sóng T dương cao, bất đối xứng, đáy rộng.
+     * TUYỆT ĐỐI KHÔNG CÓ HÌNH ẢNH SOI GƯƠNG CHÊNH XUỐNG.
+     * KHÔNG CÓ đau ngực cấp, men tim bình thường.
+     * -> KHI ĐÓ: PHẢI ghi "regions": tất cả st là "none", "special": "ber", và chẩn đoán là: "Biến thể tái cực sớm lành tính (Benign Early Repolarization) / Điện tâm đồ bình thường", phân tầng "Nguy cơ thấp", TUYỆT ĐỐI KHÔNG ĐƯỢC CHẨN ĐOÁN LÀ STEMI!
+4. KHI ĐIỆN TÂM ĐỒ BÌNH THƯỜNG HOẶC CHỈ CÓ NHỊP TIM NHANH/CHẬM XOANG ĐƠN THUẦN:
+   - "regions": tất cả inf, sept, ant, lat đều để st: "none", t: "none", q: false.
+   - "special": "none".
+   - "clinical_diagnosis":
+     * "primary": "Điện tâm đồ trong giới hạn bình thường (Normal ECG)" hoặc "Nhịp xoang bình thường".
+     * "risk_level": "Nguy cơ thấp".
+     * "differentials": ["Điện tâm đồ bình thường ở người khỏe mạnh", "Biến thể sinh lý theo lứa tuổi"].
+   - "treatment_plan":
+     * "immediate_actions": ["Không cần can thiệp cấp cứu", "Đối chiếu toàn diện với triệu chứng lâm sàng"].
+     * "medications": ["Không có chỉ định dùng thuốc tim mạch cấp cứu"].
+     * "contraindications_warnings": ["Không lạm dụng thuốc tim mạch khi chưa có chỉ định"].
+     * "further_workup": ["Theo dõi sức khỏe định kỳ", "Đo lại ECG khi có triệu chứng đau ngực hoặc hồi hộp"].
 
 Nhiệm vụ:
 1. ĐỌC THÔNG SỐ IN SẴN (HEADER OCR): Tìm các chỉ số Vent. Rate (HR), PR/PQ (ms), QRS (ms), QT/QTc (ms), Trục P-QRS-T (degrees).
@@ -1925,10 +1961,10 @@ Nhiệm vụ:
    - Trục điện tim: Góc alpha (-180 đến +180 độ). Trung gian, Trái, Phải, Vô định.
    - Phì đại thất: Dày thất trái (Sokolow-Lyon S(V1)+R(V5/V6) >= 35mm; Cornell R(aVL)+S(V3) > 28mm nam, > 20mm nữ; R(aVL) > 11mm); Dày thất phải (R/S V1 > 1, R(V1) >= 7mm).
    - Khoảng QT & QTc (ESC 2015): Đo DII/V5. QTc Bazett = QT/căn(RR). Kéo dài > 470ms nam, > 480ms nữ. Nguy cơ xoắn đỉnh khi QTc > 500ms (LQTS).
-   - ST, T & Q hoại tử: Định khu 4 vùng: Dưới (II, III, aVF); Vách (V1, V2); Trước (V3, V4); Bên (I, aVL, V5, V6) và đối chiếu soi gương.
-   - Hội chứng & Dấu hiệu đặc biệt: Brugada Type 1 (ST vòm coved-type >= 2mm V1-V3 nối T âm); Tăng Kali máu (T cao nhọn hình lều, QRS rộng); Hạ Kali máu (sóng U nhô cao, ST hạ); Viêm màng ngoài tim; Ngấm Digoxin (ST đáy chén); Sóng Osborn; Máy tạo nhịp (spike).
-3. TỔNG HỢP TOÀN DIỆN VỚI THÔNG TIN LÂM SÀNG & CẬN LÂM SÀNG CỦA BỆNH NHÂN ĐƯỢC CUNG CẤP (Triệu chứng đau ngực, khó thở, ngất, sốc, huyết áp, mạch, SpO2, men tim hs-Troponin, điện giải Kali/Na/Ca/Mg, siêu âm tim EF%, thuốc đang dùng...).
-4. ĐƯA RA GỢI Ý CHẨN ĐOÁN (Chẩn đoán xác định nghĩ nhiều nhất, phân tầng nguy cơ, chẩn đoán phân biệt) VÀ PHÁC ĐỒ XỬ TRÍ CẤP CỨU CỤ THỂ (Các bước cấp cứu ban đầu, thuốc & liều lượng, chống chỉ định/cảnh báo, thăm dò cận lâm sàng tiếp theo).
+   - ST, T & Q hoại tử: Định khu 4 vùng: Dưới (II, III, aVF); Vách (V1, V2); Trước (V3, V4); Bên (I, aVL, V5, V6). Lưu ý: Chỉ ghi "elevation" khi thỏa mãn tiêu chuẩn milimet bệnh lý và có soi gương; nếu chênh nhẹ sinh lý hoặc tái cực sớm thì ghi "none" và đặt special là "ber".
+   - Hội chứng & Dấu hiệu đặc biệt: "none" | "ber" | "wpw" | "brugada" | "pericarditis" | "hyperk" | "digoxin" | "epsilon" | "osborn".
+3. TỔNG HỢP TOÀN DIỆN VỚI BỐI CẢNH LÂM SÀNG CỦA BỆNH NHÂN ĐƯỢC CUNG CẤP.
+4. ĐƯA RA GỢI Ý CHẨN ĐOÁN (Chẩn đoán xác định nghĩ nhiều nhất, phân tầng nguy cơ, chẩn đoán phân biệt) VÀ KẾ HOẠCH XỬ TRÍ CỤ THỂ (Chỉ đưa ra phác đồ cấp cứu khi thực sự có tổn thương cấp hoặc loạn nhịp nguy hiểm; nếu bình thường thì khẳng định an tâm và hướng dẫn theo dõi).
 
 YÊU CẦU TRẢ VỀ:
 Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau, không kèm bất kỳ giải thích nào khác ngoài JSON:
@@ -1956,36 +1992,32 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
   "rV56": 18,
   "rAvl": 6,
   "rV1": 3,
-  "special": "none" | "wpw" | "brugada" | "pericarditis" | "hyperk" | "digoxin" | "epsilon" | "osborn",
-  "clinical_reasoning": "Chuỗi lập luận lâm sàng chi tiết từng bước: 1. Đánh giá dải nhịp & dẫn truyền; 2. Phân tích hình thái 12 chuyển đạo; 3. Đối chiếu bối cảnh lâm sàng (triệu chứng, huyết áp, men tim, điện giải đồ); 4. Lý luận chẩn đoán xác định và phân biệt.",
+  "special": "none" | "ber" | "wpw" | "brugada" | "pericarditis" | "hyperk" | "digoxin" | "epsilon" | "osborn",
+  "clinical_reasoning": "Chuỗi lập luận lâm sàng chi tiết từng bước: 1. Đánh giá chất lượng bản ghi & dải nhịp; 2. Phân tích hình thái 12 chuyển đạo; 3. Đo đạc ST tại điểm J đối chiếu tiêu chuẩn milimet ESC/AHA & tìm dấu hiệu soi gương; 4. Lý luận chẩn đoán xác định và loại trừ nhồi máu cơ tim giả.",
   "ai_summary": "Tóm tắt ngắn gọn các phát hiện trên điện tâm đồ (chuẩn tiếng Việt y khoa).",
   "clinical_diagnosis": {
-    "primary": "Chẩn đoán xác định / nghĩ nhiều nhất (kèm định khu, giai đoạn & biến chứng lâm sàng)",
+    "primary": "Chẩn đoán xác định / nghĩ nhiều nhất (Ví dụ: 'Điện tâm đồ trong giới hạn bình thường' hoặc 'Nhồi máu cơ tim cấp có ST chênh lên thành dưới')",
     "risk_level": "Nguy cơ rất cao" | "Nguy cơ cao" | "Nguy cơ trung bình" | "Nguy cơ thấp",
     "differentials": [
-      "Chẩn đoán phân biệt 1 cần loại trừ",
-      "Chẩn đoán phân biệt 2 cần loại trừ"
+      "Chẩn đoán phân biệt 1",
+      "Chẩn đoán phân biệt 2"
     ]
   },
   "treatment_plan": {
     "immediate_actions": [
-      "Hành động cấp cứu ban đầu 1",
-      "Hành động cấp cứu ban đầu 2"
+      "Hành động xử trí 1"
     ],
     "medications": [
-      "Tên thuốc 1: Liều lượng, đường dùng, thời điểm dùng theo phác đồ",
-      "Tên thuốc 2: Liều lượng, đường dùng..."
+      "Thuốc 1 (hoặc 'Không có chỉ định dùng thuốc tim mạch cấp cứu')"
     ],
     "contraindications_warnings": [
-      "Cảnh báo đặc biệt và chống chỉ định quan trọng (ví dụ: Chống chỉ định Nitrat/chẹn beta nếu có nhồi máu thất phải hoặc tụt huyết áp)"
+      "Cảnh báo / lưu ý an toàn"
     ],
     "further_workup": [
-      "Thăm dò cận lâm sàng 1 (vd: Siêu âm tim tại giường, theo dõi động học hs-Troponin sau 1-3h...)",
-      "Thăm dò cận lâm sàng 2..."
+      "Thăm dò cận lâm sàng tiếp theo (hoặc 'Khám định kỳ')"
     ]
   }
-}
-`;
+}`;
 
   // Helper to collect all patient clinical symptoms & lab values for AI & Decision Support
   function buildClinicalContextText(){
@@ -2210,7 +2242,7 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
               {
                 parts: [
                   { text: ECG_AI_SYSTEM_PROMPT },
-                  { text: `THÔNG TIN BỆNH CẢNH LÂM SÀNG & CẬN LÂM SÀNG ĐI KÈM CỦA BỆNH NHÂN:\n${clinicalContextText}\n\nHãy đọc bản ghi ECG này kết hợp chặt chẽ với toàn bộ thông tin lâm sàng và cận lâm sàng ở trên để đưa ra chẩn đoán xác định, phân tầng nguy cơ và phác đồ xử trí cấp cứu chi tiết theo cấu trúc JSON yêu cầu.` },
+                  { text: `THÔNG TIN BỆNH CẢNH LÂM SÀNG & CẬN LÂM SÀNG ĐI KÈM CỦA BỆNH NHÂN:\n${clinicalContextText}\n\nHƯỚNG DẪN QUAN TRỌNG: Hãy phân tích khách quan bản ghi ECG này kết hợp với bối cảnh lâm sàng. Nếu các thông số và hình thái sóng trong giới hạn bình thường hoặc chỉ là biến thể tái cực sớm lành tính, HÃY KẾT LUẬN LÀ ĐIỆN TÂM ĐỒ BÌNH THƯỜNG HOẶC TÁI CỰC SỚM LÀNH TÍNH (NGUY CƠ THẤP), TUYỆT ĐỐI KHÔNG ĐƯỢC CHẨN ĐOÁN NHỒI MÁU CƠ TIM NẾU KHÔNG CÓ TIÊU CHUẨN MILIMET RÕ RỆT VÀ HÌNH ẢNH SOI GƯƠNG. Chỉ đưa ra phác đồ cấp cứu khi thực sự có tổn thương hoại tử cấp tính hoặc loạn nhịp đe dọa tính mạng.` },
                   {
                     inline_data: {
                       mime_type: currentImageMime,
@@ -2336,6 +2368,10 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
     }
   }
 
+  
+  // State variable to preserve AI Vision diagnosis from being overwritten by local rule engine
+  let activeAiDiagnosis = null;
+
   function applyAiDataToForm(data, modelName){
     // Clinical & Lab inputs from Preset / AI
     if(data.vitals){
@@ -2418,10 +2454,17 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
       reasoningWrap.style.display = 'none';
     }
 
-    // Render Dedicated Clinical Guidance Card
+    // Render Dedicated Clinical Guidance Card & preserve AI diagnosis
     if(data.clinical_diagnosis || data.treatment_plan){
+      activeAiDiagnosis = {
+        diagnosis: data.clinical_diagnosis,
+        treatment: data.treatment_plan,
+        fromAi: true
+      };
       renderClinicalGuidanceCard(data.clinical_diagnosis, data.treatment_plan);
       notifyMobileResultsReady();
+    } else {
+      activeAiDiagnosis = null;
     }
   }
 
@@ -2595,17 +2638,33 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
       lat: 'Động mạch mũ (LCx) hoặc nhánh chéo (Diagonal)'
     };
 
-    if(elevated.length>0){
+    const tropValCheck = document.getElementById('lab-troponin')?.value.trim().toLowerCase() || '';
+    const isTropPosCheck = tropValCheck.includes('dương') || tropValCheck.includes('ng/l') || tropValCheck.includes('+');
+    const hasIschemicSigns = depressed.length > 0 || symChestPain || isTropPosCheck || qPath.length > 0 || (elevated.length >= 2 && special !== 'ber');
+
+    if(elevated.length > 0){
       const names = elevated.map(r=>r.name).join(' + ');
       const artery = elevated.map(r=>territoryMap[r.key]).join('; ');
       const symNote = symChestPain ? ` Kèm đau ngực cấp tính khởi phát ${onsetLabel}.` : '';
-      addFinding(findings,'critical','Cảnh báo tối cấp: Nhồi máu cơ tim cấp ST chênh lên (STEMI)',
-        `ST chênh lên tại vùng: ${names}.${symNote} Vị trí động mạch vành thủ phạm nghi ngờ: ${artery}. Đây là cấp cứu nội khoa khẩn cấp cần chiến lược tái tưới máu mạch vành thì đầu.`,
-        `Xử trí cấp cứu ban đầu: Aspirin 162–325mg nhai ngay + Thuốc ức chế P2Y12 (Ticagrelor 180mg hoặc Clopidogrel 300–600mg liều nạp) + Kháng đông (Enoxaparin hoặc Heparin) + Statin cường độ cao (Atorvastatin 80mg). Chuyển khẩn cấp đến phòng Can thiệp mạch vành (PCI thì đầu) trong vòng 90–120 phút. Nếu quá 12 giờ: đánh giá thêm dấu hiệu thiếu máu tiến triển hoặc biến chứng cơ học.`);
-      if(elevated.some(r=>r.key==='inf')){
-        addFinding(findings,'caution','Lưu ý đặc biệt với Nhồi máu cơ tim thành dưới',
-          'Cần đo ngay các chuyển đạo thất phải (V3R, V4R) và thành sau (V7–V9). CHỐNG CHỈ ĐỊNH dùng Nitroglycerin và các thuốc giãn mạch nếu có Nhồi máu thất phải đi kèm vì nguy cơ tụt huyết áp nghiêm trọng.',
-          'Nếu có tổn thương thất phải: truyền dịch tĩnh mạch (NaCl 0.9%) để nâng và duy trì tiền tải thất phải; tránh tuyệt đối thuốc lợi tiểu và hạ áp.');
+
+      if(special === 'ber'){
+        // Benign Early Repolarization explicitly marked
+        addFinding(findings, 'info', 'Hình ảnh Tái cực sớm lành tính (Benign Early Repolarization)',
+          `ST chênh nhẹ tại vùng: ${names} kèm hình thái cong lõm, điểm J có khấc, không có biến đổi soi gương và không có triệu chứng đau ngực cấp tính. Đây là hình ảnh sinh lý lành tính, không phải nhồi máu cơ tim.`);
+      } else if(!hasIschemicSigns){
+        // Isolated ST elevation without reciprocal changes, without chest pain, without troponin
+        addFinding(findings, 'caution', 'ST chênh nhẹ không kèm biến đổi soi gương — Nghi Tái cực sớm lành tính / Biến đổi ST không đặc hiệu',
+          `Ghi nhận ST chênh nhẹ tại vùng: ${names}. Không có hình ảnh ST chênh xuống soi gương và không có triệu chứng đau ngực cấp tính — Cần phân biệt Tái cực sớm lành tính (BER) hoặc biến đổi sinh lý ở người trẻ trước khi nghĩ đến hội chứng vành cấp.`);
+      } else {
+        // True STEMI signs present
+        addFinding(findings,'critical','Cảnh báo tối cấp: Nhồi máu cơ tim cấp ST chênh lên (STEMI)',
+          `ST chênh lên tại vùng: ${names}.${symNote} Vị trí động mạch vành thủ phạm nghi ngờ: ${artery}. Đây là cấp cứu nội khoa khẩn cấp cần chiến lược tái tưới máu mạch vành thì đầu.`,
+          `Xử trí cấp cứu ban đầu: Aspirin 162–325mg nhai ngay + Thuốc ức chế P2Y12 (Ticagrelor 180mg hoặc Clopidogrel 300–600mg liều nạp) + Kháng đông (Enoxaparin hoặc Heparin) + Statin cường độ cao (Atorvastatin 80mg). Chuyển khẩn cấp đến phòng Can thiệp mạch vành (PCI thì đầu) trong vòng 90–120 phút. Nếu quá 12 giờ: đánh giá thêm dấu hiệu thiếu máu tiến triển hoặc biến chứng cơ học.`);
+        if(elevated.some(r=>r.key==='inf')){
+          addFinding(findings,'caution','Lưu ý đặc biệt với Nhồi máu cơ tim thành dưới',
+            'Cần đo ngay các chuyển đạo thất phải (V3R, V4R) và thành sau (V7–V9). CHỐNG CHỈ ĐỊNH dùng Nitroglycerin và các thuốc giãn mạch nếu có Nhồi máu thất phải đi kèm vì nguy cơ tụt huyết áp nghiêm trọng.',
+            'Nếu có tổn thương thất phải: truyền dịch tĩnh mạch (NaCl 0.9%) để nâng và duy trì tiền tải thất phải; tránh tuyệt đối thuốc lợi tiểu và hạ áp.');
+        }
       }
     }
 
@@ -2650,6 +2709,9 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
 
     // 8. Special Patterns
     const specialText = {
+      ber: ['info','Biến thể Tái cực sớm lành tính (Benign Early Repolarization - BER)',
+        'Đoạn ST chênh lên dạng cong lõm ở các chuyển đạo trước tim (V2–V5), điểm J có khấc (notch) hoặc lượn tròn (slur), sóng T dương cao bất đối xứng, KHÔNG CÓ biến đổi ST chênh xuống soi gương, men tim âm tính.',
+        'Đây là biến thể sinh lý lành tính rất hay gặp ở người trẻ, nam giới hoặc vận động viên thể thao khỏe mạnh; hoàn toàn KHÔNG PHẢI nhồi máu cơ tim cấp. Không cần điều trị, không dùng thuốc tim mạch.'],
       wpw: ['critical','Hội chứng tiền kích thích Wolff – Parkinson – White (WPW)',
         'Đoạn PR ngắn < 120ms kết hợp sóng Delta ở đầu phức bộ QRS. Nguy cơ xuất hiện cơn nhịp nhanh vào lại nhĩ thất (AVRT) hoặc rung nhĩ dẫn truyền qua đường phụ gây rung thất đột tử.',
         'Nếu rung nhĩ có dẫn truyền qua đường phụ: CHỐNG CHỈ ĐỊNH dùng Digoxin, Verapamil, Diltiazem và chẹn beta TM (có thể làm tăng dẫn truyền qua đường phụ gây rung thất). Ưu tiên Sốc điện đồng bộ hoặc Procainamide/Ibutilide; hội chẩn thăm dò điện sinh lý để triệt đốt (RF ablation).'],
@@ -2699,9 +2761,12 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
       box.appendChild(div);
     });
 
-    // SYNTHESIZE CLINICAL & LAB DATA INTO DEDICATED GUIDANCE CARD (IF NOT ALREADY RENDERED BY AI/PRESET)
-    const curCard = document.getElementById('aiClinicalGuidanceCard');
-    const isVisible = curCard && curCard.style.display === 'block';
+    // SYNTHESIZE CLINICAL & LAB DATA INTO DEDICATED GUIDANCE CARD
+    // If AI already produced an expert clinical diagnosis, respect and do NOT overwrite it!
+    if(activeAiDiagnosis && activeAiDiagnosis.fromAi){
+      renderClinicalGuidanceCard(activeAiDiagnosis.diagnosis, activeAiDiagnosis.treatment);
+      return;
+    }
 
     const bpVal = document.getElementById('vital-bp')?.value.trim() || '';
     const tropVal = document.getElementById('lab-troponin')?.value.trim().toLowerCase() || '';
@@ -2709,9 +2774,38 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
     const isHypotension = bpVal.includes('85') || bpVal.includes('80') || bpVal.includes('70') || bpVal.includes('90/60');
     const isTropPos = tropVal.includes('dương') || tropVal.includes('ng/l') || tropVal.includes('+');
 
-    if(!isVisible || document.getElementById('presetSelect').value === ''){
+    {
       // Rule-based diagnostic synthesis
-      if(elevated.length > 0 || (symChestPain && isTropPos)){
+      if(special === 'ber' || (elevated.length > 0 && !hasIschemicSigns)){
+        // Benign Early Repolarization or isolated mild elevation without ischemic features
+        renderClinicalGuidanceCard({
+          primary: special === 'ber'
+            ? 'Biến thể Tái cực sớm lành tính (Benign Early Repolarization - BER)'
+            : 'Biến đổi ST chênh nhẹ không đặc hiệu (Theo dõi Tái cực sớm lành tính)',
+          risk_level: 'Nguy cơ thấp',
+          differentials: [
+            'Tái cực sớm lành tính ở người trẻ / vận động viên khỏe mạnh',
+            'Viêm màng ngoài tim giai đoạn sớm',
+            'Biến đổi sinh lý theo tư thế tim'
+          ]
+        }, {
+          immediate_actions: [
+            'Không cần can thiệp cấp cứu khẩn cấp',
+            'Đối chiếu toàn diện với triệu chứng lâm sàng (bệnh nhân không có cơn đau ngực cấp)',
+            'Tư vấn trấn an người bệnh, tránh lo lắng quá mức'
+          ],
+          medications: [
+            'Không có chỉ định dùng thuốc tim mạch cấp cứu'
+          ],
+          contraindications_warnings: [
+            'Không lạm dụng thuốc tim mạch (kháng đông, chống ngưng tập tiểu cầu) khi chưa có chẩn đoán bệnh lý rõ ràng'
+          ],
+          further_workup: [
+            'Khám sức khỏe tim mạch định kỳ',
+            'Đo lại ECG nếu sau này xuất hiện triệu chứng đau ngực hoặc khó thở'
+          ]
+        });
+      } else if(hasIschemicSigns && (elevated.length > 0 || (symChestPain && isTropPos))){
         renderClinicalGuidanceCard({
           primary: `Nhồi máu cơ tim cấp có ST chênh lên (STEMI) ${elevated.length>0 ? elevated.map(r=>r.name).join(' + ') : 'vùng tổn thương'} ${isHypotension ? 'kèm TỤT HUYẾT ÁP / NGUY CƠ SỐC TIM' : ''}`,
           risk_level: 'Nguy cơ rất cao',
@@ -2853,6 +2947,33 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
             'Xét nghiệm FT4, TSH tầm soát cường giáp'
           ]
         });
+      } else {
+        // NORMAL ECG DEFAULT SYNTHESIS
+        renderClinicalGuidanceCard({
+          primary: 'Điện tâm đồ trong giới hạn bình thường (Normal ECG)',
+          risk_level: 'Nguy cơ thấp',
+          differentials: [
+            'Điện tâm đồ bình thường ở người khỏe mạnh',
+            'Nhịp xoang bình thường',
+            'Biến thể sinh lý theo lứa tuổi'
+          ]
+        }, {
+          immediate_actions: [
+            'Không cần can thiệp cấp cứu khẩn cấp',
+            'Đối chiếu toàn diện với triệu chứng lâm sàng của bệnh nhân',
+            'Tư vấn lối sống khoa học, duy trì hoạt động thể lực hợp lý'
+          ],
+          medications: [
+            'Không có chỉ định dùng thuốc tim mạch cấp cứu'
+          ],
+          contraindications_warnings: [
+            'Không tự ý sử dụng các thuốc tim mạch khi chưa có chỉ định rõ ràng của bác sĩ chuyên khoa'
+          ],
+          further_workup: [
+            'Khám sức khỏe tim mạch định kỳ',
+            'Đo lại điện tâm đồ nếu xuất hiện triệu chứng đau tức ngực, hồi hộp hoặc khó thở'
+          ]
+        });
       }
     }
   }
@@ -2894,7 +3015,10 @@ ${primDiag ? `\nGỢI Ý CHẨN ĐOÁN & PHÂN TẦNG NGUY CƠ:
     });
   });
 
-  document.getElementById('analyzeBtn').addEventListener('click', analyze);
+  document.getElementById('analyzeBtn').addEventListener('click', ()=>{
+    activeAiDiagnosis = null; // User requested fresh rule analysis
+    analyze();
+  });
   document.getElementById('printBtn').addEventListener('click', ()=> window.print());
   document.getElementById('resetBtn').addEventListener('click', ()=>{
     document.querySelectorAll('input[type=number]').forEach(i=>i.value='');
@@ -2913,6 +3037,7 @@ ${primDiag ? `\nGỢI Ý CHẨN ĐOÁN & PHÂN TẦNG NGUY CƠ:
     const mBadge = document.getElementById('resultsBadge'); if(mBadge) mBadge.style.display='none';
     const mDot = document.getElementById('floatingDot'); if(mDot) mDot.style.display='none';
     switchMobileTab('inputs', false);
+    activeAiDiagnosis = null;
     document.getElementById('presetSelect').value = '';
     currentImageBase64 = null;
     ecgImg.src = '';

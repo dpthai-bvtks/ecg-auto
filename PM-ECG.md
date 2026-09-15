@@ -309,3 +309,42 @@ Hệ thống đã tiếp nhận, phân tích toàn văn và nạp vào bộ nh�
 ### 3. Kết quả Kiểm thử Trực quan (Visual Verification)
 * **Mobile (390x844):** Thử nghiệm trên browser giả lập iPhone: Thanh tab dính chặt đỉnh trang; nạp Ca 1 tự động chuyển sang tab chẩn đoán; checklist cấp cứu và bảng phân biệt hiển thị vừa vặn, không có thanh cuộn ngang tràn trang; bấm chuyển lại tab nhập liệu tức thì.
 * **Desktop (1440x900):** Thanh tab di động ẩn hoàn toàn; giao diện hiển thị 2 cột song song chuẩn mực; kính soi ECG mượt mà.
+
+---
+
+## 12. GIẢI QUYẾT TRIỆT ĐỂ LỖI THIÊN LỆCH DƯƠNG TÍNH GIẢ THÀNH NHỒI MÁU CƠ TIM (STEMI OVERDIAGNOSIS)
+
+**Ngày thực hiện:** 15/09/2026  
+**Yêu cầu người dùng:**
+> *"mình có gửi vai ảnh thực tế lên để AI đọc nhưng toàn đọc thành nhồi máu cơ tim"*
+
+### 1. Nguyên nhân Gốc rễ của Hiện tượng "Toàn đọc thành Nhồi máu cơ tim"
+1. **Lỗi logic ghi đè trong mã JavaScript (`index.html`):**
+   - Trong hàm `analyzeImageWithAI()`: sau khi AI trả về kết quả và `applyAiDataToForm()` hiển thị chẩn đoán, hàm `analyze()` lại được gọi ngay lập tức.
+   - Trong hàm `analyze()`: điều kiện `if(!isVisible || document.getElementById('presetSelect').value === '')` luôn đúng đối với ảnh người dùng tự tải lên (`presetSelect.value === ''`).
+   - Hậu quả: Nếu AI điền bất kỳ chuyển đạo nào có ST chênh nhẹ (hoặc do biến thể tái cực sớm), logic `if(elevated.length > 0)` của hàm `analyze()` cục bộ lập tức **ghi đè toàn bộ kết luận của AI** thành: *"Cảnh báo tối cấp: Nhồi máu cơ tim cấp ST chênh lên (STEMI)"* kèm phân tầng *Nguy cơ rất cao*.
+2. **Thiên lệch nhận thức của AI Vision (Cognitive Bias):**
+   - Hệ thống Prompt trước đây không cung cấp bộ tiêu chuẩn loại trừ và không hướng dẫn AI cách nhận diện bản ghi điện tim bình thường hoặc biến thể lành tính.
+   - Ảnh chụp thực tế bằng điện thoại thường bị cong giấy, chụp xiên, bóng đổ hoặc trôi đường đẳng điện (baseline wander), khiến AI dễ lầm tưởng đoạn ST chênh lên 0.5–1mm là bệnh lý.
+   - AI chưa được huấn luyện tiêu chuẩn khắt khe về **Biến thể Tái cực sớm lành tính (Benign Early Repolarization - BER)** — vốn rất hay gặp ở người trẻ/vận động viên với ST chênh cong lõm 1–2mm ở V2–V5 nhưng không có hình ảnh soi gương.
+
+### 2. Các Biện pháp Đã Thực hiện Khắc phục Toàn diện
+1. **Nâng cấp Hệ thống Prompt AI (`ECG_AI_SYSTEM_PROMPT`):**
+   - Bổ sung nguyên tắc cốt lõi: Đa số điện tâm đồ trong cộng đồng là bình thường hoặc có biến thể lành tính; TUYỆT ĐỐI KHÔNG được chẩn đoán STEMI nếu không thỏa mãn cả 3 tiêu chuẩn khách quan:
+     * (1) Ngưỡng milimet tại điểm J theo ESC 2023 / AHA / GS. Trần Đỗ Trinh: $\ge 1\text{ mm}$ ở chi; V2–V3: $\ge 2.5\text{ mm}$ (nam <40t), $\ge 2.0\text{ mm}$ (nam $\ge 40$t), $\ge 1.5\text{ mm}$ (nữ).
+     * (2) Hình thái ST chênh lồi dạng vòm Pardee (thay vì cong lõm).
+     * (3) **BẮT BUỘC có hình ảnh ST chênh xuống soi gương (Reciprocal changes)** ở các đạo trình đối diện (hoặc kèm triệu chứng đau ngực cấp / Troponin tăng cao).
+   - Định nghĩa rõ **Tái cực sớm lành tính (BER):** ST cong lõm, điểm J có khấc (notch/slur), T dương cao, không có soi gương $\rightarrow$ Kết luận là *Biến thể tái cực sớm lành tính / Điện tâm đồ bình thường*, phân tầng *Nguy cơ thấp*.
+   - Khẳng định trạng thái **Điện tâm đồ bình thường (Normal ECG)**: Đưa ra nhận định an tâm, phân tầng *Nguy cơ thấp*, không kích hoạt phác đồ cấp cứu.
+2. **Tách biệt và Bảo toàn Chẩn đoán của AI (`activeAiDiagnosis`):**
+   - Biến trạng thái `activeAiDiagnosis` lưu giữ chẩn đoán đa phương thức của AI và không cho phép logic luật thô sơ của `analyze()` ghi đè lên thẻ chẩn đoán.
+   - Chỉ khi người dùng chủ động điều chỉnh form hoặc bấm nút *"Phân tích kết quả"*, hệ thống mới chạy lại bộ quy tắc suy luận cục bộ.
+3. **Nâng cấp Bộ Quy tắc Suy luận Cục bộ (`analyze()`):**
+   - Bổ sung tùy chọn `ber` trong Card 7: *"Tái cực sớm lành tính (Early Repolarization)"*.
+   - Kiểm tra `hasIschemicSigns`: Nếu ST chênh nhẹ đơn độc mà không có biến đổi soi gương, không đau ngực và không tăng men tim, hệ thống cảnh báo *"Theo dõi Biến thể Tái cực sớm lành tính / Biến đổi ST không đặc hiệu"* với mức *Nguy cơ thấp / Trung bình*, loại bỏ hoàn toàn cảnh báo báo động đỏ STEMI giả.
+   - Tự động hiển thị thẻ kết luận xanh an tâm: *"Điện tâm đồ trong giới hạn bình thường (Normal ECG) — Nguy cơ thấp"* khi không có bất thường.
+
+### 3. Kết quả Kiểm thử Thực tế trên Trình duyệt (Browser Verification)
+- **Test 1 (Bình thường):** Nhịp xoang 75 l/p, PR 160ms, QRS 85ms $\rightarrow$ Kết luận: *"Điện tâm đồ trong giới hạn bình thường (Normal ECG)"*, Nguy cơ thấp. Không có bất kỳ cảnh báo STEMI nào.
+- **Test 2 (Tái cực sớm lành tính):** ST chênh lên ở trước mỏm + chọn Tái cực sớm $\rightarrow$ Kết luận: *"Biến thể Tái cực sớm lành tính (Benign Early Repolarization - BER)"*, Nguy cơ thấp.
+- **Test 3 (STEMI thực thụ - Ca 1):** ST chênh lên DII/DIII/aVF kèm soi gương và đau ngực cấp $\rightarrow$ Kết luận chính xác: *"Nhồi máu cơ tim cấp có ST chênh lên (STEMI) thành dưới"*, Nguy cơ rất cao, kích hoạt phác đồ DAPT + PCI và cảnh báo chống chỉ định Nitroglycerin.
