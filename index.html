@@ -202,6 +202,143 @@
   .readout .rlabel{ color:#8fb9b0; }
   .readout .rline{ display:flex; justify-content:space-between; gap:8px; }
 
+  /* Medical Paper Result Sheet (Chuẩn phiếu kết quả y khoa như ảnh) */
+  .ecg-result-paper{
+    background: #ffffff !important;
+    border: 1px solid #d0dcd8 !important;
+    border-radius: 10px !important;
+    padding: 22px 24px !important;
+    box-shadow: 0 3px 12px rgba(15, 74, 67, 0.05) !important;
+    margin-bottom: 16px !important;
+    font-size: 13.5px !important;
+    color: #172a27 !important;
+    line-height: 1.65 !important;
+  }
+  .rp-header{
+    text-align: center;
+    font-size: 19px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    color: #0f4a43;
+    margin: 0 0 18px;
+    text-transform: uppercase;
+    border-bottom: 2px solid #e1ebe7;
+    padding-bottom: 10px;
+  }
+  .rp-grid2{
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 4px 16px;
+    align-items: start;
+  }
+  .rp-section-title{
+    font-weight: 700;
+    font-size: 14px;
+    color: #0f4a43;
+    margin-bottom: 6px;
+  }
+  .rp-precordial-header{
+    margin-top: 18px;
+    padding-top: 12px;
+    border-top: 1px dashed #d5e3df;
+  }
+  .rp-item{
+    margin: 4px 0;
+    line-height: 1.55;
+    word-break: break-word;
+  }
+  .rp-pad-top{
+    margin-top: 26px;
+  }
+  .rp-bullet{
+    font-weight: 600;
+    color: #1f6f64;
+    user-select: none;
+    margin-right: 2px;
+  }
+  .rp-label{
+    font-weight: 600;
+    color: #2b4541;
+  }
+  .rp-val{
+    font-weight: 500;
+    color: #0a1f1c;
+  }
+  .rp-single-items{
+    margin-top: 4px;
+  }
+  .rp-precordial-box{
+    margin-top: 6px;
+    line-height: 1.6;
+    color: #18312d;
+  }
+  .rp-precordial-line{
+    margin: 4px 0;
+  }
+  .rp-conclusion-wrap{
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1.5px solid #d0e0dc;
+  }
+  .rp-conclusion-title{
+    font-size: 15px;
+    font-weight: 700;
+    color: #0f4a43;
+    margin-bottom: 8px;
+  }
+  .rp-conclusion-content{
+    line-height: 1.65;
+    font-size: 13.5px;
+    color: #142826;
+  }
+  .rp-conclusion-item{
+    margin: 5px 0;
+  }
+  .rp-empty-dash{
+    color: #8c9f9a;
+    font-style: italic;
+  }
+  @media (max-width: 600px){
+    .ecg-result-paper{
+      padding: 16px 14px !important;
+      font-size: 13px !important;
+    }
+    .rp-header{
+      font-size: 17px !important;
+      margin-bottom: 14px !important;
+      letter-spacing: 1.5px !important;
+    }
+    .rp-grid2{
+      grid-template-columns: 1fr 1fr !important;
+      gap: 4px 10px !important;
+    }
+    .rp-pad-top{
+      margin-top: 24px !important;
+    }
+    .rp-item{
+      font-size: 12.5px !important;
+      margin: 3px 0 !important;
+    }
+    .rp-section-title{
+      font-size: 13.5px !important;
+    }
+    .rp-conclusion-title{
+      font-size: 14px !important;
+    }
+    .rp-conclusion-content{
+      font-size: 13px !important;
+    }
+  }
+  @media (max-width: 380px){
+    .rp-grid2{
+      grid-template-columns: 1fr !important;
+      gap: 2px !important;
+    }
+    .rp-pad-top{
+      margin-top: 2px !important;
+    }
+  }
+
   .findings-card h2{ margin-bottom: 10px; }
   .finding{
     border-radius: 8px; padding: 11px 12px; margin-bottom: 9px; font-size: 13px;
@@ -559,6 +696,7 @@
     .wrap{ display:block; padding:0; }
     .panel{ position:static; }
     .card{ border:1px solid #ccc; box-shadow:none; break-inside:avoid; }
+    .ecg-result-paper{ border:none !important; box-shadow:none !important; padding:0 !important; }
     .readout{ background:#f5f5f5 !important; color:#000 !important; border:1px solid #ddd; }
     .readout .rlabel{ color:#444; }
   }
@@ -644,11 +782,12 @@
           <div class="ecg-viewer-toolbar">
             <span>Kính soi bản ghi ECG (Kéo để di chuyển • Lăn chuột để zoom)</span>
             <div class="viewer-btns">
+              <button class="v-btn" id="changeImgBtn" title="Chụp lại hoặc chọn ảnh khác" style="background:#178374; border-color:#2da695; color:#fff;">📷 Đổi / Chụp lại</button>
               <button class="v-btn" id="zoomInBtn" title="Phóng to">+</button>
               <button class="v-btn" id="zoomOutBtn" title="Thu nhỏ">−</button>
               <button class="v-btn" id="rotateBtn" title="Xoay 90 độ">↻ Xoay</button>
               <button class="v-btn" id="resetViewBtn" title="Đặt lại">⟲</button>
-              <button class="v-btn" id="removeImgBtn" title="Đóng ảnh" style="background:#552828;">✕</button>
+              <button class="v-btn" id="removeImgBtn" title="Đóng ảnh" style="background:#552828;">✕ Đóng</button>
             </div>
           </div>
           <div class="ecg-viewport" id="ecgViewport">
@@ -955,13 +1094,58 @@
 
     <!-- RIGHT COLUMN: RESULTS STICKY -->
     <div id="colResults" class="panel col-results">
-      <div class="readout" id="readout">
-        <div class="rline"><span class="rlabel">NHỊP</span><span id="rt-rhythm">—</span></div>
-        <div class="rline"><span class="rlabel">TẦN SỐ</span><span id="rt-hr">—</span></div>
-        <div class="rline"><span class="rlabel">PR / PQ</span><span id="rt-pr">—</span></div>
-        <div class="rline"><span class="rlabel">QRS</span><span id="rt-qrs">—</span></div>
-        <div class="rline"><span class="rlabel">QTc (Baz/Frid)</span><span id="rt-qtc">—</span></div>
-        <div class="rline"><span class="rlabel">TRỤC ĐIỆN TIM</span><span id="rt-axis">—</span></div>
+      <!-- BẢN ĐỌC KẾT QUẢ ĐIỆN TÂM ĐỒ (CHUẨN FORM Y KHOA NHƯ ẢNH) -->
+      <div class="card ecg-result-paper" id="ecgResultPaper">
+        <div class="rp-header">KẾT QUẢ</div>
+        
+        <div class="rp-body">
+          <!-- Phần 1: Chuyển đạo mẫu & 2 cột trên -->
+          <div class="rp-grid2">
+            <div class="rp-col-left">
+              <div class="rp-section-title">Chuyển đạo mẫu :</div>
+              <div class="rp-item"><span class="rp-bullet">- </span><span class="rp-label">Nhịp tần số :</span> <span class="rp-val" id="rp-hr-rhythm">—</span></div>
+              <div class="rp-item"><span class="rp-bullet">- </span><span class="rp-label">Trục:</span> <span class="rp-val" id="rp-axis">—</span></div>
+            </div>
+            <div class="rp-col-right">
+              <div class="rp-item rp-pad-top"><span class="rp-bullet">- </span><span class="rp-label">Góc α :</span> <span class="rp-val" id="rp-alpha">—</span></div>
+              <div class="rp-item"><span class="rp-bullet">- </span><span class="rp-label">Tư thế tim :</span> <span class="rp-val" id="rp-heart-pos">—</span></div>
+              <div class="rp-item"><span class="rp-bullet">- </span><span class="rp-label">PQ:</span> <span class="rp-val" id="rp-pq">—</span></div>
+            </div>
+          </div>
+
+          <!-- Các dòng tiếp theo của Chuyển đạo mẫu -->
+          <div class="rp-single-items">
+            <div class="rp-item"><span class="rp-bullet">- </span><span class="rp-label">P :</span> <span class="rp-val" id="rp-p">—</span></div>
+            <div class="rp-item"><span class="rp-bullet">- </span><span class="rp-label">QRS :</span> <span class="rp-val" id="rp-qrs">—</span></div>
+            <div class="rp-item"><span class="rp-bullet">- </span><span class="rp-label">ST :</span> <span class="rp-val" id="rp-st">—</span></div>
+            <div class="rp-item"><span class="rp-bullet">- </span><span class="rp-label">T :</span> <span class="rp-val" id="rp-t">—</span></div>
+            <div class="rp-item"><span class="rp-bullet">- </span><span class="rp-label">QT :</span> <span class="rp-val" id="rp-qt">—</span></div>
+          </div>
+
+          <!-- Phần 2: Chuyển đạo trước tim -->
+          <div class="rp-section-title rp-precordial-header">Chuyển đạo trước tim:</div>
+          <div class="rp-precordial-box" id="rp-precordial">
+            <div class="rp-empty-dash">—</div>
+          </div>
+
+          <!-- Phần 3: Kết luận -->
+          <div class="rp-conclusion-wrap">
+            <div class="rp-conclusion-title">Kết luận:.</div>
+            <div class="rp-conclusion-content" id="rp-conclusion">
+              <span class="rp-empty-dash">Chưa có kết quả phân tích. Vui lòng nhập thông số hoặc quét ảnh ECG.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hidden legacy compatibility tags for rt-* -->
+        <div style="display:none;" aria-hidden="true">
+          <span id="rt-rhythm">—</span>
+          <span id="rt-hr">—</span>
+          <span id="rt-pr">—</span>
+          <span id="rt-qrs">—</span>
+          <span id="rt-qtc">—</span>
+          <span id="rt-axis">—</span>
+        </div>
       </div>
 
       <!-- DEDICATED CLINICAL GUIDANCE CARD -->
@@ -1170,15 +1354,28 @@
 
   function updateQTcDisplay(){
     const q = computeQTcDetails();
+    const rtQtc = document.getElementById('rt-qtc');
+    const rpQt = document.getElementById('rp-qt');
     if(!q){
       document.getElementById('qtcOut').textContent = '—';
-      document.getElementById('rt-qtc').textContent = '—';
+      if(rtQtc) rtQtc.textContent = '—';
+      if(rpQt) rpQt.textContent = '—';
       return;
     }
     const b = Math.round(q.bazett);
     const f = Math.round(q.fridericia);
     document.getElementById('qtcOut').textContent = `${b} ms (Bazett) / ${f} ms (Frid)`;
-    document.getElementById('rt-qtc').textContent = `${b} / ${f} ms`;
+    if(rtQtc) rtQtc.textContent = `${b} / ${f} ms`;
+    if(rpQt){
+      const qtVal = num('qt');
+      const sexVal = val('sex');
+      const thr = sexVal === 'nu' ? 460 : 450;
+      let qEval = 'bình thường';
+      if(b > 500) qEval = 'kéo dài rất rõ rệt (> 500 ms, nguy cơ xoắn đỉnh)';
+      else if(b > thr) qEval = `kéo dài (> ${thr} ms)`;
+      else if(b < 350) qEval = 'ngắn (< 350 ms)';
+      rpQt.textContent = `${qtVal ? qtVal + ' ms (' + (qtVal/1000).toFixed(2) + 's) — ' : ''}QTc: ${b} ms (Bazett) / ${f} ms (Frid) [${qEval}]`;
+    }
   }
 
   ['hr','qt'].forEach(id=> document.getElementById(id).addEventListener('input', updateQTcDisplay));
@@ -1216,11 +1413,20 @@
   document.getElementById('zoomOutBtn').addEventListener('click', ()=>{ viewState.scale = Math.max(viewState.scale / 1.25, 0.4); updateTransform(); });
   document.getElementById('rotateBtn').addEventListener('click', ()=>{ viewState.rotation = (viewState.rotation + 90) % 360; updateTransform(); });
   document.getElementById('resetViewBtn').addEventListener('click', resetViewport);
-  document.getElementById('removeImgBtn').addEventListener('click', ()=>{
+  function resetImageUpload(){
     currentImageBase64 = null;
     ecgImg.src = '';
     ecgViewerWrap.style.display = 'none';
-  });
+    const dropzoneEl = document.getElementById('dropzone');
+    if(dropzoneEl) dropzoneEl.style.display = 'block';
+    const fileInp = document.getElementById('fileInput');
+    if(fileInp) fileInp.value = '';
+    const camInp = document.getElementById('cameraInput');
+    if(camInp) camInp.value = '';
+  }
+
+  document.getElementById('changeImgBtn')?.addEventListener('click', resetImageUpload);
+  document.getElementById('removeImgBtn').addEventListener('click', resetImageUpload);
 
   // Mouse drag to pan
   ecgViewport.addEventListener('mousedown', (e)=>{
@@ -1333,6 +1539,9 @@
       currentImageMime = file.type || 'image/jpeg';
       ecgImg.src = e.target.result;
       ecgViewerWrap.style.display = 'block';
+      // Ẩn giao diện các nút bấm Chụp trực tiếp, Chọn file ảnh...
+      const dropzoneEl = document.getElementById('dropzone');
+      if(dropzoneEl) dropzoneEl.style.display = 'none';
       resetViewport();
       setAiStatus('Ảnh đã sẵn sàng. Nhấn "Quét & Tự động điền" để AI phân tích.', 'loading');
       setTimeout(()=> document.getElementById('aiStatusBar').style.display='none', 2500);
@@ -2803,12 +3012,260 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
       addFinding(findings,'normal','Chưa ghi nhận bất thường điện học rõ rệt', 'Các chỉ số nằm trong giới hạn bình thường theo tiêu chuẩn GS. Trần Đỗ Trinh. Vẫn cần đối chiếu với bệnh cảnh lâm sàng và so sánh với các bản ghi ECG trước đó.');
     }
 
-    // Render Readout
-    document.getElementById('rt-rhythm').textContent = rhythm==='regular' ? 'Đều' : 'Không đều';
-    document.getElementById('rt-hr').textContent = hr!==null ? `${hr} l/p (${rateWord})` : '—';
-    document.getElementById('rt-pr').textContent = pr!==null ? `${pr} ms` : '—';
-    document.getElementById('rt-qrs').textContent = qrs!==null ? `${qrs} ms` : '—';
-    document.getElementById('rt-axis').textContent = axisWord;
+    // Render Medical Paper Result Sheet (Phiếu kết quả y khoa chuẩn hoá theo ảnh)
+    let hrText = '—';
+    if(hr!==null){
+      if(rhythm==='regular' && pWave==='normal' && !dissociation && !fixedRatio){
+        if(hr<60) hrText = `Nhịp chậm xoang, ${hr} chu kỳ/phút`;
+        else if(hr>100) hrText = `Nhịp nhanh xoang, ${hr} chu kỳ/phút`;
+        else hrText = `Xoang đều, ${hr} chu kỳ/phút`;
+      } else if(rhythm==='irregular' && pWave==='absent'){
+        hrText = `Rung nhĩ, tần số thất TB ${hr} chu kỳ/phút`;
+      } else if(rhythm==='irregular'){
+        hrText = `Không đều, tần số ${hr} chu kỳ/phút`;
+      } else {
+        hrText = `Đều, tần số ${hr} chu kỳ/phút`;
+      }
+    }
+
+    let axisText = '—';
+    if(axis!==null){
+      if(axis>=-30 && axis<=90) axisText = 'Trục trung gian';
+      else if(axis<-30 && axis>=-90) axisText = 'Trục lệch trái';
+      else if(axis>90 && axis<=180) axisText = 'Trục lệch phải';
+      else axisText = 'Trục vô định';
+    } else {
+      const quick = val('axisQuickSelect');
+      if(quick==='normal') axisText = 'Trục trung gian (0° đến +90°)';
+      else if(quick==='left') axisText = 'Trục lệch trái (-30° đến -90°)';
+      else if(quick==='right') axisText = 'Trục lệch phải (+90° đến +180°)';
+      else if(quick==='extreme') axisText = 'Trục vô định';
+    }
+
+    let alphaText = '—';
+    if(axis!==null){
+      alphaText = (axis>=0 ? `+${axis}°` : `${axis}°`);
+    } else {
+      const quick = val('axisQuickSelect');
+      if(quick==='normal') alphaText = '+45° (ước lượng)';
+      else if(quick==='left') alphaText = '-45° (ước lượng)';
+      else if(quick==='right') alphaText = '+120° (ước lượng)';
+      else if(quick==='extreme') alphaText = '-135° (ước lượng)';
+    }
+
+    let heartPosText = '—';
+    if(axis!==null){
+      if(axis>=30 && axis<=60) heartPosText = 'Trung gian';
+      else if(axis>0 && axis<30) heartPosText = 'Nằm ngang (Bán nằm)';
+      else if(axis>=-30 && axis<=0) heartPosText = 'Nằm ngang';
+      else if(axis<-30 && axis>=-90) heartPosText = 'Nằm ngang (trục trái)';
+      else if(axis>60 && axis<=90) heartPosText = 'Đứng (Bán đứng)';
+      else if(axis>90 && axis<=180) heartPosText = 'Thẳng đứng (trục phải)';
+      else heartPosText = 'Vô định';
+    } else {
+      const quick = val('axisQuickSelect');
+      if(quick==='normal') heartPosText = 'Trung gian';
+      else if(quick==='left') heartPosText = 'Nằm ngang';
+      else if(quick==='right') heartPosText = 'Đứng / Lệch phải';
+      else if(quick==='extreme') heartPosText = 'Vô định';
+    }
+
+    let pqText = '—';
+    if(dissociation){
+      pqText = 'Phân ly nhĩ thất hoàn toàn (Block AV độ III)';
+    } else if(wenckebach){
+      pqText = 'Dài dần rồi rớt QRS (Mobitz I / Wenckebach)';
+    } else if(fixedRatio){
+      pqText = 'Tỷ lệ P:QRS cố định > 1:1 (Mobitz II)';
+    } else if(pr!==null){
+      const prSec = (pr/1000).toFixed(2);
+      let prEval = 'bình thường';
+      if(pr>200) prEval = 'kéo dài (Block AV độ I)';
+      else if(pr<120) prEval = special==='wpw' ? 'ngắn (Hội chứng WPW)' : 'ngắn';
+      pqText = `${pr} ms (${prSec}s) — ${prEval}`;
+    } else if(pWave==='absent'){
+      pqText = 'Không xác định (mất sóng P)';
+    }
+
+    let pText = '—';
+    if(pWave==='normal'){
+      pText = 'Bình thường (hình dạng đều, thời gian < 0,11s, biên độ < 2,5mm)';
+    } else if(pWave==='abnormal'){
+      pText = 'Bất thường (P phế / P hai pha / dãn nhĩ)';
+    } else if(pWave==='absent'){
+      pText = 'Mất sóng P rõ (sóng f lăn tăn hoặc F răng cưa)';
+    }
+
+    let qrsText = '—';
+    if(qrs!==null){
+      const qrsSec = (qrs/1000).toFixed(2);
+      if(qrs>=120){
+        let bNote = 'giãn rộng';
+        if(v1shape==='rsr') bNote = "giãn rộng (dạng rSR' V1 — Block nhánh phải RBBB)";
+        else if(v6shape==='broadR') bNote = 'giãn rộng (dạng R rộng có khấc V6 — Block nhánh trái LBBB)';
+        qrsText = `${qrs} ms (${qrsSec}s) — ${bNote}`;
+      } else if(qrs>=100){
+        qrsText = `${qrs} ms (${qrsSec}s) — giới hạn trên (100–110 ms)`;
+      } else {
+        qrsText = `${qrs} ms (${qrsSec}s) — bình thường (< 100 ms)`;
+      }
+    }
+
+    let stItems = [];
+    const stInf = val('st-inf');
+    const stLat = val('st-lat');
+    if(stInf==='elevation') stItems.push('Chênh lên dạng vòm ở DII, DIII, aVF (thành dưới)');
+    else if(stInf==='depression') stItems.push('Chênh xuống ở DII, DIII, aVF');
+
+    if(stLat==='elevation') stItems.push('Chênh lên ở DI, aVL (thành bên)');
+    else if(stLat==='depression'){
+      if(stInf==='elevation') stItems.push('Chênh xuống soi gương ở DI, aVL');
+      else stItems.push('Chênh xuống ở DI, aVL');
+    }
+
+    if(special==='ber') stItems.push('ST chênh lên cong lõm, điểm J có khấc (Tái cực sớm lành tính)');
+    else if(special==='pericarditis') stItems.push('ST chênh lên lan tỏa lõm ở nhiều chuyển đạo (Viêm màng ngoài tim)');
+    else if(special==='digoxin') stItems.push('ST lõm hình đáy chén (Ngấm Digoxin)');
+
+    let stText = stItems.length>0 ? stItems.join('; ') : 'Đẳng điện (bình thường ở các chuyển đạo mẫu)';
+
+    let tItems = [];
+    const tInf = val('t-inf');
+    const tLat = val('t-lat');
+    if(tInf==='peaked') tItems.push('Cao nhọn đối xứng ở DII, DIII, aVF');
+    else if(tInf==='inverted') tItems.push('Âm ở DII, DIII, aVF');
+
+    if(tLat==='inverted') tItems.push('Âm ở DI, aVL');
+    else if(tLat==='peaked') tItems.push('Cao nhọn ở DI, aVL');
+
+    if(special==='hyperk') tItems.push('Cao nhọn đỉnh hẹp đối xứng (nghi tăng Kali máu)');
+    else if(special==='dewinter') tItems.push('Cao nhọn đối xứng khổng lồ (sóng T de Winter)');
+
+    let tText = tItems.length>0 ? tItems.join('; ') : 'Dương ở DI, DII, aVF; âm ở aVR (bình thường)';
+
+    let qtText = '—';
+    if(qt!==null){
+      const b = qtc ? Math.round(qtc) : null;
+      const f = qtcDet ? Math.round(qtcDet.fridericia) : null;
+      const thr = sex==='nu' ? 460 : 450;
+      let qEval = 'bình thường';
+      if(b>500) qEval = 'kéo dài rất rõ rệt (> 500 ms, nguy cơ xoắn đỉnh)';
+      else if(b>thr) qEval = `kéo dài (> ${thr} ms)`;
+      else if(b<350) qEval = 'ngắn (< 350 ms)';
+      qtText = `${qt} ms (${(qt/1000).toFixed(2)}s) — QTc Bazett: ${b} ms / Frid: ${f} ms [${qEval}]`;
+    }
+
+    let pLines = [];
+    // V1, V2
+    let pV1V2 = [];
+    if(v1shape==='rsr') pV1V2.push("dạng rSR' (tai thỏ)");
+    else if(v1shape==='qswide') pV1V2.push('dạng QS rộng');
+    else pV1V2.push('dạng rS');
+
+    if(val('st-sept')==='elevation') pV1V2.push('ST chênh lên');
+    else if(val('st-sept')==='depression') pV1V2.push('ST chênh xuống');
+    else pV1V2.push('ST đẳng điện');
+
+    if(val('t-sept')==='inverted') pV1V2.push('T âm');
+    else if(val('t-sept')==='peaked') pV1V2.push('T cao nhọn');
+    else pV1V2.push('T dương');
+
+    if(val('q-sept')) pV1V2.push('có sóng Q hoại tử');
+    if(special==='brugada') pV1V2.push('ST chênh lên dạng vòm coved-type ≥ 2mm (Brugada Type 1)');
+    if(special==='wellens') pV1V2.push('sóng T hai pha hoặc T âm sâu nhọn (Hội chứng Wellens)');
+    pLines.push(`- V1, V2 (Vách / trước vách): ${pV1V2.join(', ')}.`);
+
+    // V3, V4
+    let pV3V4 = [];
+    pV3V4.push('Vùng chuyển tiếp');
+    if(val('st-ant')==='elevation') pV3V4.push('ST chênh lên');
+    else if(val('st-ant')==='depression') pV3V4.push('ST chênh xuống');
+    else pV3V4.push('ST đẳng điện');
+
+    if(val('t-ant')==='inverted') pV3V4.push('T âm');
+    else if(val('t-ant')==='peaked') pV3V4.push('T cao nhọn');
+    else pV3V4.push('T dương');
+    if(val('q-ant')) pV3V4.push('có sóng Q hoại tử');
+    pLines.push(`- V3, V4 (Trước mỏm / trước rộng): ${pV3V4.join(', ')}.`);
+
+    // V5, V6
+    let pV5V6 = [];
+    if(v6shape==='broadR') pV5V6.push('dạng R rộng đơn pha có khấc');
+    else if(v6shape==='notchedS') pV5V6.push('dạng S rộng có khấc');
+    else pV5V6.push('dạng qR');
+
+    if(val('st-lat')==='elevation') pV5V6.push('ST chênh lên');
+    else if(val('st-lat')==='depression') pV5V6.push('ST chênh xuống');
+    else pV5V6.push('ST đẳng điện');
+
+    if(val('t-lat')==='inverted') pV5V6.push('T âm');
+    else if(val('t-lat')==='peaked') pV5V6.push('T cao nhọn');
+    else pV5V6.push('T dương');
+    pLines.push(`- V5, V6 (Thành bên): ${pV5V6.join(', ')}.`);
+
+    // Voltage
+    let vNotes = [];
+    if(sV1!==null && rV56!==null){
+      const sokolow = sV1 + rV56;
+      vNotes.push(`Chỉ số Sokolow-Lyon: S(V1) + R(V5/V6) = ${sV1} + ${rV56} = ${sokolow} mm ${sokolow>=35 ? '(≥ 35 mm: Dày thất trái)' : '(< 35 mm: Bình thường)'}`);
+    }
+    if(rV1!==null){
+      vNotes.push(`Sóng R ở V1 = ${rV1} mm ${rV1>=7 ? '(≥ 7 mm: Nghi dày thất phải)' : '(< 7 mm: Bình thường)'}`);
+    }
+    if(vNotes.length>0){
+      pLines.push(`- Điện thế & Dày thất: ${vNotes.join(' | ')}.`);
+    }
+
+    let cList = [];
+    if(hrText!=='—') cList.push(`1. ${hrText}.`);
+    if(axisText!=='—' || heartPosText!=='—'){
+      cList.push(`2. ${axisText} (Góc α = ${alphaText}), Tư thế tim: ${heartPosText}.`);
+    }
+    let pathList = [];
+    if(activeAiDiagnosis && activeAiDiagnosis.diagnosis && activeAiDiagnosis.diagnosis.primary){
+      pathList.push(activeAiDiagnosis.diagnosis.primary);
+    } else {
+      findings.forEach(f=>{
+        if(f.level==='critical' || f.level==='caution'){
+          pathList.push(f.title);
+        }
+      });
+    }
+    if(pathList.length>0){
+      const uniq = Array.from(new Set(pathList));
+      uniq.forEach(p=>{
+        cList.push(`${cList.length+1}. ${p}.`);
+      });
+    } else {
+      cList.push(`${cList.length+1}. Hiện tại chưa ghi nhận biến đổi điện học bệnh lý (Điện tâm đồ trong giới hạn bình thường theo tiêu chuẩn GS. Trần Đỗ Trinh).`);
+    }
+
+    // Set DOM elements in ecgResultPaper
+    const elHr = document.getElementById('rp-hr-rhythm'); if(elHr) elHr.textContent = hrText;
+    const elAxis = document.getElementById('rp-axis'); if(elAxis) elAxis.textContent = axisText;
+    const elAlpha = document.getElementById('rp-alpha'); if(elAlpha) elAlpha.textContent = alphaText;
+    const elHeart = document.getElementById('rp-heart-pos'); if(elHeart) elHeart.textContent = heartPosText;
+    const elPq = document.getElementById('rp-pq'); if(elPq) elPq.textContent = pqText;
+    const elP = document.getElementById('rp-p'); if(elP) elP.textContent = pText;
+    const elQrs = document.getElementById('rp-qrs'); if(elQrs) elQrs.textContent = qrsText;
+    const elSt = document.getElementById('rp-st'); if(elSt) elSt.textContent = stText;
+    const elT = document.getElementById('rp-t'); if(elT) elT.textContent = tText;
+    const elQt = document.getElementById('rp-qt'); if(elQt) elQt.textContent = qtText;
+    const elPrecordial = document.getElementById('rp-precordial');
+    if(elPrecordial){
+      elPrecordial.innerHTML = pLines.length>0 ? pLines.map(l=>`<div class="rp-precordial-line">${l}</div>`).join('') : '<div class="rp-empty-dash">—</div>';
+    }
+    const elConclusion = document.getElementById('rp-conclusion');
+    if(elConclusion){
+      elConclusion.innerHTML = cList.map(c=>`<div class="rp-conclusion-item">${c}</div>`).join('');
+    }
+
+    // Update hidden legacy spans for backward compatibility
+    const rtRhythm = document.getElementById('rt-rhythm'); if(rtRhythm) rtRhythm.textContent = rhythm==='regular' ? 'Đều' : 'Không đều';
+    const rtHr = document.getElementById('rt-hr'); if(rtHr) rtHr.textContent = hr!==null ? `${hr} l/p (${rateWord})` : '—';
+    const rtPr = document.getElementById('rt-pr'); if(rtPr) rtPr.textContent = pr!==null ? `${pr} ms` : '—';
+    const rtQrs = document.getElementById('rt-qrs'); if(rtQrs) rtQrs.textContent = qrs!==null ? `${qrs} ms` : '—';
+    const rtAxis = document.getElementById('rt-axis'); if(rtAxis) rtAxis.textContent = axisWord;
     updateQTcDisplay();
     notifyMobileResultsReady();
 
@@ -3294,21 +3751,44 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
     const findingsEls = document.querySelectorAll('#findings .finding .ftitle');
     const conclusions = Array.from(findingsEls).map(el=>el.textContent).join('; ');
 
-    const textToCopy = `TÓM TẮT ĐIỆN TÂM ĐỒ & BỆNH CẢNH LÂM SÀNG (ECG CONSOLE):
-THÔNG TIN LÂM SÀNG & CẬN LÂM SÀNG:
-${clinicalContext}
+    const hrVal = document.getElementById('rp-hr-rhythm')?.textContent || '—';
+    const axisVal = document.getElementById('rp-axis')?.textContent || '—';
+    const alphaVal = document.getElementById('rp-alpha')?.textContent || '—';
+    const heartVal = document.getElementById('rp-heart-pos')?.textContent || '—';
+    const pqVal = document.getElementById('rp-pq')?.textContent || '—';
+    const pVal = document.getElementById('rp-p')?.textContent || '—';
+    const qrsVal = document.getElementById('rp-qrs')?.textContent || '—';
+    const stVal = document.getElementById('rp-st')?.textContent || '—';
+    const tVal = document.getElementById('rp-t')?.textContent || '—';
+    const qtVal = document.getElementById('rp-qt')?.textContent || '—';
+    const precordialVal = Array.from(document.querySelectorAll('#rp-precordial .rp-precordial-line')).map(el=>el.textContent).join('\n') || '—';
+    const conclusionVal = Array.from(document.querySelectorAll('#rp-conclusion .rp-conclusion-item')).map(el=>el.textContent).join('\n') || '—';
 
-KẾT QUẢ ĐỌC ĐIỆN TÂM ĐỒ 12 CHUYỂN ĐẠO:
-- Nhịp: ${rhythm} | Tần số: ${hr}
-- Khoảng PR/PQ: ${pr} | Độ rộng QRS: ${qrs}
-- QTc: ${qtc} | Trục điện tim: ${axis}
-- Dấu hiệu điện học: ${conclusions || 'Trong giới hạn bình thường'}
-${primDiag ? `\nGỢI Ý CHẨN ĐOÁN & PHÂN TẦNG NGUY CƠ:
-- Chẩn đoán: ${primDiag} (${riskBadge})` : ''}
+    const textToCopy = `PHIẾU ĐỌC KẾT QUẢ ĐIỆN TÂM ĐỒ (ECG CONSOLE):
+KẾT QUẢ
+Chuyển đạo mẫu :
+- Nhịp tần số : ${hrVal}
+- Trục: ${axisVal}
+- Góc α : ${alphaVal}
+- Tư thế tim : ${heartVal}
+- PQ: ${pqVal}
+- P : ${pVal}
+- QRS : ${qrsVal}
+- ST : ${stVal}
+- T : ${tVal}
+- QT : ${qtVal}
+
+Chuyển đạo trước tim:
+${precordialVal}
+
+Kết luận:.
+${conclusionVal}
+${clinicalContext ? `\nTHÔNG TIN LÂM SÀNG & CẬN LÂM SÀNG:\n${clinicalContext}` : ''}
+${primDiag ? `\nGỢI Ý CHẨN ĐOÁN & PHÂN TẦNG NGUY CƠ:\n- Chẩn đoán: ${primDiag} (${riskBadge})` : ''}
 (Nguồn: ECG Console — Chuẩn hóa theo tài liệu GS. Trần Đỗ Trinh & Viện Tim Mạch VN)`;
 
     navigator.clipboard.writeText(textToCopy).then(()=>{
-      alert('Đã sao chép tóm tắt điện tim vào bộ nhớ tạm! Bạn có thể dán (Ctrl+V) vào bệnh án điện tử.');
+      alert('Đã sao chép phiếu kết quả điện tim vào bộ nhớ tạm! Bạn có thể dán (Ctrl+V) vào bệnh án điện tử.');
     }).catch(()=>{
       alert('Không thể sao chép tự động. Vui lòng thử lại!');
     });
@@ -3329,6 +3809,14 @@ ${primDiag ? `\nGỢI Ý CHẨN ĐOÁN & PHÂN TẦNG NGUY CƠ:
     document.querySelector('input[name="rhythm"][value="regular"]').checked = true;
     document.getElementById('qtcOut').textContent = '—';
     ['rt-rhythm','rt-hr','rt-pr','rt-qrs','rt-qtc','rt-axis'].forEach(id=>document.getElementById(id).textContent='—');
+    
+    // Reset Paper Result layout
+    ['rp-hr-rhythm','rp-axis','rp-alpha','rp-heart-pos','rp-pq','rp-p','rp-qrs','rp-st','rp-t','rp-qt'].forEach(id=>{
+      const el = document.getElementById(id); if(el) el.textContent = '—';
+    });
+    const pEl = document.getElementById('rp-precordial'); if(pEl) pEl.innerHTML = '<div class="rp-empty-dash">—</div>';
+    const cEl = document.getElementById('rp-conclusion'); if(cEl) cEl.innerHTML = '<span class="rp-empty-dash">Chưa có kết quả phân tích. Vui lòng nhập thông số hoặc quét ảnh ECG.</span>';
+
     document.getElementById('findings').innerHTML = '<p class="empty-state">Nhập thông số hoặc tải ảnh điện tim để nhận kết quả phân tích tự động.</p>';
     document.getElementById('aiNotesBox').style.display = 'none';
     document.getElementById('aiStatusBar').style.display = 'none';
@@ -3338,9 +3826,9 @@ ${primDiag ? `\nGỢI Ý CHẨN ĐOÁN & PHÂN TẦNG NGUY CƠ:
     switchMobileTab('inputs', false);
     activeAiDiagnosis = null;
     document.getElementById('presetSelect').value = '';
-    currentImageBase64 = null;
-    ecgImg.src = '';
-    ecgViewerWrap.style.display = 'none';
+    
+    // Reset upload and restore upload buttons
+    resetImageUpload();
   });
 </script>
 </body>
