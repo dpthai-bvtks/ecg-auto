@@ -12,8 +12,8 @@ from . import LEAD_NAMES
 from .ocr_parser import OCRResult
 from .signal_metrics import SignalMetricsResult
 
-GEMINI_FAST_MODELS = ["gemini-3.8-flash", "gemini-3.6-flash", "gemini-2.5-flash"]
-GEMINI_DEEP_MODELS = ["gemini-3.8-flash", "gemini-3.6-flash", "gemini-2.5-pro", "gemini-2.5-flash"]
+GEMINI_FAST_MODELS = ["gemini-3.5-flash-lite", "gemini-2.5-flash", "gemini-3-flash-preview"]
+GEMINI_DEEP_MODELS = ["gemini-3-flash-preview", "gemini-2.5-flash", "gemini-3.5-flash-lite"]
 
 HYBRID_SYSTEM_PROMPT = """Bạn là chuyên gia Tim mạch & Cấp cứu (tổng hợp chuẩn GS.TS. Trần Đỗ Trinh, VNHA 2023–2024, Bộ Y tế VN, ESC 2023 và Dr. Smith OMI).
 Bạn nhận đồng thời:
@@ -522,45 +522,60 @@ async def _call_gemini_hybrid(
 ) -> Tuple[Optional[dict], Optional[str], Optional[str]]:
     thinking_lvl = "high" if mode == "deep" else "low"
     base_list = GEMINI_DEEP_MODELS if mode == "deep" else GEMINI_FAST_MODELS
-    deprecated_or_slow = {"gemini-1.5-pro", "gemini-1.5-flash", "gemini-2.0-pro-exp-02-05", "gemini-exp-1206"}
+    deprecated_or_slow = {
+        "gemini-1.5-pro",
+        "gemini-1.5-flash",
+        "gemini-2.0-pro-exp-02-05",
+        "gemini-exp-1206",
+        "gemini-2.5-pro",
+        "gemini-3.1-pro-preview",
+        "gemini-4.0-flash",
+        "gemini-4.0-pro",
+        "gemini-4-argon",
+        "gemini-4-neon",
+        "gemini-4-carbon",
+    }
     candidates = []
-    if preferred_model and preferred_model not in deprecated_or_slow:
-        if mode == "fast" and preferred_model == "gemini-2.5-pro":
-            candidates.extend(GEMINI_FAST_MODELS)
-        else:
+    if mode == "fast":
+        candidates.extend(GEMINI_FAST_MODELS)
+        if preferred_model and preferred_model not in deprecated_or_slow and preferred_model not in candidates:
             candidates.append(preferred_model)
-    for m in base_list:
-        if m not in candidates:
-            candidates.append(m)
+    else:
+        if preferred_model and preferred_model not in deprecated_or_slow:
+            candidates.append(preferred_model)
+        for m in base_list:
+            if m not in candidates:
+                candidates.append(m)
 
-    parts: List[Dict[str, Any]] = [{"text": prompt_text}]
+    base_parts: List[Dict[str, Any]] = [{"text": prompt_text}]
     if waveform_img_b64:
-        parts.append(
+        base_parts.append(
             {
                 "inline_data": {
                     "mime_type": "image/jpeg",
                     "data": waveform_img_b64,
-                },
-                "media_resolution": {"level": "MEDIA_RESOLUTION_HIGH"},
+                }
             }
         )
 
-    timeout_sec = 35.0 if mode == "deep" else 20.0
+    timeout_sec = 14.0 if mode == "deep" else 6.0
     last_err = None
 
     async with httpx.AsyncClient(timeout=timeout_sec) as client:
-        for model in candidates[:4]:
+        for model in candidates[:3]:
             url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
             gen_cfg: Dict[str, Any] = {
                 "temperature": 0.1,
                 "response_mime_type": "application/json",
             }
-            if "gemini-4" in model or "gemini-3" in model or "2.5" in model:
+            if model == "gemini-3-flash-preview":
                 gen_cfg["thinking_config"] = {"thinking_level": thinking_lvl}
+            elif "2.5-flash" in model:
+                gen_cfg["thinkingConfig"] = {"thinkingBudget": 1024 if mode == "deep" else 0}
 
             payload = {
                 "system_instruction": {"parts": [{"text": HYBRID_SYSTEM_PROMPT}]},
-                "contents": [{"parts": parts}],
+                "contents": [{"parts": base_parts}],
                 "generationConfig": gen_cfg,
             }
 
@@ -570,16 +585,10 @@ async def _call_gemini_hybrid(
                     headers={"Content-Type": "application/json", "x-goog-api-key": api_key},
                     json=payload,
                 )
-                # Compatibility retry if API rejects thinking_config or per-part media_resolution on older models
                 if resp.status_code == 400:
-                    compat_parts = [{"text": prompt_text}]
-                    if waveform_img_b64:
-                        compat_parts.append(
-                            {"inline_data": {"mime_type": "image/jpeg", "data": waveform_img_b64}}
-                        )
                     compat_payload = {
                         "system_instruction": {"parts": [{"text": HYBRID_SYSTEM_PROMPT}]},
-                        "contents": [{"parts": compat_parts}],
+                        "contents": [{"parts": base_parts}],
                         "generationConfig": {"temperature": 0.1, "response_mime_type": "application/json"},
                     }
                     resp = await client.post(
@@ -588,7 +597,7 @@ async def _call_gemini_hybrid(
                         json=compat_payload,
                     )
 
-                if resp.status_code in (404, 429, 400):
+                if resp.status_code in (404, 429, 400, 500, 503):
                     err_j = resp.json() if resp.headers.get("content-type", "").startswith("application/json") else {}
                     last_err = f"{model}: HTTP {resp.status_code} {err_j.get('error', {}).get('message', '')}".strip()
                     continue

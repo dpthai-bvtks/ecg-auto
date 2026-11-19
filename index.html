@@ -921,8 +921,8 @@
             ✨ Quét &amp; Tự động điền (AI Vision)
           </button>
           <select id="scanModeSelect" title="Chế độ xử lý Hybrid" style="padding:8px 10px; font-size:12px; border:1px solid var(--line); border-radius:6px; background:#fff; color:var(--ink); font-family:var(--sans);">
-            <option value="fast">⚡ Hybrid Nhanh (Local + Gemini 3.8 Flash)</option>
-            <option value="offline">🖥️ Hybrid Offline (100% nội bộ, 3–5s)</option>
+            <option value="offline" selected>⚡ Hybrid Siêu tốc (ECGFounder + OCR, ~2.5s)</option>
+            <option value="fast">☁️ Hybrid + Gemini Flash (Tổng hợp thêm bệnh cảnh)</option>
             <option value="deep">🧠 Hybrid Chuyên sâu (Local + Thinking High)</option>
           </select>
           <span style="font-size:11.5px; color:var(--ink-soft);">Tự hiệu chuẩn độ lợi, đo ST từng mm &amp; bóc tách thông số</span>
@@ -1342,17 +1342,16 @@
         <label class="field">
           <span class="lbl">Mô hình AI:</span>
           <select id="modelSelect">
-            <optgroup label="🌟 THẾ HỆ GEMINI 4.0 &amp; 3.8 MỚI NHẤT (NHANH &amp; CHUẨN Y KHOA)">
-              <option value="gemini-3.8-flash" selected>Gemini 3.8 Flash (Khuyến nghị — Nhanh nhất &amp; chính xác cao)</option>
-              <option value="gemini-3.8-pro">Gemini 3.8 Pro (Suy luận lâm sàng chuyên sâu thế hệ 3.8)</option>
-              <option value="gemini-4.0-flash">Gemini 4.0 Flash (Thế hệ 4.0 — Tốc độ cao &amp; thị giác sóng)</option>
-              <option value="gemini-4.0-pro">Gemini 4.0 Pro (Flagship 4.0 — Lý luận đa tầng chuyên sâu)</option>
-              <option value="gemini-3.6-flash">Gemini 3.6 Flash (Thế hệ 3.6 — Thị giác y khoa độ nét cao)</option>
-              <option value="gemini-3.1-pro-preview">Gemini 3.1 Pro Preview (Lý luận chuyên sâu thế hệ 3.1)</option>
+            <optgroup label="⚡ MÔ HÌNH GEMINI TỐC ĐỘ CAO &amp; ỔN ĐỊNH NHẤT (KHUYẾN NGHỊ CHO ĐIỆN THOẠI)">
+              <option value="gemini-2.5-flash" selected>Gemini 2.5 Flash (Khuyến nghị — Nhanh 1–2s &amp; Hạn mức miễn phí cao nhất)</option>
+              <option value="gemini-3.5-flash-lite">Gemini 3.5 Flash Lite (Siêu tốc 1.2s — Tối ưu cho 4G/Điện thoại)</option>
+              <option value="gemini-3-flash-preview">Gemini 3.0 Flash Preview (Thế hệ 3 — Cân bằng tốc độ &amp; lập luận)</option>
             </optgroup>
-            <optgroup label="⚡ DÒNG GEMINI 2.5 (TƯƠNG THÍCH RỘNG)">
-              <option value="gemini-2.5-flash">Gemini 2.5 Flash (Nhanh &amp; ổn định)</option>
-              <option value="gemini-2.5-pro">Gemini 2.5 Pro (Suy luận chuyên sâu, chậm hơn)</option>
+            <optgroup label="🌟 DÒNG GEMINI 3.8 &amp; 4.0 (KHI API KEY CÓ HẠN MỨC PRO)">
+              <option value="gemini-3.8-flash">Gemini 3.8 Flash (Thế hệ 3.8 — Tự chuyển 2.5 Flash nếu quá tải)</option>
+              <option value="gemini-3.6-flash">Gemini 3.6 Flash (Thế hệ 3.6)</option>
+              <option value="gemini-4-neon">Gemini 4 Neon (Thế hệ 4 — Yêu cầu gói trả phí/Quota riêng)</option>
+              <option value="gemini-4-argon">Gemini 4 Argon (Thế hệ 4 — Yêu cầu gói trả phí/Quota riêng)</option>
             </optgroup>
             <optgroup label="🛠️ TÙY CHỈNH NÂNG CAO">
               <option value="custom">Nhập mã Model tùy chọn (Custom Model ID)...</option>
@@ -2099,19 +2098,18 @@
       placeholder: 'Dán mã API Key vào đây (hệ thống đã tích hợp sẵn key)',
       linkText: '👉 Lấy API Key miễn phí tại Google AI Studio',
       linkUrl: 'https://aistudio.google.com/app/apikey',
-      defaultModel: 'gemini-3.8-flash',
+      defaultModel: 'gemini-2.5-flash',
       optionsHtml: `
-        <optgroup label="🌟 THẾ HỆ GEMINI 4.0 &amp; 3.8 MỚI NHẤT (NHANH &amp; CHUẨN Y KHOA)">
-          <option value="gemini-3.8-flash" selected>Gemini 3.8 Flash (Khuyến nghị — Nhanh nhất &amp; chính xác cao)</option>
-          <option value="gemini-3.8-pro">Gemini 3.8 Pro (Suy luận lâm sàng chuyên sâu thế hệ 3.8)</option>
-          <option value="gemini-4.0-flash">Gemini 4.0 Flash (Thế hệ 4.0 — Tốc độ cao &amp; thị giác sóng)</option>
-          <option value="gemini-4.0-pro">Gemini 4.0 Pro (Flagship 4.0 — Lý luận đa tầng chuyên sâu)</option>
-          <option value="gemini-3.6-flash">Gemini 3.6 Flash (Thế hệ 3.6 — Thị giác y khoa độ nét cao)</option>
-          <option value="gemini-3.1-pro-preview">Gemini 3.1 Pro Preview (Lý luận chuyên sâu thế hệ 3.1)</option>
+        <optgroup label="⚡ MÔ HÌNH GEMINI TỐC ĐỘ CAO &amp; ỔN ĐỊNH NHẤT (KHUYẾN NGHỊ CHO ĐIỆN THOẠI)">
+          <option value="gemini-2.5-flash" selected>Gemini 2.5 Flash (Khuyến nghị — Nhanh 1–2s &amp; Hạn mức miễn phí cao nhất)</option>
+          <option value="gemini-3.5-flash-lite">Gemini 3.5 Flash Lite (Siêu tốc 1.2s — Tối ưu cho 4G/Điện thoại)</option>
+          <option value="gemini-3-flash-preview">Gemini 3.0 Flash Preview (Thế hệ 3 — Cân bằng tốc độ &amp; lập luận)</option>
         </optgroup>
-        <optgroup label="⚡ DÒNG GEMINI 2.5 (TƯƠNG THÍCH RỘNG)">
-          <option value="gemini-2.5-flash">Gemini 2.5 Flash (Nhanh &amp; ổn định)</option>
-          <option value="gemini-2.5-pro">Gemini 2.5 Pro (Suy luận chuyên sâu, chậm hơn)</option>
+        <optgroup label="🌟 DÒNG GEMINI 3.8 &amp; 4.0 (KHI API KEY CÓ HẠN MỨC PRO)">
+          <option value="gemini-3.8-flash">Gemini 3.8 Flash (Thế hệ 3.8 — Tự chuyển 2.5 Flash nếu quá tải)</option>
+          <option value="gemini-3.6-flash">Gemini 3.6 Flash (Thế hệ 3.6)</option>
+          <option value="gemini-4-neon">Gemini 4 Neon (Thế hệ 4 — Yêu cầu gói trả phí/Quota riêng)</option>
+          <option value="gemini-4-argon">Gemini 4 Argon (Thế hệ 4 — Yêu cầu gói trả phí/Quota riêng)</option>
         </optgroup>
         <optgroup label="🛠️ TÙY CHỈNH NÂNG CAO">
           <option value="custom">Nhập mã Model tùy chọn (Custom Model ID)...</option>
@@ -2172,9 +2170,13 @@
     const selected = localStorage.getItem('ai_selected_model');
     if(selected === 'custom' && custom) return custom;
     const p = getActiveProvider();
-    const deprecated = new Set(['gemini-1.5-pro', 'gemini-1.5-flash', 'gemini-2.0-pro-exp-02-05', 'gemini-exp-1206', 'gemini-2.0-flash', 'gemini-3.5-flash']);
+    const deprecated = new Set([
+      'gemini-1.5-pro', 'gemini-1.5-flash', 'gemini-2.0-pro-exp-02-05', 'gemini-exp-1206',
+      'gemini-2.0-flash', 'gemini-3.5-flash', 'gemini-2.5-pro', 'gemini-3.1-pro-preview',
+      'gemini-3.8-pro', 'gemini-4.0-flash', 'gemini-4.0-pro', 'gemini-3.8-flash', 'gemini-3.6-flash'
+    ]);
     if(selected && !deprecated.has(selected)) return selected;
-    return PROVIDER_CONFIGS[p]?.defaultModel || 'gemini-3.8-flash';
+    return PROVIDER_CONFIGS[p]?.defaultModel || 'gemini-2.5-flash';
   }
 
   function updateProviderUI(provider){
@@ -2613,6 +2615,11 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
   // ==========================================
   // HYBRID BACKEND DETECTION & VISUALIZATION
   // ==========================================
+  let hasUserChangedScanMode = false;
+  document.getElementById('scanModeSelect')?.addEventListener('change', ()=>{
+    hasUserChangedScanMode = true;
+  });
+
   function syncScanModeUI(isHybridReady){
     const sel = document.getElementById('scanModeSelect');
     if(!sel) return;
@@ -2620,16 +2627,17 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
     const optOff  = sel.querySelector('option[value="offline"]');
     const optDeep = sel.querySelector('option[value="deep"]');
     if(isHybridReady){
-      if(optFast) optFast.textContent = '⚡ Hybrid Nhanh (Local + Gemini 3.8 Flash)';
       if(optOff){
-        optOff.textContent = '🖥️ Hybrid Offline (100% nội bộ, 3–5s)';
+        optOff.textContent = '⚡ Hybrid Siêu tốc (ECGFounder + OCR, ~2.5s)';
         optOff.disabled = false;
       }
+      if(optFast) optFast.textContent = '☁️ Hybrid + Gemini Flash (Tổng hợp bệnh cảnh)';
       if(optDeep) optDeep.textContent = '🧠 Hybrid Chuyên sâu (Local + Thinking High)';
+      if(!hasUserChangedScanMode) sel.value = 'offline';
     } else {
-      if(optFast) optFast.textContent = '☁️ AI Cloud Nhanh (Trình duyệt / GitHub Pages)';
+      if(optFast) optFast.textContent = '⚡ AI Cloud Siêu tốc (Gemini 2.5 / 3.5 Flash)';
       if(optOff){
-        optOff.textContent = '🖥️ Hybrid Offline (Cần máy chủ nội bộ)';
+        optOff.textContent = '🖥️ Hybrid Siêu tốc (Cần máy chủ nội bộ)';
         optOff.disabled = true;
       }
       if(optDeep) optDeep.textContent = '🧠 AI Cloud Chuyên sâu (Thinking High)';
@@ -2682,23 +2690,32 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
     return null;
   }
 
-  async function detectHybridBackend(){
+  let hybridDetectPromise = null;
+
+  async function _runDetectHybridBackend(){
     const badge = document.getElementById('hybridStatusBadge');
     const txt = document.getElementById('hybridStatusText');
     const customUrl = (localStorage.getItem('hybrid_backend_url') || '').trim().replace(/\/+$/, '');
+    const cachedTunnel = (sessionStorage.getItem('pm_ecg_active_tunnel') || '').trim().replace(/\/+$/, '');
     const isStaticHost = /(?:^|\.)(?:github\.io|pages\.dev|netlify\.app|vercel\.app)$/i.test(window.location.hostname || '');
+    const isMobileDevice = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent || '');
+
     const rawCandidates = [];
     if(customUrl) rawCandidates.push(customUrl);
+    if(cachedTunnel) rawCandidates.push(cachedTunnel);
     if(window.location.protocol.startsWith('http') && !isStaticHost){
       rawCandidates.push('');
     }
-    rawCandidates.push('http://127.0.0.1:8785', 'http://localhost:8785');
+    if(!isMobileDevice){
+      rawCandidates.push('http://127.0.0.1:8785', 'http://localhost:8785');
+    }
     const candidates = rawCandidates.filter((v, i, a) => a.indexOf(v) === i);
 
     for(const base of candidates){
-      const j = await probeHybridBase(base, base.startsWith('https://') ? 4500 : 1600);
+      const j = await probeHybridBase(base, base.startsWith('https://') ? 3200 : 1200);
       if(j){
         hybridBackendBaseUrl = base;
+        if(base.startsWith('https://')) sessionStorage.setItem('pm_ecg_active_tunnel', base);
         if(badge) badge.classList.add('configured');
         if(j.tunnel_url && hybridBackendUrlInput && !hybridBackendUrlInput.value){
           hybridBackendUrlInput.placeholder = `Đang mở Tunnel: ${j.tunnel_url}`;
@@ -2717,9 +2734,10 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
     // Auto-discover live Cloudflare HTTPS Tunnel published in tunnel.json (for mobile / external PCs)
     const tunnelUrl = await fetchActiveTunnelUrl();
     if(tunnelUrl && !candidates.includes(tunnelUrl)){
-      const j = await probeHybridBase(tunnelUrl, 4800);
+      const j = await probeHybridBase(tunnelUrl, 3800);
       if(j){
         hybridBackendBaseUrl = tunnelUrl;
+        sessionStorage.setItem('pm_ecg_active_tunnel', tunnelUrl);
         if(badge) badge.classList.add('configured');
         if(hybridBackendUrlInput && !hybridBackendUrlInput.value){
           hybridBackendUrlInput.placeholder = `Tự động kết nối Tunnel: ${tunnelUrl}`;
@@ -2735,6 +2753,11 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
     if(txt) txt.textContent = 'Chế độ Trình duyệt (Zero-Backend)';
     syncScanModeUI(false);
     return false;
+  }
+
+  function detectHybridBackend(){
+    hybridDetectPromise = _runDetectHybridBackend();
+    return hybridDetectPromise;
   }
   detectHybridBackend();
 
@@ -2916,12 +2939,13 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
       return;
     }
 
+    if(hybridBackendBaseUrl === null){
+      await (hybridDetectPromise || detectHybridBackend());
+    }
+
     if(isDigitalFile && hybridBackendBaseUrl === null){
-      const ok = await detectHybridBackend();
-      if(!ok){
-        setAiStatus('Để đọc file tín hiệu số (JSON/CSV/XML), vui lòng khởi chạy máy chủ Hybrid bằng file start_server.bat!', 'error');
-        return;
-      }
+      setAiStatus('Để đọc file tín hiệu số (JSON/CSV/XML), vui lòng khởi chạy máy chủ Hybrid bằng file start_server.bat!', 'error');
+      return;
     }
 
     // 1. HYBRID BACKEND PATH (FAST, ACCURATE, GAIN-CALIBRATED + ECGFOUNDER)
@@ -2939,7 +2963,7 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
           fd.append('file', currentFileObject, currentFileName || 'ecg.json');
           fd.append('rotation', '0');
         } else {
-          const proc = await getProcessedImageForSend(2048, 0.90);
+          const proc = await getProcessedImageForSend(1360, 0.83);
           fd.append('file', proc.blob, 'ecg_preprocessed.jpg');
           fd.append('rotation', '0'); // canvas already applied viewState.rotation
         }
@@ -3002,7 +3026,7 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
     hideHybridMetaCard();
     let procImg;
     try {
-      procImg = await getProcessedImageForSend(1800, 0.88);
+      procImg = await getProcessedImageForSend(1280, 0.82);
     } catch(e){
       setAiStatus(`Lỗi tiền xử lý ảnh: ${e.message}`, 'error');
       return;
@@ -3010,16 +3034,14 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
 
     if(provider === 'gemini'){
       const cachedWorking = sessionStorage.getItem('ecg_working_gemini_model');
+      const blockedOnFree = new Set(['gemini-3.1-pro-preview', 'gemini-2.5-pro', 'gemini-4.0-flash', 'gemini-4.0-pro', 'gemini-3.8-pro']);
       const candidateModels = [
         selectedModel,
         cachedWorking,
-        'gemini-3.8-flash',
-        'gemini-4.0-flash',
-        'gemini-3.6-flash',
         'gemini-2.5-flash',
-        'gemini-2.5-pro',
-        'gemini-3.1-pro-preview'
-      ].filter((v, idx, arr) => v && arr.indexOf(v) === idx);
+        'gemini-3.5-flash-lite',
+        'gemini-3-flash-preview'
+      ].filter((v, idx, arr) => v && !blockedOnFree.has(v) && arr.indexOf(v) === idx);
 
       const userInstruction = `THÔNG TIN BỆNH CẢNH LÂM SÀNG & CẬN LÂM SÀNG ĐI KÈM CỦA BỆNH NHÂN:\n${clinicalContextText}\n\nHƯỚNG DẪN ĐỌC QUAN TRỌNG:\n1. Nếu ảnh có cột đổi độ lợi (vd 2.5 mm/mV hoặc 5 mm/mV), hãy quy chuẩn về 10 mm/mV trước khi đánh giá biên độ.\n2. Nếu có ST chênh lên đủ ngưỡng ở ≥ 2 chuyển đạo liên tiếp kèm ST chênh xuống soi gương ở chuyển đạo đối diện (vd DII, DIII, aVF chênh lên + DI, aVL chênh xuống), HÃY KẾT LUẬN RÕ LÀ NHỒI MÁU CƠ TIM CẤP CÓ ST CHÊNH LÊN (STEMI) + vùng tổn thương, KHÔNG gọi chung chung là Hội chứng vành cấp.\n3. Ngược lại, nếu sóng và đoạn ST bình thường hoặc chỉ là tái cực sớm lành tính không soi gương, hãy kết luận Điện tâm đồ bình thường / Tái cực sớm lành tính (Nguy cơ thấp).\n4. Viết chuỗi clinical_reasoning trước rồi mới chốt các trường chẩn đoán.`;
 
@@ -3030,22 +3052,24 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
           setAiStatus(`Đang kết nối ${model} (ảnh đã xoay & nén tối ưu)...`, 'loading');
           const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
           const genCfg = { temperature: 0.1, response_mime_type: "application/json" };
-          if(model.includes('gemini-4') || model.includes('gemini-3') || model.includes('2.5')){
+          if(model === 'gemini-3-flash-preview'){
             genCfg.thinking_config = { thinking_level: scanMode === 'deep' ? 'high' : 'low' };
+          } else if(model.includes('2.5-flash')){
+            genCfg.thinkingConfig = { thinkingBudget: scanMode === 'deep' ? 1024 : 0 };
           }
           const payload = {
             system_instruction: { parts: [{ text: ECG_AI_SYSTEM_PROMPT }] },
             contents: [{
               parts: [
                 { text: userInstruction },
-                { inline_data: { mime_type: procImg.mime, data: procImg.base64 }, media_resolution: { level: 'MEDIA_RESOLUTION_HIGH' } }
+                { inline_data: { mime_type: procImg.mime, data: procImg.base64 } }
               ]
             }],
             generationConfig: genCfg
           };
 
           const ctrl = new AbortController();
-          const tid = setTimeout(()=> ctrl.abort(), 30000);
+          const tid = setTimeout(()=> ctrl.abort(), 9000);
           let resp = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
@@ -3055,7 +3079,6 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
           clearTimeout(tid);
 
           if(resp.status === 400){
-            // Retry without newer fields if model rejects thinking_config or media_resolution
             const compatPayload = {
               system_instruction: { parts: [{ text: ECG_AI_SYSTEM_PROMPT }] },
               contents: [{ parts: [{ text: userInstruction }, { inline_data: { mime_type: procImg.mime, data: procImg.base64 } }] }],
@@ -3071,7 +3094,7 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
           if(!resp.ok){
             const errJson = await resp.json().catch(()=>({}));
             const errMsg = errJson.error?.message || `HTTP ${resp.status}`;
-            if(resp.status === 404 || resp.status === 429 || resp.status === 400){
+            if(resp.status === 404 || resp.status === 429 || resp.status === 400 || resp.status === 500 || resp.status === 503){
               lastError = new Error(`${model}: ${errMsg}`);
               continue;
             }

@@ -74,8 +74,8 @@ def get_ocr_engine() -> RapidOCR:
                 "Global.use_cls": False,
                 "Global.log_level": "warning",
                 "Det.limit_type": "max",
-                "Det.limit_side_len": 960,
-                "Rec.rec_batch_num": 16,
+                "Det.limit_side_len": 800,
+                "Rec.rec_batch_num": 8,
                 "EngineConfig.onnxruntime.intra_op_num_threads": -1,
             }
         )
@@ -348,7 +348,7 @@ def parse_ecg_ocr(
         g_strip = waveform_img[wf_y0:wf_y1, :]
         num_rep = report_img[rep_y0:rep_y1, :rep_x1]
 
-        sc_wf = 1.6 if (wf_y1 - wf_y0) < 60 else 1.0
+        sc_wf = 1.45 if (wf_y1 - wf_y0) < 60 else 1.0
         sc_rep = 1.6 if (rep_y1 - rep_y0) < 220 else 1.0
 
         wf_boxes = _run_ocr_on_crop(g_strip, fixed_scale=sc_wf)

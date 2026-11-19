@@ -241,7 +241,7 @@ async def analyze_ecg(
         except json.JSONDecodeError:
             crop_box = None
 
-    need_llm_img = (not is_digital) and (mode_norm != "offline") and bool(api_key and len(api_key.strip()) >= 8)
+    need_llm_img = (not is_digital) and (mode_norm == "deep") and bool(api_key and len(api_key.strip()) >= 8)
 
     try:
         if is_digital:
