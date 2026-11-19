@@ -12,7 +12,7 @@ from . import LEAD_NAMES
 from .ocr_parser import OCRResult
 from .signal_metrics import SignalMetricsResult
 
-GEMINI_FAST_MODELS = ["gemini-3.5-flash-lite", "gemini-2.5-flash", "gemini-3-flash-preview"]
+GEMINI_FAST_MODELS = ["gemini-2.5-flash", "gemini-3.5-flash-lite", "gemini-3-flash-preview"]
 GEMINI_DEEP_MODELS = ["gemini-3-flash-preview", "gemini-2.5-flash", "gemini-3.5-flash-lite"]
 
 HYBRID_SYSTEM_PROMPT = """Bạn là chuyên gia Tim mạch & Cấp cứu (tổng hợp chuẩn GS.TS. Trần Đỗ Trinh, VNHA 2023–2024, Bộ Y tế VN, ESC 2023 và Dr. Smith OMI).
@@ -547,7 +547,12 @@ async def _call_gemini_hybrid(
             if m not in candidates:
                 candidates.append(m)
 
-    base_parts: List[Dict[str, Any]] = [{"text": prompt_text}]
+    prompt_for_call = (
+        prompt_text + "\nLƯU Ý TỐC ĐỘ: Giữ clinical_reasoning và ai_summary thật ngắn gọn (2 câu súc tích)."
+        if mode == "fast"
+        else prompt_text
+    )
+    base_parts: List[Dict[str, Any]] = [{"text": prompt_for_call}]
     if waveform_img_b64:
         base_parts.append(
             {
@@ -558,11 +563,12 @@ async def _call_gemini_hybrid(
             }
         )
 
-    timeout_sec = 14.0 if mode == "deep" else 6.0
+    timeout_sec = 14.0 if mode == "deep" else 7.5
+    max_attempts = 2 if mode == "deep" else 1
     last_err = None
 
     async with httpx.AsyncClient(timeout=timeout_sec) as client:
-        for model in candidates[:3]:
+        for model in candidates[:max_attempts]:
             url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
             gen_cfg: Dict[str, Any] = {
                 "temperature": 0.1,
