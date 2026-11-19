@@ -80,6 +80,27 @@ async def serve_index():
     return FileResponse(INDEX_HTML, media_type="text/html; charset=utf-8")
 
 
+TUNNEL_JSON = ROOT_DIR / "tunnel.json"
+
+
+def _get_active_tunnel_url() -> Optional[str]:
+    if not TUNNEL_JSON.exists():
+        return None
+    try:
+        data = json.loads(TUNNEL_JSON.read_text(encoding="utf-8"))
+        url = str(data.get("url") or "").strip().rstrip("/")
+        return url or None
+    except Exception:
+        return None
+
+
+@app.get("/tunnel.json")
+async def serve_tunnel_json():
+    if not TUNNEL_JSON.exists():
+        return {"url": None, "updated_at": None}
+    return FileResponse(TUNNEL_JSON, media_type="application/json; charset=utf-8")
+
+
 @app.get("/api/health")
 async def health():
     return {
@@ -87,6 +108,7 @@ async def health():
         "engine": "PM-ECG Hybrid v2.0",
         "ocr_ready": _ocr_ready,
         "ecgfounder_loaded": _ecgfounder_ready or is_ecgfounder_loaded(),
+        "tunnel_url": _get_active_tunnel_url(),
     }
 
 

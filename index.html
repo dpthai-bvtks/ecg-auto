@@ -2637,6 +2637,51 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
     }
   }
 
+  async function fetchActiveTunnelUrl(){
+    const sources = [
+      {
+        url: 'https://api.github.com/repos/dpthai-bvtks/ecg-auto/contents/tunnel.json',
+        headers: { 'Accept': 'application/vnd.github.raw+json' }
+      },
+      {
+        url: `./tunnel.json?t=${Date.now()}`,
+        headers: {}
+      }
+    ];
+    for(const src of sources){
+      try {
+        const ctrl = new AbortController();
+        const tid = setTimeout(()=> ctrl.abort(), 2800);
+        const r = await fetch(src.url, { headers: src.headers, cache: 'no-store', signal: ctrl.signal });
+        clearTimeout(tid);
+        if(r.ok){
+          const j = await r.json();
+          const u = String(j?.url || '').trim().replace(/\/+$/, '');
+          if(u.startsWith('https://')){
+            return u;
+          }
+        }
+      } catch(_e){}
+    }
+    return null;
+  }
+
+  async function probeHybridBase(base, timeoutMs){
+    try {
+      const ctrl = new AbortController();
+      const tid = setTimeout(()=> ctrl.abort(), timeoutMs);
+      const resp = await fetch(`${base}/api/health`, { signal: ctrl.signal });
+      clearTimeout(tid);
+      if(resp.ok){
+        const j = await resp.json();
+        if(j && j.status === 'ok' && String(j.engine || '').includes('PM-ECG')){
+          return j;
+        }
+      }
+    } catch(_e){}
+    return null;
+  }
+
   async function detectHybridBackend(){
     const badge = document.getElementById('hybridStatusBadge');
     const txt = document.getElementById('hybridStatusText');
@@ -2651,23 +2696,40 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
     const candidates = rawCandidates.filter((v, i, a) => a.indexOf(v) === i);
 
     for(const base of candidates){
-      try {
-        const ctrl = new AbortController();
-        const tid = setTimeout(()=> ctrl.abort(), 1600);
-        const resp = await fetch(`${base}/api/health`, { signal: ctrl.signal });
-        clearTimeout(tid);
-        if(resp.ok){
-          const j = await resp.json();
-          if(j && j.status === 'ok' && String(j.engine || '').includes('PM-ECG')){
-            hybridBackendBaseUrl = base;
-            if(badge) badge.classList.add('configured');
-            if(txt) txt.textContent = j.ecgfounder_loaded ? 'Hybrid AI Sẵn sàng (ECGFounder + OCR)' : 'Hybrid Local Sẵn sàng (OCR + mV)';
-            syncScanModeUI(true);
-            return true;
-          }
+      const j = await probeHybridBase(base, base.startsWith('https://') ? 4500 : 1600);
+      if(j){
+        hybridBackendBaseUrl = base;
+        if(badge) badge.classList.add('configured');
+        if(j.tunnel_url && hybridBackendUrlInput && !hybridBackendUrlInput.value){
+          hybridBackendUrlInput.placeholder = `Đang mở Tunnel: ${j.tunnel_url}`;
         }
-      } catch(_e){}
+        const isTunnel = base.includes('.trycloudflare.com');
+        if(txt){
+          txt.textContent = j.ecgfounder_loaded
+            ? (isTunnel ? 'Hybrid AI Sẵn sàng (Cloud Tunnel)' : 'Hybrid AI Sẵn sàng (ECGFounder + OCR)')
+            : 'Hybrid Local Sẵn sàng (OCR + mV)';
+        }
+        syncScanModeUI(true);
+        return true;
+      }
     }
+
+    // Auto-discover live Cloudflare HTTPS Tunnel published in tunnel.json (for mobile / external PCs)
+    const tunnelUrl = await fetchActiveTunnelUrl();
+    if(tunnelUrl && !candidates.includes(tunnelUrl)){
+      const j = await probeHybridBase(tunnelUrl, 4800);
+      if(j){
+        hybridBackendBaseUrl = tunnelUrl;
+        if(badge) badge.classList.add('configured');
+        if(hybridBackendUrlInput && !hybridBackendUrlInput.value){
+          hybridBackendUrlInput.placeholder = `Tự động kết nối Tunnel: ${tunnelUrl}`;
+        }
+        if(txt) txt.textContent = j.ecgfounder_loaded ? 'Hybrid AI Sẵn sàng (Cloud Tunnel)' : 'Hybrid Tunnel Sẵn sàng';
+        syncScanModeUI(true);
+        return true;
+      }
+    }
+
     hybridBackendBaseUrl = null;
     if(badge) badge.classList.remove('configured');
     if(txt) txt.textContent = 'Chế độ Trình duyệt (Zero-Backend)';
