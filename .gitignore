@@ -1,0 +1,7 @@
+backend/models/*.onnx
+backend/models/*.tmp
+**/__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+*.log

@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+python-multipart
+httpx
+onnxruntime
+rapidocr
+numpy
+opencv-python
+pillow

@@ -451,6 +451,56 @@
     background: #f0f4f3;
   }
 
+  /* Hybrid Quantitative Card */
+  .hybrid-card{
+    border: 1.5px solid #2b6cb0;
+    background: #ffffff;
+    box-shadow: 0 2px 10px rgba(43,108,176,0.10);
+    margin-bottom: 16px;
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .timing-strip{
+    display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px;
+    font-family:var(--mono); font-size:11px; color:#1f4e48;
+  }
+  .timing-pill{
+    background:#eef6f4; border:1px solid #cce3dd; border-radius:10px; padding:2px 8px;
+  }
+  .timing-pill.total{ background:#178374; color:#fff; border-color:#178374; font-weight:600; }
+  .gain-alert{
+    background:#fff8e6; border:1px solid #f0c36d; color:#7a4f00;
+    border-radius:6px; padding:7px 10px; font-size:12px; margin-bottom:10px; line-height:1.45;
+  }
+  .st12-grid{
+    display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:6px; margin-bottom:10px;
+  }
+  @media (max-width: 520px){
+    .st12-grid{ grid-template-columns:repeat(3, minmax(0, 1fr)); }
+  }
+  .st12-cell{
+    border:1px solid var(--line); border-radius:6px; padding:5px 7px; font-size:11.5px;
+    background:#fafcfb; display:flex; flex-direction:column; gap:1px;
+  }
+  .st12-cell.st-elev{ background:#fdecea; border-color:#e58a80; color:#8f1d14; }
+  .st12-cell.st-dep{ background:#edf4fc; border-color:#8cb8e8; color:#1a4f8a; }
+  .st12-head{ display:flex; justify-content:space-between; align-items:center; font-weight:700; font-family:var(--mono); }
+  .st12-gain{ font-size:9.5px; opacity:0.75; font-weight:500; }
+  .st12-val{ font-family:var(--mono); font-weight:700; font-size:12.5px; }
+  .st12-sub{ font-size:10px; opacity:0.82; }
+  .ef-row{
+    display:flex; align-items:center; gap:8px; font-size:11.5px; margin-bottom:4px;
+  }
+  .ef-label{ flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .ef-track{ width:86px; height:7px; background:#e6eeec; border-radius:4px; overflow:hidden; flex:none; }
+  .ef-fill{ height:100%; background:#178374; border-radius:4px; }
+  .ef-fill.mi{ background:#c6372b; }
+  .ef-pct{ width:38px; text-align:right; font-family:var(--mono); font-weight:600; flex:none; }
+  .hybrid-wave-wrap{
+    margin-top:10px; border:1px solid #d5e5e1; border-radius:6px; background:#fcfefd; padding:6px;
+  }
+  #hybridWaveCanvas{ width:100%; height:auto; display:block; }
+
 
   /* ==========================================================================
      RESPONSIVE DESIGN SYSTEM (MOBILE, TABLET, LAPTOP, DESKTOP)
@@ -716,6 +766,9 @@
         </div>
       </div>
       <div class="top-actions">
+        <div class="api-status-badge" id="hybridStatusBadge" style="cursor:pointer;" title="Trạng thái máy chủ Hybrid cục bộ (Bấm để kiểm tra / cấu hình URL)">
+          <span class="dot"></span><span id="hybridStatusText">Kiểm tra Hybrid...</span>
+        </div>
         <div class="api-status-badge" id="apiStatusBadge">
           <span class="dot"></span><span id="apiStatusText">Chưa có API Key</span>
         </div>
@@ -752,13 +805,13 @@
 
         <div class="upload-dropzone" id="dropzone">
           <svg class="upload-icon" viewBox="0 0 24 24"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <div class="upload-title">Kéo &amp; thả ảnh chụp bản ghi điện tim vào đây</div>
-          <div class="upload-hint">Hỗ trợ ảnh JPEG, PNG, WEBP từ máy quét hoặc ảnh chụp điện thoại (chuyển đạo rõ nét)</div>
+          <div class="upload-title">Kéo &amp; thả ảnh chụp bản ghi điện tim hoặc file ECG số vào đây</div>
+          <div class="upload-hint">Hỗ trợ ảnh JPEG, PNG, WEBP (máy quét/điện thoại) hoặc file tín hiệu số JSON, CSV, XML</div>
           
           <div class="upload-actions">
             <label class="upload-btn">
-              📁 Chọn file ảnh từ máy
-              <input type="file" id="fileInput" accept="image/*" style="display:none;">
+              📁 Chọn file ảnh / ECG số
+              <input type="file" id="fileInput" accept="image/*,.xml,.json,.csv" style="display:none;">
             </label>
             <label class="upload-btn">
               📷 Chụp trực tiếp từ camera
@@ -863,11 +916,16 @@
         </div>
 
         <!-- Action trigger -->
-        <div style="margin-top:12px; display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+        <div style="margin-top:12px; display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
           <button class="primary" id="aiScanBtn" style="background:#178374; display:flex; align-items:center; gap:8px;">
             ✨ Quét &amp; Tự động điền (AI Vision)
           </button>
-          <span style="font-size:11.5px; color:var(--ink-soft);">Tự bóc tách thông số in sẵn &amp; hình thái sóng 12 chuyển đạo</span>
+          <select id="scanModeSelect" title="Chế độ xử lý Hybrid" style="padding:8px 10px; font-size:12px; border:1px solid var(--line); border-radius:6px; background:#fff; color:var(--ink); font-family:var(--sans);">
+            <option value="fast">⚡ Hybrid Nhanh (Local + Gemini 3.8 Flash)</option>
+            <option value="offline">🖥️ Hybrid Offline (100% nội bộ, 3–5s)</option>
+            <option value="deep">🧠 Hybrid Chuyên sâu (Local + Thinking High)</option>
+          </select>
+          <span style="font-size:11.5px; color:var(--ink-soft);">Tự hiệu chuẩn độ lợi, đo ST từng mm &amp; bóc tách thông số</span>
         </div>
 
         <!-- Status & Notes -->
@@ -1201,6 +1259,30 @@
         </div>
       </div>
 
+      <!-- HYBRID QUANTITATIVE ANALYSIS CARD -->
+      <div class="card hybrid-card" id="hybridPanelCard" style="display:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px; border-bottom:1px solid #e1ebf5; padding-bottom:6px;">
+          <h2 style="margin:0; font-size:13.5px; color:#1c4e80; display:flex; align-items:center; gap:7px;">
+            <span style="background:#2b6cb0; color:#fff; width:22px; height:22px; border-radius:6px; display:inline-flex; align-items:center; justify-content:center; font-size:12px;">📊</span>
+            Đo đạc Định lượng 12 Chuyển đạo &amp; ECGFounder-all71
+          </h2>
+          <span id="hybridModeTag" style="font-size:11px; background:#e8f1fb; color:#1c4e80; padding:2px 8px; border-radius:10px; font-family:var(--mono); font-weight:600;"></span>
+        </div>
+        <div class="timing-strip" id="hybridTimingStrip"></div>
+        <div class="gain-alert" id="hybridGainAlert" style="display:none;"></div>
+        <div style="font-size:11.5px; font-weight:600; color:var(--ink); margin-bottom:5px;">Đoạn ST chuẩn hóa về 10 mm/mV (tại J+40ms) — 12 chuyển đạo:</div>
+        <div class="st12-grid" id="hybridStGrid"></div>
+        <div id="hybridEfWrap" style="margin-top:8px;">
+          <div style="font-size:11.5px; font-weight:600; color:var(--ink); margin-bottom:5px;">Mô hình chuyên biệt ECGFounder-all71 (PTB-XL 71 lớp):</div>
+          <div id="hybridEfSuper" style="font-size:11px; font-family:var(--mono); color:var(--ink-soft); margin-bottom:6px;"></div>
+          <div id="hybridEfBars"></div>
+        </div>
+        <div class="hybrid-wave-wrap" id="hybridWaveWrap" style="display:none;">
+          <div style="font-size:11px; font-weight:600; color:var(--ink-soft); margin-bottom:4px;">Sóng 12 chuyển đạo đã số hóa (đã quy đổi độ lợi chuẩn):</div>
+          <canvas id="hybridWaveCanvas" width="760" height="270"></canvas>
+        </div>
+      </div>
+
       <div class="card findings-card">
         <h2>Tiêu chuẩn điện tim chi tiết (GS. Trần Đỗ Trinh)</h2>
         <div id="findings"><p class="empty-state">Nhập thông số hoặc tải ảnh điện tim để nhận kết quả phân tích tự động.</p></div>
@@ -1260,19 +1342,17 @@
         <label class="field">
           <span class="lbl">Mô hình AI:</span>
           <select id="modelSelect">
-            <optgroup label="🌟 SIÊU MÔ HÌNH THẾ HỆ MỚI (GEMINI 3.X &amp; FLAGSHIP PRO)">
-              <option value="gemini-3.6-flash">Gemini 3.6 Flash (Thế hệ mới nhất — Đỉnh cao thị giác y khoa)</option>
-              <option value="gemini-3.5-flash">Gemini 3.5 Flash (Thế hệ 3.5 — Phân tích sóng ECG siêu tốc)</option>
-              <option value="gemini-2.5-pro" selected>Gemini 2.5 Pro (Flagship — Lập luận chuyên sâu &amp; phân tích vi sóng)</option>
-              <option value="gemini-3.1-pro-preview">Gemini 3.1 Pro Preview (Bản Pro thế hệ 3.1 đột phá)</option>
-              <option value="gemini-2.0-pro-exp-02-05">Gemini 2.0 Pro Experimental (Đỉnh cao lý luận hình ảnh)</option>
-              <option value="gemini-exp-1206">Gemini Experimental 1206 (Bản đột phá năng lực nghiên cứu)</option>
+            <optgroup label="🌟 THẾ HỆ GEMINI 4.0 &amp; 3.8 MỚI NHẤT (NHANH &amp; CHUẨN Y KHOA)">
+              <option value="gemini-3.8-flash" selected>Gemini 3.8 Flash (Khuyến nghị — Nhanh nhất &amp; chính xác cao)</option>
+              <option value="gemini-3.8-pro">Gemini 3.8 Pro (Suy luận lâm sàng chuyên sâu thế hệ 3.8)</option>
+              <option value="gemini-4.0-flash">Gemini 4.0 Flash (Thế hệ 4.0 — Tốc độ cao &amp; thị giác sóng)</option>
+              <option value="gemini-4.0-pro">Gemini 4.0 Pro (Flagship 4.0 — Lý luận đa tầng chuyên sâu)</option>
+              <option value="gemini-3.6-flash">Gemini 3.6 Flash (Thế hệ 3.6 — Thị giác y khoa độ nét cao)</option>
+              <option value="gemini-3.1-pro-preview">Gemini 3.1 Pro Preview (Lý luận chuyên sâu thế hệ 3.1)</option>
             </optgroup>
-            <optgroup label="⚡ DÒNG ĐA PHƯƠNG THỨC ỔN ĐỊNH (STABLE MULTIMODAL)">
-              <option value="gemini-2.5-flash">Gemini 2.5 Flash (Cân bằng xuất sắc — Nhanh &amp; chuẩn xác)</option>
-              <option value="gemini-2.0-flash">Gemini 2.0 Flash (Đa phương thức thế hệ 2.0)</option>
-              <option value="gemini-1.5-pro">Gemini 1.5 Pro (Bản suy luận sâu thế hệ 1.5)</option>
-              <option value="gemini-1.5-flash">Gemini 1.5 Flash (Bản kinh điển ổn định)</option>
+            <optgroup label="⚡ DÒNG GEMINI 2.5 (TƯƠNG THÍCH RỘNG)">
+              <option value="gemini-2.5-flash">Gemini 2.5 Flash (Nhanh &amp; ổn định)</option>
+              <option value="gemini-2.5-pro">Gemini 2.5 Pro (Suy luận chuyên sâu, chậm hơn)</option>
             </optgroup>
             <optgroup label="🛠️ TÙY CHỈNH NÂNG CAO">
               <option value="custom">Nhập mã Model tùy chọn (Custom Model ID)...</option>
@@ -1281,6 +1361,16 @@
         </label>
         <div id="customModelWrap" style="display:none; margin-top:8px;">
           <input type="text" id="customModelInput" placeholder="Nhập mã model (ví dụ: gemini-2.5-pro hoặc custom-id)" style="font-family:var(--mono); font-size:12.5px; padding:7px 9px; width:100%; border:1px solid var(--line); border-radius:6px;">
+        </div>
+      </div>
+
+      <div class="api-input-wrap">
+        <label class="field">
+          <span class="lbl">Địa chỉ Hybrid Backend URL (Tùy chọn):</span>
+          <input type="url" id="hybridBackendUrlInput" placeholder="Mặc định tự dò http://127.0.0.1:8785 (để trống nếu dùng cục bộ)" style="font-family:var(--mono); font-size:12.5px; padding:7px 9px; width:100%; border:1px solid var(--line); border-radius:6px;">
+        </label>
+        <div style="margin-top:4px; font-size:11.5px; color:var(--ink-soft); line-height:1.4;">
+          Khi mở trang GitHub Pages trên máy tính đang chạy ngầm <code>start_server.bat</code>, hệ thống tự kết nối <code>http://127.0.0.1:8785</code>. Nếu dùng máy chủ LAN/Tunnel riêng, dán URL vào đây.
         </div>
       </div>
 
@@ -1389,10 +1479,15 @@
   });
 
   // ==========================================
-  // IMAGE VIEWER & ZOOM/PAN ENGINE
+  // IMAGE VIEWER, PREPROCESSOR & HYBRID STATE
   // ==========================================
   let currentImageBase64 = null;
   let currentImageMime = 'image/jpeg';
+  let currentFileObject = null;
+  let currentFileName = '';
+  let isDigitalFile = false;
+  let activeHybridMeta = null;
+  let hybridBackendBaseUrl = null;
   let viewState = { scale: 1, x: 0, y: 0, rotation: 0 };
   let isDragging = false, startX = 0, startY = 0;
 
@@ -1415,7 +1510,11 @@
   document.getElementById('resetViewBtn').addEventListener('click', resetViewport);
   function resetImageUpload(){
     currentImageBase64 = null;
+    currentFileObject = null;
+    currentFileName = '';
+    isDigitalFile = false;
     ecgImg.src = '';
+    ecgImg.style.display = 'block';
     ecgViewerWrap.style.display = 'none';
     const dropzoneEl = document.getElementById('dropzone');
     if(dropzoneEl) dropzoneEl.style.display = 'block';
@@ -1423,6 +1522,47 @@
     if(fileInp) fileInp.value = '';
     const camInp = document.getElementById('cameraInput');
     if(camInp) camInp.value = '';
+  }
+
+  async function getProcessedImageForSend(maxSide = 2048, quality = 0.90){
+    if(!currentImageBase64) return null;
+    const rot = ((viewState.rotation % 360) + 360) % 360;
+    const img = new Image();
+    img.src = `data:${currentImageMime};base64,${currentImageBase64}`;
+    await new Promise((resolve, reject)=>{
+      if(img.complete && img.naturalWidth > 0) return resolve();
+      img.onload = ()=> resolve();
+      img.onerror = ()=> reject(new Error('Không thể đọc dữ liệu ảnh để tiền xử lý.'));
+    });
+
+    const srcW = img.naturalWidth || img.width;
+    const srcH = img.naturalHeight || img.height;
+    const swap = (rot === 90 || rot === 270);
+    const outW0 = swap ? srcH : srcW;
+    const outH0 = swap ? srcW : srcH;
+    const longest = Math.max(outW0, outH0);
+    const scale = longest > maxSide ? (maxSide / longest) : 1.0;
+    const outW = Math.max(1, Math.round(outW0 * scale));
+    const outH = Math.max(1, Math.round(outH0 * scale));
+
+    const canvas = document.createElement('canvas');
+    canvas.width = outW;
+    canvas.height = outH;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, outW, outH);
+    ctx.save();
+    ctx.translate(outW / 2, outH / 2);
+    ctx.rotate((rot * Math.PI) / 180);
+    const drawW = Math.round(srcW * scale);
+    const drawH = Math.round(srcH * scale);
+    ctx.drawImage(img, -drawW / 2, -drawH / 2, drawW, drawH);
+    ctx.restore();
+
+    const dataUrl = canvas.toDataURL('image/jpeg', quality);
+    const b64 = dataUrl.split(',')[1];
+    const blob = await new Promise(res => canvas.toBlob(b => res(b), 'image/jpeg', quality));
+    return { blob, base64: b64, mime: 'image/jpeg' };
   }
 
   document.getElementById('changeImgBtn')?.addEventListener('click', resetImageUpload);
@@ -1530,16 +1670,32 @@
     }
   }
 
-  // Load Image into Viewer
+  // Load Image or Digital ECG File into Viewer
   function loadFile(file){
     if(!file) return;
+    currentFileObject = file;
+    currentFileName = file.name || 'ecg';
+    const ext = (currentFileName.split('.').pop() || '').toLowerCase();
+    if(['json', 'csv', 'xml'].includes(ext)){
+      isDigitalFile = true;
+      currentImageBase64 = null;
+      ecgImg.src = '';
+      ecgImg.style.display = 'none';
+      ecgViewerWrap.style.display = 'block';
+      const dropzoneEl = document.getElementById('dropzone');
+      if(dropzoneEl) dropzoneEl.style.display = 'none';
+      setAiStatus(`Đã nạp file ECG số (${currentFileName}). Nhấn "Quét & Tự động điền" để phân tích trực tiếp.`, 'success');
+      return;
+    }
+
+    isDigitalFile = false;
+    ecgImg.style.display = 'block';
     const reader = new FileReader();
     reader.onload = (e)=>{
       currentImageBase64 = e.target.result.split(',')[1];
       currentImageMime = file.type || 'image/jpeg';
       ecgImg.src = e.target.result;
       ecgViewerWrap.style.display = 'block';
-      // Ẩn giao diện các nút bấm Chụp trực tiếp, Chọn file ảnh...
       const dropzoneEl = document.getElementById('dropzone');
       if(dropzoneEl) dropzoneEl.style.display = 'none';
       resetViewport();
@@ -1913,6 +2069,8 @@
 
   document.getElementById('presetSelect').addEventListener('change', (e)=>{
     activeAiDiagnosis = null;
+    activeHybridMeta = null;
+    hideHybridMetaCard();
     const p = PRESET_CASES[e.target.value];
     if(!p) return;
     applyAiDataToForm(p);
@@ -1941,21 +2099,19 @@
       placeholder: 'Dán mã API Key vào đây (hệ thống đã tích hợp sẵn key)',
       linkText: '👉 Lấy API Key miễn phí tại Google AI Studio',
       linkUrl: 'https://aistudio.google.com/app/apikey',
-      defaultModel: 'gemini-2.5-pro',
+      defaultModel: 'gemini-3.8-flash',
       optionsHtml: `
-        <optgroup label="🌟 SIÊU MÔ HÌNH THẾ HỆ MỚI (GEMINI 3.X &amp; FLAGSHIP PRO)">
-          <option value="gemini-3.6-flash">Gemini 3.6 Flash (Thế hệ mới nhất — Đỉnh cao thị giác y khoa)</option>
-          <option value="gemini-3.5-flash">Gemini 3.5 Flash (Thế hệ 3.5 — Phân tích sóng ECG siêu tốc)</option>
-          <option value="gemini-2.5-pro" selected>Gemini 2.5 Pro (Flagship — Lập luận chuyên sâu &amp; phân tích vi sóng)</option>
-          <option value="gemini-3.1-pro-preview">Gemini 3.1 Pro Preview (Bản Pro thế hệ 3.1 đột phá)</option>
-          <option value="gemini-2.0-pro-exp-02-05">Gemini 2.0 Pro Experimental (Đỉnh cao lý luận hình ảnh)</option>
-          <option value="gemini-exp-1206">Gemini Experimental 1206 (Bản đột phá năng lực nghiên cứu)</option>
+        <optgroup label="🌟 THẾ HỆ GEMINI 4.0 &amp; 3.8 MỚI NHẤT (NHANH &amp; CHUẨN Y KHOA)">
+          <option value="gemini-3.8-flash" selected>Gemini 3.8 Flash (Khuyến nghị — Nhanh nhất &amp; chính xác cao)</option>
+          <option value="gemini-3.8-pro">Gemini 3.8 Pro (Suy luận lâm sàng chuyên sâu thế hệ 3.8)</option>
+          <option value="gemini-4.0-flash">Gemini 4.0 Flash (Thế hệ 4.0 — Tốc độ cao &amp; thị giác sóng)</option>
+          <option value="gemini-4.0-pro">Gemini 4.0 Pro (Flagship 4.0 — Lý luận đa tầng chuyên sâu)</option>
+          <option value="gemini-3.6-flash">Gemini 3.6 Flash (Thế hệ 3.6 — Thị giác y khoa độ nét cao)</option>
+          <option value="gemini-3.1-pro-preview">Gemini 3.1 Pro Preview (Lý luận chuyên sâu thế hệ 3.1)</option>
         </optgroup>
-        <optgroup label="⚡ DÒNG ĐA PHƯƠNG THỨC ỔN ĐỊNH (STABLE MULTIMODAL)">
-          <option value="gemini-2.5-flash">Gemini 2.5 Flash (Cân bằng xuất sắc — Nhanh &amp; chuẩn xác)</option>
-          <option value="gemini-2.0-flash">Gemini 2.0 Flash (Đa phương thức thế hệ 2.0)</option>
-          <option value="gemini-1.5-pro">Gemini 1.5 Pro (Bản suy luận sâu thế hệ 1.5)</option>
-          <option value="gemini-1.5-flash">Gemini 1.5 Flash (Bản kinh điển ổn định)</option>
+        <optgroup label="⚡ DÒNG GEMINI 2.5 (TƯƠNG THÍCH RỘNG)">
+          <option value="gemini-2.5-flash">Gemini 2.5 Flash (Nhanh &amp; ổn định)</option>
+          <option value="gemini-2.5-pro">Gemini 2.5 Pro (Suy luận chuyên sâu, chậm hơn)</option>
         </optgroup>
         <optgroup label="🛠️ TÙY CHỈNH NÂNG CAO">
           <option value="custom">Nhập mã Model tùy chọn (Custom Model ID)...</option>
@@ -2015,9 +2171,10 @@
     const custom = localStorage.getItem('ai_custom_model');
     const selected = localStorage.getItem('ai_selected_model');
     if(selected === 'custom' && custom) return custom;
-    if(selected) return selected;
     const p = getActiveProvider();
-    return PROVIDER_CONFIGS[p]?.defaultModel || 'gemini-2.5-pro';
+    const deprecated = new Set(['gemini-1.5-pro', 'gemini-1.5-flash', 'gemini-2.0-pro-exp-02-05', 'gemini-exp-1206', 'gemini-2.0-flash', 'gemini-3.5-flash']);
+    if(selected && !deprecated.has(selected)) return selected;
+    return PROVIDER_CONFIGS[p]?.defaultModel || 'gemini-3.8-flash';
   }
 
   function updateProviderUI(provider){
@@ -2071,13 +2228,20 @@
     }
   }
 
-  document.getElementById('openApiModalBtn').addEventListener('click', ()=>{
+  const hybridBackendUrlInput = document.getElementById('hybridBackendUrlInput');
+  function openSettingsModal(){
     const p = getActiveProvider();
     aiProviderSelect.value = p;
     updateProviderUI(p);
     if(p === 'gemini') apiKeyInput.value = localStorage.getItem('gemini_ecg_key') || DEFAULT_API_KEY;
     else apiKeyInput.value = localStorage.getItem(`${p}_ecg_key`) || '';
+    if(hybridBackendUrlInput) hybridBackendUrlInput.value = localStorage.getItem('hybrid_backend_url') || '';
     modal.classList.add('open');
+  }
+  document.getElementById('openApiModalBtn').addEventListener('click', openSettingsModal);
+  document.getElementById('hybridStatusBadge')?.addEventListener('click', ()=>{
+    detectHybridBackend();
+    openSettingsModal();
   });
   document.getElementById('closeApiModalBtn').addEventListener('click', ()=> modal.classList.remove('open'));
   document.getElementById('showKeyToggle').addEventListener('change', (e)=>{
@@ -2090,6 +2254,11 @@
     localStorage.setItem('ai_selected_model', modelSelect.value);
     if(modelSelect.value === 'custom'){
       localStorage.setItem('ai_custom_model', customModelInput.value.trim());
+    }
+    if(hybridBackendUrlInput){
+      const rawUrl = hybridBackendUrlInput.value.trim().replace(/\/+$/, '');
+      if(rawUrl) localStorage.setItem('hybrid_backend_url', rawUrl);
+      else localStorage.removeItem('hybrid_backend_url');
     }
 
     if(p === 'gemini'){
@@ -2113,6 +2282,7 @@
       }
     }
     updateApiStatus();
+    detectHybridBackend();
     modal.classList.remove('open');
   });
 
@@ -2440,80 +2610,406 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
     }
   }
 
+  // ==========================================
+  // HYBRID BACKEND DETECTION & VISUALIZATION
+  // ==========================================
+  function syncScanModeUI(isHybridReady){
+    const sel = document.getElementById('scanModeSelect');
+    if(!sel) return;
+    const optFast = sel.querySelector('option[value="fast"]');
+    const optOff  = sel.querySelector('option[value="offline"]');
+    const optDeep = sel.querySelector('option[value="deep"]');
+    if(isHybridReady){
+      if(optFast) optFast.textContent = '⚡ Hybrid Nhanh (Local + Gemini 3.8 Flash)';
+      if(optOff){
+        optOff.textContent = '🖥️ Hybrid Offline (100% nội bộ, 3–5s)';
+        optOff.disabled = false;
+      }
+      if(optDeep) optDeep.textContent = '🧠 Hybrid Chuyên sâu (Local + Thinking High)';
+    } else {
+      if(optFast) optFast.textContent = '☁️ AI Cloud Nhanh (Trình duyệt / GitHub Pages)';
+      if(optOff){
+        optOff.textContent = '🖥️ Hybrid Offline (Cần máy chủ nội bộ)';
+        optOff.disabled = true;
+      }
+      if(optDeep) optDeep.textContent = '🧠 AI Cloud Chuyên sâu (Thinking High)';
+      if(sel.value === 'offline') sel.value = 'fast';
+    }
+  }
+
+  async function detectHybridBackend(){
+    const badge = document.getElementById('hybridStatusBadge');
+    const txt = document.getElementById('hybridStatusText');
+    const customUrl = (localStorage.getItem('hybrid_backend_url') || '').trim().replace(/\/+$/, '');
+    const isStaticHost = /(?:^|\.)(?:github\.io|pages\.dev|netlify\.app|vercel\.app)$/i.test(window.location.hostname || '');
+    const rawCandidates = [];
+    if(customUrl) rawCandidates.push(customUrl);
+    if(window.location.protocol.startsWith('http') && !isStaticHost){
+      rawCandidates.push('');
+    }
+    rawCandidates.push('http://127.0.0.1:8785', 'http://localhost:8785');
+    const candidates = rawCandidates.filter((v, i, a) => a.indexOf(v) === i);
+
+    for(const base of candidates){
+      try {
+        const ctrl = new AbortController();
+        const tid = setTimeout(()=> ctrl.abort(), 1600);
+        const resp = await fetch(`${base}/api/health`, { signal: ctrl.signal });
+        clearTimeout(tid);
+        if(resp.ok){
+          const j = await resp.json();
+          if(j && j.status === 'ok' && String(j.engine || '').includes('PM-ECG')){
+            hybridBackendBaseUrl = base;
+            if(badge) badge.classList.add('configured');
+            if(txt) txt.textContent = j.ecgfounder_loaded ? 'Hybrid AI Sẵn sàng (ECGFounder + OCR)' : 'Hybrid Local Sẵn sàng (OCR + mV)';
+            syncScanModeUI(true);
+            return true;
+          }
+        }
+      } catch(_e){}
+    }
+    hybridBackendBaseUrl = null;
+    if(badge) badge.classList.remove('configured');
+    if(txt) txt.textContent = 'Chế độ Trình duyệt (Zero-Backend)';
+    syncScanModeUI(false);
+    return false;
+  }
+  detectHybridBackend();
+
+  function hideHybridMetaCard(){
+    const card = document.getElementById('hybridPanelCard');
+    if(card) card.style.display = 'none';
+  }
+
+  function drawHybridWaveforms(preview){
+    const wrap = document.getElementById('hybridWaveWrap');
+    const canvas = document.getElementById('hybridWaveCanvas');
+    if(!wrap || !canvas || !preview){
+      if(wrap) wrap.style.display = 'none';
+      return;
+    }
+    wrap.style.display = 'block';
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width, H = canvas.height;
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#fffdfd';
+    ctx.fillRect(0, 0, W, H);
+
+    // Subtle 5mm-like medical grid
+    ctx.strokeStyle = '#f5e2e2';
+    ctx.lineWidth = 1;
+    for(let x = 0; x <= W; x += 19){
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+    }
+    for(let y = 0; y <= H; y += 18){
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+    }
+
+    const layout = [
+      ['I', 'aVR', 'V1', 'V4'],
+      ['II', 'aVL', 'V2', 'V5'],
+      ['III', 'aVF', 'V3', 'V6'],
+    ];
+    const colW = W / 4;
+    const rowH = H / 3;
+    const pxPerMv = 16.0; // uniform calibrated scale across all 12 leads
+
+    ctx.font = 'bold 11px IBM Plex Mono, monospace';
+    for(let r = 0; r < 3; r++){
+      for(let c = 0; c < 4; c++){
+        const ln = layout[r][c];
+        const pts = preview[ln];
+        const x0 = c * colW + 8;
+        const yMid = r * rowH + rowH * 0.56;
+        const drawW = colW - 16;
+
+        ctx.fillStyle = '#0f4a43';
+        ctx.fillText(ln, x0, r * rowH + 14);
+
+        if(!Array.isArray(pts) || pts.length < 2) continue;
+        ctx.strokeStyle = '#152221';
+        ctx.lineWidth = 1.4;
+        ctx.beginPath();
+        for(let i = 0; i < pts.length; i++){
+          const px = x0 + (i / (pts.length - 1)) * drawW;
+          const clampedMv = Math.max(-2.2, Math.min(2.2, Number(pts[i]) || 0));
+          const py = yMid - clampedMv * pxPerMv;
+          if(i === 0) ctx.moveTo(px, py);
+          else ctx.lineTo(px, py);
+        }
+        ctx.stroke();
+      }
+    }
+  }
+
+  function renderHybridMetaCard(meta){
+    const card = document.getElementById('hybridPanelCard');
+    if(!card || !meta){
+      hideHybridMetaCard();
+      return;
+    }
+    card.style.display = 'block';
+
+    const modeTag = document.getElementById('hybridModeTag');
+    if(modeTag){
+      const fm = meta.fusion_meta || {};
+      modeTag.textContent = fm.model_used || 'Hybrid Engine';
+    }
+
+    const tStrip = document.getElementById('hybridTimingStrip');
+    if(tStrip && meta.timings_ms){
+      const t = meta.timings_ms;
+      const pills = [
+        `<span class="timing-pill">Tiền xử lý: ${t.preprocess ?? 0}ms</span>`,
+        `<span class="timing-pill">OCR: ${t.ocr ?? 0}ms</span>`,
+        `<span class="timing-pill">Số hóa: ${t.digitize ?? 0}ms</span>`,
+        `<span class="timing-pill">Đo 12 đạo trình: ${t.metrics ?? 0}ms</span>`,
+        `<span class="timing-pill">ECGFounder: ${t.ecgfounder ?? 0}ms</span>`,
+      ];
+      if(t.fusion) pills.push(`<span class="timing-pill">Tổng hợp: ${t.fusion}ms</span>`);
+      pills.push(`<span class="timing-pill total">Tổng: ${((t.total || 0)/1000).toFixed(2)}s</span>`);
+      tStrip.innerHTML = pills.join('');
+    }
+
+    const gAlert = document.getElementById('hybridGainAlert');
+    if(gAlert){
+      const g = meta.column_gains_mm_per_mv || {};
+      if(meta.has_nonstandard_gain){
+        gAlert.style.display = 'block';
+        gAlert.innerHTML = `⚠️ <b>Phát hiện bản ghi đặt độ lợi không đồng nhất:</b> Cột 1 (I–III): <b>${g.col1}</b>, Cột 2 (aVR–aVF): <b>${g.col2}</b>, Cột 3 (V1–V3): <b>${g.col3} mm/mV</b>, Cột 4 (V4–V6): <b>${g.col4} mm/mV</b>. Hệ thống đã tự quy đổi toàn bộ biên độ ST/QRS về chuẩn <b>10 mm/mV</b> trước khi đọc!`;
+      } else {
+        gAlert.style.display = 'none';
+      }
+    }
+
+    const stGrid = document.getElementById('hybridStGrid');
+    if(stGrid && meta.lead_measurements){
+      const order = ['I','II','III','aVR','aVL','aVF','V1','V2','V3','V4','V5','V6'];
+      stGrid.innerHTML = order.map(ln=>{
+        const m = meta.lead_measurements[ln];
+        if(!m) return '';
+        const st = Number(m.st_mm) || 0;
+        const cls = st >= 0.9 ? 'st-elev' : (st <= -0.65 ? 'st-dep' : '');
+        const sign = st >= 0 ? '+' : '';
+        return `<div class="st12-cell ${cls}">
+          <div class="st12-head"><span>${ln}</span><span class="st12-gain">${m.gain_mm_per_mv}mm/mV</span></div>
+          <div class="st12-val">${sign}${st.toFixed(2)} mm</div>
+          <div class="st12-sub">T:${m.t_mm >= 0 ? '+' : ''}${Number(m.t_mm).toFixed(1)} | R:${Number(m.r_mm).toFixed(1)}</div>
+        </div>`;
+      }).join('');
+    }
+
+    const efWrap = document.getElementById('hybridEfWrap');
+    const efSuper = document.getElementById('hybridEfSuper');
+    const efBars = document.getElementById('hybridEfBars');
+    if(efWrap && meta.ecgfounder && meta.ecgfounder.loaded){
+      efWrap.style.display = 'block';
+      const sc = meta.ecgfounder.superclasses || {};
+      efSuper.textContent = `Nhóm lớn: MI ${(100*(sc.MI||0)).toFixed(0)}% | STTC ${(100*(sc.STTC||0)).toFixed(0)}% | CD ${(100*(sc.CD||0)).toFixed(0)}% | HYP ${(100*(sc.HYP||0)).toFixed(0)}% | NORM ${(100*(sc.NORM||0)).toFixed(0)}%`;
+      const tops = (meta.ecgfounder.top_predictions || []).slice(0, 5);
+      efBars.innerHTML = tops.map(item=>{
+        const pct = Math.round((item.prob || 0) * 100);
+        const isMi = item.superclass === 'MI' || item.code.includes('MI') || item.code.includes('INJ');
+        return `<div class="ef-row">
+          <div class="ef-label" title="${item.name_vi}"><b>${item.code}</b> — ${item.name_vi}</div>
+          <div class="ef-track"><div class="ef-fill ${isMi ? 'mi' : ''}" style="width:${pct}%"></div></div>
+          <div class="ef-pct">${pct}%</div>
+        </div>`;
+      }).join('');
+    } else if(efWrap){
+      efWrap.style.display = 'none';
+    }
+
+    drawHybridWaveforms(meta.digitized_preview);
+  }
+
+  function resetEcgFieldsOnly(){
+    ['hr','pr','qrs','axis','qt','sV1','rV56','rAvl','rV1'].forEach(id=>{
+      const el = document.getElementById(id); if(el) el.value = '';
+    });
+    setVal('pWave', 'normal');
+    setVal('v1shape', 'normal');
+    setVal('v6shape', 'normal');
+    setVal('sex', 'nam');
+    setVal('special', 'none');
+    const aq = document.getElementById('axisQuickSelect'); if(aq) aq.value = 'custom';
+    setRadio('rhythm', 'regular');
+    ['wenckebach','fixedRatio','dissociation'].forEach(id=> setVal(id, false));
+    REGIONS.forEach(r=>{
+      setVal(`st-${r.key}`, 'none');
+      setVal(`t-${r.key}`, 'none');
+      setVal(`q-${r.key}`, false);
+    });
+  }
+
   async function analyzeImageWithAI(){
     const provider = getActiveProvider();
     const apiKey = getActiveApiKey();
+    const scanMode = document.getElementById('scanModeSelect')?.value || 'fast';
+    const selectedModel = getActiveModel();
+    const clinicalContextText = buildClinicalContextText();
+
+    if(!currentImageBase64 && !isDigitalFile){
+      setAiStatus('Vui lòng chọn hoặc chụp ảnh điện tim (hoặc nạp file số JSON/CSV/XML) trước khi quét!', 'error');
+      return;
+    }
+
+    if(isDigitalFile && hybridBackendBaseUrl === null){
+      const ok = await detectHybridBackend();
+      if(!ok){
+        setAiStatus('Để đọc file tín hiệu số (JSON/CSV/XML), vui lòng khởi chạy máy chủ Hybrid bằng file start_server.bat!', 'error');
+        return;
+      }
+    }
+
+    // 1. HYBRID BACKEND PATH (FAST, ACCURATE, GAIN-CALIBRATED + ECGFOUNDER)
+    if(hybridBackendBaseUrl !== null){
+      try {
+        setAiStatus(
+          scanMode === 'offline'
+            ? 'Đang chạy Hybrid Offline (OCR + Số hóa 12 chuyển đạo + ECGFounder ONNX)...'
+            : 'Đang chạy Hybrid AI (OCR + Số hóa 12 chuyển đạo + ECGFounder + Tổng hợp lâm sàng)...',
+          'loading'
+        );
+
+        const fd = new FormData();
+        if(isDigitalFile && currentFileObject){
+          fd.append('file', currentFileObject, currentFileName || 'ecg.json');
+          fd.append('rotation', '0');
+        } else {
+          const proc = await getProcessedImageForSend(2048, 0.90);
+          fd.append('file', proc.blob, 'ecg_preprocessed.jpg');
+          fd.append('rotation', '0'); // canvas already applied viewState.rotation
+        }
+        fd.append('mode', scanMode);
+        fd.append('clinical_context', clinicalContextText);
+        fd.append('api_key', apiKey || '');
+        fd.append('provider', provider);
+        fd.append('model', selectedModel);
+
+        const ctrl = new AbortController();
+        const tid = setTimeout(()=> ctrl.abort(), 45000);
+        const resp = await fetch(`${hybridBackendBaseUrl}/api/analyze`, {
+          method: 'POST',
+          body: fd,
+          signal: ctrl.signal
+        });
+        clearTimeout(tid);
+
+        if(!resp.ok){
+          const errJ = await resp.json().catch(()=>({}));
+          throw new Error(errJ.detail || `HTTP ${resp.status}`);
+        }
+
+        const parsed = await resp.json();
+        activeHybridMeta = parsed.hybrid_meta || null;
+        renderHybridMetaCard(activeHybridMeta);
+        const modelLabel = activeHybridMeta?.fusion_meta?.model_used || 'Hybrid AI';
+        applyAiDataToForm(parsed, modelLabel);
+        const totalSec = activeHybridMeta?.timings_ms?.total ? (activeHybridMeta.timings_ms.total / 1000).toFixed(2) : '?';
+        const fbNote = activeHybridMeta?.fusion_meta?.fallback_used ? ' (Tự chuyển Offline do LLM chậm/lỗi)' : '';
+        setAiStatus(`Phân tích Hybrid hoàn tất trong ${totalSec}s (${modelLabel})${fbNote}!`, 'success');
+        analyze();
+        return;
+      } catch(err){
+        console.warn('Hybrid backend error, checking fallback:', err);
+        if(isDigitalFile || scanMode === 'offline'){
+          setAiStatus(`Lỗi Hybrid Engine: ${err.message}`, 'error');
+          return;
+        }
+        // If network/backend died during image scan, gracefully fall back to direct browser mode
+      }
+    }
+
+    if(hybridBackendBaseUrl === null && scanMode === 'offline'){
+      const ok = await detectHybridBackend();
+      if(!ok){
+        setAiStatus('Chế độ Hybrid Offline yêu cầu máy chủ nội bộ đang chạy trên máy tính (start_server.bat). Hãy bật máy chủ hoặc chọn chế độ AI Cloud.', 'error');
+        return;
+      }
+    }
+
+    // 2. ZERO-BACKEND BROWSER FALLBACK PATH (OPTIMIZED & ROTATION/COMPRESSION FIXED)
     if(!apiKey){
       modal.classList.add('open');
       setAiStatus(`Vui lòng nhập API Key cho ${provider.toUpperCase()} để sử dụng tính năng đọc ảnh.`, 'error');
       return;
     }
-    if(!currentImageBase64){
-      setAiStatus('Vui lòng chọn hoặc chụp ảnh điện tim trước khi quét!', 'error');
+
+    activeHybridMeta = null;
+    hideHybridMetaCard();
+    let procImg;
+    try {
+      procImg = await getProcessedImageForSend(1800, 0.88);
+    } catch(e){
+      setAiStatus(`Lỗi tiền xử lý ảnh: ${e.message}`, 'error');
       return;
     }
 
-    const selectedModel = getActiveModel();
-
     if(provider === 'gemini'){
-      // DÒNG SIÊU MÔ HÌNH GOOGLE VỚI TỰ ĐỘNG FALLBACK THÔNG MINH
+      const cachedWorking = sessionStorage.getItem('ecg_working_gemini_model');
       const candidateModels = [
         selectedModel,
+        cachedWorking,
+        'gemini-3.8-flash',
+        'gemini-4.0-flash',
         'gemini-3.6-flash',
-        'gemini-3.5-flash',
         'gemini-2.5-flash',
         'gemini-2.5-pro',
-        'gemini-3.1-pro-preview',
-        'gemini-2.0-pro-exp-02-05',
-        'gemini-exp-1206',
-        'gemini-2.0-flash',
-        'gemini-1.5-pro',
-        'gemini-1.5-flash'
-      ].filter((v, idx, arr) => arr.indexOf(v) === idx);
+        'gemini-3.1-pro-preview'
+      ].filter((v, idx, arr) => v && arr.indexOf(v) === idx);
+
+      const userInstruction = `THÔNG TIN BỆNH CẢNH LÂM SÀNG & CẬN LÂM SÀNG ĐI KÈM CỦA BỆNH NHÂN:\n${clinicalContextText}\n\nHƯỚNG DẪN ĐỌC QUAN TRỌNG:\n1. Nếu ảnh có cột đổi độ lợi (vd 2.5 mm/mV hoặc 5 mm/mV), hãy quy chuẩn về 10 mm/mV trước khi đánh giá biên độ.\n2. Nếu có ST chênh lên đủ ngưỡng ở ≥ 2 chuyển đạo liên tiếp kèm ST chênh xuống soi gương ở chuyển đạo đối diện (vd DII, DIII, aVF chênh lên + DI, aVL chênh xuống), HÃY KẾT LUẬN RÕ LÀ NHỒI MÁU CƠ TIM CẤP CÓ ST CHÊNH LÊN (STEMI) + vùng tổn thương, KHÔNG gọi chung chung là Hội chứng vành cấp.\n3. Ngược lại, nếu sóng và đoạn ST bình thường hoặc chỉ là tái cực sớm lành tính không soi gương, hãy kết luận Điện tâm đồ bình thường / Tái cực sớm lành tính (Nguy cơ thấp).\n4. Viết chuỗi clinical_reasoning trước rồi mới chốt các trường chẩn đoán.`;
 
       let lastError = null;
       for(let i = 0; i < candidateModels.length; i++){
         const model = candidateModels[i];
         try {
-          setAiStatus(`Đang kết nối siêu mô hình ${model}... Đang phân tích sóng 12 chuyển đạo...`, 'loading');
-
-          const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
-          const clinicalContextText = buildClinicalContextText();
+          setAiStatus(`Đang kết nối ${model} (ảnh đã xoay & nén tối ưu)...`, 'loading');
+          const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
+          const genCfg = { temperature: 0.1, response_mime_type: "application/json" };
+          if(model.includes('gemini-4') || model.includes('gemini-3') || model.includes('2.5')){
+            genCfg.thinking_config = { thinking_level: scanMode === 'deep' ? 'high' : 'low' };
+          }
           const payload = {
-            contents: [
-              {
-                parts: [
-                  { text: ECG_AI_SYSTEM_PROMPT },
-                  { text: `THÔNG TIN BỆNH CẢNH LÂM SÀNG & CẬN LÂM SÀNG ĐI KÈM CỦA BỆNH NHÂN:\n${clinicalContextText}\n\nHƯỚNG DẪN QUAN TRỌNG: Hãy phân tích khách quan bản ghi ECG này kết hợp với bối cảnh lâm sàng. Nếu các thông số và hình thái sóng trong giới hạn bình thường hoặc chỉ là biến thể tái cực sớm lành tính, HÃY KẾT LUẬN LÀ ĐIỆN TÂM ĐỒ BÌNH THƯỜNG HOẶC TÁI CỰC SỚM LÀNH TÍNH (NGUY CƠ THẤP), TUYỆT ĐỐI KHÔNG ĐƯỢC CHẨN ĐOÁN NHỒI MÁU CƠ TIM NẾU KHÔNG CÓ TIÊU CHUẨN MILIMET RÕ RỆT VÀ HÌNH ẢNH SOI GƯƠNG. Chỉ đưa ra phác đồ cấp cứu khi thực sự có tổn thương hoại tử cấp tính hoặc loạn nhịp đe dọa tính mạng.` },
-                  {
-                    inline_data: {
-                      mime_type: currentImageMime,
-                      data: currentImageBase64
-                    }
-                  }
-                ]
-              }
-            ],
-            generationConfig: {
-              temperature: 0.1,
-              response_mime_type: "application/json"
-            }
+            system_instruction: { parts: [{ text: ECG_AI_SYSTEM_PROMPT }] },
+            contents: [{
+              parts: [
+                { text: userInstruction },
+                { inline_data: { mime_type: procImg.mime, data: procImg.base64 }, media_resolution: { level: 'MEDIA_RESOLUTION_HIGH' } }
+              ]
+            }],
+            generationConfig: genCfg
           };
 
-          const resp = await fetch(url, {
+          const ctrl = new AbortController();
+          const tid = setTimeout(()=> ctrl.abort(), 30000);
+          let resp = await fetch(url, {
             method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'x-goog-api-key': apiKey
-            },
-            body: JSON.stringify(payload)
+            headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
+            body: JSON.stringify(payload),
+            signal: ctrl.signal
           });
+          clearTimeout(tid);
+
+          if(resp.status === 400){
+            // Retry without newer fields if model rejects thinking_config or media_resolution
+            const compatPayload = {
+              system_instruction: { parts: [{ text: ECG_AI_SYSTEM_PROMPT }] },
+              contents: [{ parts: [{ text: userInstruction }, { inline_data: { mime_type: procImg.mime, data: procImg.base64 } }] }],
+              generationConfig: { temperature: 0.1, response_mime_type: "application/json" }
+            };
+            resp = await fetch(url, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
+              body: JSON.stringify(compatPayload)
+            });
+          }
 
           if(!resp.ok){
             const errJson = await resp.json().catch(()=>({}));
             const errMsg = errJson.error?.message || `HTTP ${resp.status}`;
             if(resp.status === 404 || resp.status === 429 || resp.status === 400){
-              console.warn(`Model ${model} trả về lỗi ${resp.status} (${errMsg}). Tự động thử mô hình kế tiếp...`);
               lastError = new Error(`${model}: ${errMsg}`);
               continue;
             }
@@ -2529,8 +3025,9 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
           else if(cleanJson.startsWith('```')) cleanJson = cleanJson.replace(/^```/, '').replace(/```$/, '').trim();
 
           const parsed = JSON.parse(cleanJson);
+          sessionStorage.setItem('ecg_working_gemini_model', model);
           applyAiDataToForm(parsed, model);
-          setAiStatus(`Phân tích thành công bằng siêu mô hình ${model}! Các thông số đã được tự động điền.`, 'success');
+          setAiStatus(`Phân tích thành công bằng ${model}! Các thông số đã được tự động điền.`, 'success');
           analyze();
           return;
         } catch(err){
@@ -2542,7 +3039,6 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
       setAiStatus(`Lỗi phân tích: ${lastError?.message || 'Không thể kết nối đến AI. Vui lòng kiểm tra API Key.'}`, 'error');
     }
     else if(provider === 'openai' || provider === 'openrouter'){
-      // OPENAI / OPENROUTER (CLAUDE 3.7 / GPT-4o)
       const endpoint = provider === 'openai'
         ? 'https://api.openai.com/v1/chat/completions'
         : 'https://openrouter.ai/api/v1/chat/completions';
@@ -2565,11 +3061,11 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
           {
             role: 'user',
             content: [
-              { type: 'text', text: `THÔNG TIN BỆNH CẢNH LÂM SÀNG & CẬN LÂM SÀNG ĐI KÈM:\n${buildClinicalContextText()}\n\nHãy phân tích ảnh điện tâm đồ 12 chuyển đạo này kết hợp toàn diện với dữ kiện lâm sàng và cận lâm sàng ở trên, trả về JSON chính xác theo định dạng yêu cầu.` },
+              { type: 'text', text: `THÔNG TIN BỆNH CẢNH LÂM SÀNG & CẬN LÂM SÀNG ĐI KÈM:\n${clinicalContextText}\n\nHãy phân tích ảnh điện tâm đồ 12 chuyển đạo này kết hợp toàn diện với dữ kiện lâm sàng và cận lâm sàng ở trên, trả về JSON chính xác theo định dạng yêu cầu.` },
               {
                 type: 'image_url',
                 image_url: {
-                  url: `data:${currentImageMime};base64,${currentImageBase64}`
+                  url: `data:${procImg.mime};base64,${procImg.base64}`
                 }
               }
             ]
@@ -2615,6 +3111,9 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
   let activeAiDiagnosis = null;
 
   function applyAiDataToForm(data, modelName){
+    // Always reset prior ECG fields so null values never carry over from previous patients
+    resetEcgFieldsOnly();
+
     // Clinical & Lab inputs from Preset / AI
     if(data.vitals){
       if(data.vitals.bp) setVal('vital-bp', data.vitals.bp);
@@ -2733,6 +3232,24 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
   // ==========================================
   function addFinding(list, level, title, text, tx){
     list.push({level, title, text, tx});
+  }
+
+  function isTroponinPositive(rawStr){
+    const txt = (rawStr || '').trim().toLowerCase();
+    if(!txt) return false;
+    if(txt.includes('âm tính') || txt.includes('bình thường') || txt.includes('normal') || txt.includes('negative') || txt.includes('(-)')) return false;
+    if(txt.includes('dương') || txt.includes('tăng cao') || txt.includes('(+)')) return true;
+    const m = txt.match(/(\d+(?:\.\d+)?)/);
+    return Boolean(m && parseFloat(m[1]) >= 50);
+  }
+
+  function isHypotensionBP(bpStr){
+    const m = (bpStr || '').trim().match(/(\d{2,3})\s*\/\s*(\d{2,3})/);
+    if(m){
+      const sbp = parseInt(m[1], 10);
+      return sbp > 0 && sbp < 90;
+    }
+    return false;
   }
 
   function analyze(){
@@ -2880,8 +3397,8 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
       lat: 'Động mạch mũ (LCx) hoặc nhánh chéo (Diagonal)'
     };
 
-    const tropValCheck = document.getElementById('lab-troponin')?.value.trim().toLowerCase() || '';
-    const isTropPosCheck = tropValCheck.includes('dương') || tropValCheck.includes('ng/l') || tropValCheck.includes('+');
+    const tropValCheck = document.getElementById('lab-troponin')?.value || '';
+    const isTropPosCheck = isTroponinPositive(tropValCheck);
     const hasIschemicSigns = depressed.length > 0 || symChestPain || isTropPosCheck || qPath.length > 0 || (elevated.length >= 2 && special !== 'ber');
 
     if(elevated.length > 0){
@@ -3114,13 +3631,28 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
     let stItems = [];
     const stInf = val('st-inf');
     const stLat = val('st-lat');
-    if(stInf==='elevation') stItems.push('Chênh lên dạng vòm ở DII, DIII, aVF (thành dưới)');
-    else if(stInf==='depression') stItems.push('Chênh xuống ở DII, DIII, aVF');
+    const hLm = activeHybridMeta?.lead_measurements || null;
+    if(hLm){
+      const fmt = (ln)=> `${ln} ${hLm[ln].st_mm >= 0 ? '+' : ''}${Number(hLm[ln].st_mm).toFixed(1)}mm`;
+      if(stInf==='elevation') stItems.push(`Chênh lên thành dưới (${fmt('II')}, ${fmt('III')}, ${fmt('aVF')})`);
+      else if(stInf==='depression') stItems.push(`Chênh xuống thành dưới (${fmt('II')}, ${fmt('III')}, ${fmt('aVF')})`);
+      if(hLm.I.st_mm <= -0.65 || hLm.aVL.st_mm <= -0.65){
+        stItems.push(`${stInf==='elevation' ? 'Chênh xuống soi gương' : 'Chênh xuống'} thành bên cao (${fmt('I')}, ${fmt('aVL')})`);
+      } else if(hLm.I.st_mm >= 0.9 || hLm.aVL.st_mm >= 0.9){
+        stItems.push(`Chênh lên thành bên cao (${fmt('I')}, ${fmt('aVL')})`);
+      }
+      if(Math.abs(hLm.aVR.st_mm) >= 0.8){
+        stItems.push(`aVR ${hLm.aVR.st_mm >= 0 ? '+' : ''}${Number(hLm.aVR.st_mm).toFixed(1)}mm`);
+      }
+    } else {
+      if(stInf==='elevation') stItems.push('Chênh lên dạng vòm ở DII, DIII, aVF (thành dưới)');
+      else if(stInf==='depression') stItems.push('Chênh xuống ở DII, DIII, aVF');
 
-    if(stLat==='elevation') stItems.push('Chênh lên ở DI, aVL (thành bên)');
-    else if(stLat==='depression'){
-      if(stInf==='elevation') stItems.push('Chênh xuống soi gương ở DI, aVL');
-      else stItems.push('Chênh xuống ở DI, aVL');
+      if(stLat==='elevation') stItems.push('Chênh lên ở DI, aVL (thành bên)');
+      else if(stLat==='depression'){
+        if(stInf==='elevation') stItems.push('Chênh xuống soi gương ở DI, aVL');
+        else stItems.push('Chênh xuống ở DI, aVL');
+      }
     }
 
     if(special==='ber') stItems.push('ST chênh lên cong lõm, điểm J có khấc (Tái cực sớm lành tính)');
@@ -3188,15 +3720,22 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
     if(val('q-ant')) pV3V4.push('có sóng Q hoại tử');
     pLines.push(`- V3, V4 (Trước mỏm / trước rộng): ${pV3V4.join(', ')}.`);
 
-    // V5, V6
+    // V5, V6 (tách riêng khỏi DI/aVL khi có số đo 12 chuyển đạo định lượng)
     let pV5V6 = [];
     if(v6shape==='broadR') pV5V6.push('dạng R rộng đơn pha có khấc');
     else if(v6shape==='notchedS') pV5V6.push('dạng S rộng có khấc');
     else pV5V6.push('dạng qR');
 
-    if(val('st-lat')==='elevation') pV5V6.push('ST chênh lên');
-    else if(val('st-lat')==='depression') pV5V6.push('ST chênh xuống');
-    else pV5V6.push('ST đẳng điện');
+    if(hLm && hLm.V5 && hLm.V6){
+      const fmtL = (ln)=> `${ln} ${hLm[ln].st_mm >= 0 ? '+' : ''}${Number(hLm[ln].st_mm).toFixed(1)}mm`;
+      if(hLm.V5.st_mm >= 0.9 || hLm.V6.st_mm >= 0.9) pV5V6.push(`ST chênh lên (${fmtL('V5')}, ${fmtL('V6')})`);
+      else if(hLm.V5.st_mm <= -0.65 || hLm.V6.st_mm <= -0.65) pV5V6.push(`ST chênh xuống (${fmtL('V5')}, ${fmtL('V6')})`);
+      else pV5V6.push(`ST đẳng điện (${fmtL('V5')}, ${fmtL('V6')})`);
+    } else {
+      if(val('st-lat')==='elevation') pV5V6.push('ST chênh lên');
+      else if(val('st-lat')==='depression') pV5V6.push('ST chênh xuống');
+      else pV5V6.push('ST đẳng điện');
+    }
 
     if(val('t-lat')==='inverted') pV5V6.push('T âm');
     else if(val('t-lat')==='peaked') pV5V6.push('T cao nhọn');
@@ -3289,10 +3828,10 @@ Chỉ trả về DUY NHẤT một chuỗi JSON hợp lệ với cấu trúc sau,
     }
 
     const bpVal = document.getElementById('vital-bp')?.value.trim() || '';
-    const tropVal = document.getElementById('lab-troponin')?.value.trim().toLowerCase() || '';
+    const tropVal = document.getElementById('lab-troponin')?.value || '';
     const kVal = document.getElementById('lab-electrolytes')?.value.trim().toLowerCase() || '';
-    const isHypotension = bpVal.includes('85') || bpVal.includes('80') || bpVal.includes('70') || bpVal.includes('90/60');
-    const isTropPos = tropVal.includes('dương') || tropVal.includes('ng/l') || tropVal.includes('+');
+    const isHypotension = isHypotensionBP(bpVal);
+    const isTropPos = isTroponinPositive(tropVal);
 
     {
       // Rule-based diagnostic synthesis
@@ -3825,6 +4364,8 @@ ${primDiag ? `\nGỢI Ý CHẨN ĐOÁN & PHÂN TẦNG NGUY CƠ:\n- Chẩn đoán
     const mDot = document.getElementById('floatingDot'); if(mDot) mDot.style.display='none';
     switchMobileTab('inputs', false);
     activeAiDiagnosis = null;
+    activeHybridMeta = null;
+    hideHybridMetaCard();
     document.getElementById('presetSelect').value = '';
     
     // Reset upload and restore upload buttons
